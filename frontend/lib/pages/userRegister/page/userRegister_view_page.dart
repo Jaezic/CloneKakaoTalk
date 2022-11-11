@@ -40,11 +40,11 @@ class UserRegisterViewPage extends StatelessWidget {
                     '비밀번호',
                     style: namefieldstyle,
                   ),
-                  UserRegisterViewController.textField(textEditController: controller.passFieldController, hintText: '비밀번호'),
+                  UserRegisterViewController.textField(textEditController: controller.passFieldController, hintText: '비밀번호', pass: true),
                   const SizedBox(
                     height: 10,
                   ),
-                  UserRegisterViewController.textField(textEditController: controller.passVerifyFieldController, hintText: '비밀번호 확인'),
+                  UserRegisterViewController.textField(textEditController: controller.passVerifyFieldController, hintText: '비밀번호 확인', pass: true),
                   const SizedBox(
                     height: 40,
                   ),

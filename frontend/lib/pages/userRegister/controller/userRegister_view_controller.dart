@@ -14,7 +14,7 @@ class UserRegisterViewController extends GetxController {
   TextEditingController nameFieldController = TextEditingController();
   TextEditingController nicknameFieldController = TextEditingController();
   TextEditingController emailFieldController = TextEditingController();
-  static Widget textField({required textEditController, required String hintText}) {
+  static Widget textField({required textEditController, required String hintText, bool pass = false}) {
     return Container(
       decoration: BoxDecoration(
         border: Border(bottom: BorderSide(width: 0.6, color: Colors.black.withOpacity(0.3))),
@@ -27,7 +27,7 @@ class UserRegisterViewController extends GetxController {
           contentPadding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
           hintStyle: _hintStyle,
         ),
-        obscureText: hintText == '비밀번호' ? true : false,
+        obscureText: pass,
         cursorColor: Colors.black38,
         style: _textStyle,
       ),
