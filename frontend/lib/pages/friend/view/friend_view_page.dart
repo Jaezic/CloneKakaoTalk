@@ -64,10 +64,10 @@ class FriendViewPage extends StatelessWidget {
                   ),
                 ),
                 Common.divider(margin: const EdgeInsets.symmetric(vertical: 15)),
-                const Text(
-                  '친구 3',
-                  style: TextStyle(color: Colors.black54, fontSize: 12),
-                ),
+                Obx(() => Text(
+                      '친구 ${controller.friendCnt}',
+                      style: const TextStyle(color: Colors.black54, fontSize: 12),
+                    )),
                 FriendTuple(),
                 FriendTuple(),
                 FriendTuple(),

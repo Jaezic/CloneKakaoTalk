@@ -10,6 +10,7 @@ class UserRegisterViewController extends GetxController {
   RxString birthdayString = RxString('');
   TextEditingController idFieldController = TextEditingController();
   TextEditingController passFieldController = TextEditingController();
+  TextEditingController passVerifyFieldController = TextEditingController();
   TextEditingController nameFieldController = TextEditingController();
   TextEditingController nicknameFieldController = TextEditingController();
   TextEditingController emailFieldController = TextEditingController();
@@ -62,6 +63,10 @@ class UserRegisterViewController extends GetxController {
   void onClose() {
     idFieldController.dispose();
     passFieldController.dispose();
+    passVerifyFieldController.dispose();
+    nameFieldController.dispose();
+    nicknameFieldController.dispose();
+    emailFieldController.dispose();
     super.onClose();
   }
 }

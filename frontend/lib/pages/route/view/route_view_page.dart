@@ -15,25 +15,27 @@ class RouteViewPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Get.put(RouteViewController());
     return Scaffold(
-        body: Center(
-      child: Column(
-        children: [
-          CommonButton(
-            title: UserLoginViewPage.url,
-            onTap: () => Get.toNamed(UserLoginViewPage.url),
-            color: Colors.black12,
-          ),
-          CommonButton(
-            title: UserRegisterViewPage.url,
-            onTap: () => Get.toNamed(UserRegisterViewPage.url),
-            color: Colors.black12,
-          ),
-          CommonButton(
-            title: MainViewPage.url,
-            onTap: () => Get.offAllNamed(MainViewPage.url),
-            color: Colors.black12,
-          ),
-        ],
+        body: SingleChildScrollView(
+      child: Center(
+        child: Column(
+          children: [
+            CommonButton(
+              title: UserLoginViewPage.url,
+              onTap: () => Get.toNamed(UserLoginViewPage.url),
+              color: Colors.black12,
+            ),
+            CommonButton(
+              title: UserRegisterViewPage.url,
+              onTap: () => Get.toNamed(UserRegisterViewPage.url),
+              color: Colors.black12,
+            ),
+            CommonButton(
+              title: MainViewPage.url,
+              onTap: () => Get.offAllNamed(MainViewPage.url),
+              color: Colors.black12,
+            ),
+          ],
+        ),
       ),
     ));
   }
