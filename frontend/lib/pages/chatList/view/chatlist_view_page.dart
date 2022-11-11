@@ -1,7 +1,7 @@
+import 'package:KakaoTalk/common/widget/common_appbar.dart';
+import 'package:KakaoTalk/pages/friend/controller/friend_view_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:kakaotalk/common/widget/common_appbar.dart';
-import 'package:kakaotalk/pages/friend/controller/friend_view_controller.dart';
 
 class ChatListViewPage extends StatelessWidget {
   const ChatListViewPage({super.key});

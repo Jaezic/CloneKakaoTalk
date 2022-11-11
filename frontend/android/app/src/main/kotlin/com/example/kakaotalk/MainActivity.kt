@@ -1,4 +1,4 @@
-package com.example.kakaotalk
+package com.example.KakaoTalk
 
 import io.flutter.embedding.android.FlutterActivity
 

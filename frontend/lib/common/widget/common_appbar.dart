@@ -1,7 +1,7 @@
+import 'package:KakaoTalk/common/common.dart';
+import 'package:KakaoTalk/common/widget/common_button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:kakaotalk/common/common.dart';
-import 'package:kakaotalk/common/widget/common_button.dart';
 
 class CommonAppBar extends AppBar {
   CommonAppBar(

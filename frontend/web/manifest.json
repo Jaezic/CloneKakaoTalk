@@ -1,6 +1,6 @@
 {
-    "name": "kakaotalk",
-    "short_name": "kakaotalk",
+    "name": "KakaoTalk",
+    "short_name": "KakaoTalk",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

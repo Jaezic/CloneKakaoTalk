@@ -1,4 +1,4 @@
-# kakaotalk
+# KakaoTalk
 
 A new Flutter project.
 

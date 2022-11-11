@@ -1,7 +1,7 @@
+import 'package:KakaoTalk/common/widget/common_button.dart';
+import 'package:KakaoTalk/pages/userRegister/controller/userRegister_view_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:kakaotalk/common/widget/common_button.dart';
-import 'package:kakaotalk/pages/userRegister/controller/userRegister_view_controller.dart';
 
 class UserRegisterViewPage extends StatelessWidget {
   const UserRegisterViewPage({super.key});

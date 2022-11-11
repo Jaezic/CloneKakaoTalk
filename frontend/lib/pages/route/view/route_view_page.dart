@@ -1,10 +1,10 @@
+import 'package:KakaoTalk/common/widget/common_button.dart';
+import 'package:KakaoTalk/pages/main/view/main_view_page.dart';
+import 'package:KakaoTalk/pages/route/controller/route_view_controller.dart';
+import 'package:KakaoTalk/pages/userLogin/page/userlogin_view_page.dart';
+import 'package:KakaoTalk/pages/userRegister/page/userRegister_view_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:kakaotalk/common/widget/common_button.dart';
-import 'package:kakaotalk/pages/main/view/main_view_page.dart';
-import 'package:kakaotalk/pages/route/controller/route_view_controller.dart';
-import 'package:kakaotalk/pages/userLogin/page/userlogin_view_page.dart';
-import 'package:kakaotalk/pages/userRegister/page/userRegister_view_page.dart';
 
 class RouteViewPage extends StatelessWidget {
   const RouteViewPage({super.key});

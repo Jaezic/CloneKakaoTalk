@@ -1,7 +1,7 @@
+import 'package:KakaoTalk/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get_navigation/get_navigation.dart';
-import 'package:kakaotalk/routes.dart';
 
 void main() {
   runApp(GetMaterialApp(

@@ -1,6 +1,6 @@
+import 'package:KakaoTalk/pages/splash/controller/splash_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:kakaotalk/pages/splash/controller/splash_controller.dart';
 
 class SplashViewPage extends StatelessWidget {
   const SplashViewPage({super.key});

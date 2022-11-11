@@ -1,9 +1,9 @@
+import 'package:KakaoTalk/pages/main/view/main_view_page.dart';
+import 'package:KakaoTalk/pages/route/view/route_view_page.dart';
+import 'package:KakaoTalk/pages/splash/view/splash_view_page.dart';
+import 'package:KakaoTalk/pages/userLogin/page/userlogin_view_page.dart';
+import 'package:KakaoTalk/pages/userRegister/page/userRegister_view_page.dart';
 import 'package:get/get.dart';
-import 'package:kakaotalk/pages/main/view/main_view_page.dart';
-import 'package:kakaotalk/pages/route/view/route_view_page.dart';
-import 'package:kakaotalk/pages/splash/view/splash_view_page.dart';
-import 'package:kakaotalk/pages/userLogin/page/userlogin_view_page.dart';
-import 'package:kakaotalk/pages/userRegister/page/userRegister_view_page.dart';
 
 class CustomRouter {
   static final routes = [

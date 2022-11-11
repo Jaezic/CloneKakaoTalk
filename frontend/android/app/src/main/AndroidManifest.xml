@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.kakaotalk">
+    package="com.example.KakaoTalk">
    <application
-        android:label="kakaotalk"
+        android:label="KakaoTalk"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

@@ -1,6 +1,6 @@
+import 'package:KakaoTalk/pages/main/controller/main_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:kakaotalk/pages/main/controller/main_controller.dart';
 
 class MainViewPage extends StatelessWidget {
   const MainViewPage({super.key});

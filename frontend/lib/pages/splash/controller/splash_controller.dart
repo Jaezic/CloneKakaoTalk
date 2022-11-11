@@ -1,5 +1,5 @@
+import 'package:KakaoTalk/pages/route/view/route_view_page.dart';
 import 'package:get/get.dart';
-import 'package:kakaotalk/pages/route/view/route_view_page.dart';
 
 class SplashController extends GetxController {
   @override
