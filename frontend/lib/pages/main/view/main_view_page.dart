@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kakaotalk/pages/main/controller/main_controller.dart';
-import 'package:line_icons/line_icons.dart';
 
 class MainViewPage extends StatelessWidget {
   const MainViewPage({super.key});
@@ -34,9 +33,8 @@ class MainViewPage extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 0),
               child: Row(
                 children: [
-                  Expanded(child: _bottomNavigationButton(index: 0, icon: [Icons.feed_outlined, Icons.feed])),
-                  Expanded(child: _bottomNavigationButton(index: 1, icon: [Icons.search_outlined, LineIcons.search])),
-                  Expanded(child: _bottomNavigationButton(index: 2, icon: [Icons.account_circle_outlined, Icons.account_circle])),
+                  Expanded(child: _bottomNavigationButton(index: 0, icon: [Icons.account_circle_outlined, Icons.account_circle_rounded])),
+                  Expanded(child: _bottomNavigationButton(index: 1, icon: [Icons.chat_outlined, Icons.chat])),
                 ],
               ),
             ),

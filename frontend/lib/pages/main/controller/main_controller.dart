@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kakaotalk/common/widget/common_appbar.dart';
+import 'package:kakaotalk/pages/chatList/view/chatlist_view_page.dart';
+import 'package:kakaotalk/pages/friend/view/friend_view_page.dart';
 
 class MainController extends GetxController {
   MainController(this.context);
@@ -14,22 +16,10 @@ class MainController extends GetxController {
     update();
   }
 
-  // Future<void> showSettingDialog() {
-  //   return showCupertinoModalPopup(
-  //       barrierColor: Colors.black54,
-  //       context: context,
-  //       builder: (context) {
-  //         return const SettingDialog();
-  //       });
-  // }
-
-  final List<Widget> bodyContent = [];
+  final List<Widget> bodyContent = [const FriendViewPage(), const ChatListViewPage()];
 
   final List<CommonAppBar?> appBarContent = [
-    null,
-    // SearchViewPage.appBar,
-    null,
-    // UserLoginViewPage.appBar,
-    null,
+    FriendViewPage.appBar,
+    ChatListViewPage.appBar,
   ];
 }
