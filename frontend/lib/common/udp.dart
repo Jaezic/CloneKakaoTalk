@@ -16,9 +16,10 @@ class Udp {
     print(json);
     sender.asStream(timeout: const Duration(seconds: 10)).listen((datagram) {
       var str = String.fromCharCodes(datagram!.data);
-      print(str);
+      print(jsonDecode(str));
+      print(jsonDecode(str));
     });
-    print('test');
+    await Future.delayed(const Duration(seconds: 5));
     sender.close();
     return Response();
   }
