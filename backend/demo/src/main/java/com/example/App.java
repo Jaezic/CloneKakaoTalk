@@ -11,7 +11,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class App {
     public static void main(String[] args) throws Exception {
         try {
-            DatagramSocket ds = new DatagramSocket(9998);
+            DatagramSocket ds = new DatagramSocket(9999);
             byte[] bf = new byte[300];
             DatagramPacket dp = new DatagramPacket(bf, bf.length);
 
@@ -28,8 +28,7 @@ public class App {
 
                 System.out.println("IP:" + dp.getAddress() + "  Port#:" + dp.getPort());
                 System.out.println("message: " + rs1);
-                System.out.println(map.get("method"));
-
+                System.out.println(map);
             }
         } catch (IOException e) {
         }
