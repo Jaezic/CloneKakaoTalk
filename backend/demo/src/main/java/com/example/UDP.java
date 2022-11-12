@@ -32,7 +32,7 @@ public class UDP {
     }
 
     static void response(UDPResponse message, DatagramSocket ds, InetAddress ip, int port) throws IOException {
-        String msg = message.getMessage().toString();
+        String msg = message.toJson().toString();
         byte[] bf = msg.getBytes();
         DatagramPacket dp = new DatagramPacket(bf, bf.length, ip, port);
         ds.send(dp);
