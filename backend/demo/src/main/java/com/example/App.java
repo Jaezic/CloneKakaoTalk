@@ -15,7 +15,7 @@ public class App {
             while (true) {
                 System.out.println("Waiting for a packet reception..");
                 UDPRequest request = UDP.receive(ds);
-                UDP.response(ds, request.ip, request.port);
+                UDP.response(new UDPResponse(200, "OK", request.toJson()), ds, request.ip, request.port);
             }
         } catch (IOException e) {
         }

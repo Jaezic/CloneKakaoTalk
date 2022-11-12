@@ -27,14 +27,12 @@ public class UDP {
         System.out.println("IP:" + dp.getAddress() + " Port#:" + dp.getPort());
         System.out.println("Method : " + request.method);
         System.out.println(request.data);
-
-        response(new UDPResponse(200, "OK", jsonObject), ds, request.ip, request.port);
         return request;
 
     }
 
     static void response(UDPResponse message, DatagramSocket ds, InetAddress ip, int port) throws IOException {
-        String msg = message.getMessage();
+        String msg = message.getMessage().toString();
         byte[] bf = msg.getBytes();
         DatagramPacket dp = new DatagramPacket(bf, bf.length, ip, port);
         ds.send(dp);

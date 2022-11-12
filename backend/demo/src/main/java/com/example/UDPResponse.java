@@ -16,11 +16,11 @@ public class UDPResponse {
 
     }
 
-    String getMessage() {
+    JSONObject toJson() {
         JSONObject json = new JSONObject();
         json.put("statusCode", statusCode);
         json.put("statusMessage", statusMessage);
         json.put("data", data);
-        return json.toString();
+        return json;
     }
 }

@@ -14,9 +14,20 @@ public class UDPRequest {
 
     UDPRequest(JSONObject message, InetAddress ip, int port)
             throws JsonMappingException, JsonProcessingException {
-        this.method = message.get("method").toString();
-        this.data = new JSONObject(message.get("data").toString());
+        fromJson(message);
         this.ip = ip;
         this.port = port;
+    }
+
+    void fromJson(JSONObject message) {
+        this.method = message.get("method").toString();
+        this.data = new JSONObject(message.get("data").toString());
+    }
+
+    JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        json.put("method", method);
+        json.put("data", data);
+        return json;
     }
 }
