@@ -6,6 +6,7 @@ import 'package:KakaoTalk/common/udp_response.dart';
 import 'package:udp/udp.dart';
 
 class Udp {
+  static int timeout = 500;
   static Future<Response> post(String route, {required dynamic data}) async {
     Endpoint clinet = Endpoint.any();
     var sender = await UDP.bind(clinet);
@@ -32,11 +33,11 @@ class Udp {
       print('-------------------------------------------------');
       returnObject = Response(statusCode: json['statusCode'], statusMessage: json['statusMessage'], data: json['data']);
     });
-    await Future.delayed(const Duration(milliseconds: 100));
+    await Future.delayed(Duration(milliseconds: timeout));
     sender.close();
     if (returnObject.statusCode == null) {
       throw "API 타임 아웃이 발생하였습니다.";
-    } else if (returnObject.statusCode == 0) {
+    } else if (returnObject.statusCode != 200) {
       throw "Error ${returnObject.statusCode!} : ${returnObject.statusMessage!}";
     }
     return returnObject;

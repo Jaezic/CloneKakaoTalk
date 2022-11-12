@@ -1,3 +1,7 @@
+import 'package:KakaoTalk/common/api_service.dart';
+import 'package:KakaoTalk/common/common.dart';
+import 'package:KakaoTalk/common/service_response.dart';
+import 'package:KakaoTalk/models/post_user_login_response.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -21,11 +25,26 @@ class UserLoginViewController extends GetxController {
           contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
           hintStyle: _hintStyle,
         ),
-        
         cursorColor: Colors.black38,
         style: _textStyle,
       ),
     );
+  }
+
+  Future<void> userLogin() async {
+    if (idFieldController.text.isEmpty || passFieldController.text.isEmpty) {
+      Common.showSnackBar(messageText: "모든 항목을 작성해주세요.");
+      return;
+    }
+    ApiResponse<PostUserLoginResponse> response = await ApiService.instance.userLogin(
+      id: idFieldController.text,
+      password: passFieldController.text,
+    );
+    if (response.result) {
+      // Common.showSnackBar(messageText: "로그인에 성공하였습니다.");
+    } else {
+      Common.showSnackBar(messageText: response.errorMsg);
+    }
   }
 
   @override

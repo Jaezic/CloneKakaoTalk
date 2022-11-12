@@ -43,7 +43,9 @@ class UserLoginViewPage extends StatelessWidget {
                   ),
                   CommonButton(
                       padding: EdgeInsets.zero,
-                      onTap: () {},
+                      onTap: () {
+                        controller.userLogin();
+                      },
                       child: Container(
                           width: GetPlatform.isMobile ? null : 460,
                           height: 50,
