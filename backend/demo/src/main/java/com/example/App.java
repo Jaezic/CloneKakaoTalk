@@ -35,7 +35,7 @@ public class App {
             try {
                 if(request.method.equalsIgnoreCase("POST")){
                     if(request.route.equalsIgnoreCase("register")){
-                        System.out.println(request.data.get("name")); // 들어온 데이터 읽기
+                        //System.out.println(request.data.get("name")); // 들어온 데이터 읽기
 
                         JSONObject json = new JSONObject();
                         json.put("value", "test");
