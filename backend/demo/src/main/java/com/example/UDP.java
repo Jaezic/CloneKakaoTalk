@@ -26,7 +26,7 @@ public class UDP {
 
         UDPRequest request = new UDPRequest(jsonObject, dp.getAddress(), dp.getPort());
         System.out.println("IP:" + dp.getAddress() + " Port#:" + dp.getPort());
-        System.out.println("Method: " + request.method);
+        System.out.println("method: " + request.method);
         System.out.println(request.data);
         System.out.println("-------------------------------------------------");
         return request;
@@ -42,8 +42,8 @@ public class UDP {
         System.out.println("[UDP Send]");
         System.out.println("IP:" + ip + " Port#:" + port);
         System.out.println(
-                "StatusCode: " + Integer.toString(message.statusCode) + " StatusMessage: " + message.statusMessage);
-        System.out.println(message.data);
+                "statusCode: " + Integer.toString(message.statusCode) + " statusmessage: " + message.statusMessage);
+        System.out.println("data:\n" + message.data);
         System.out.println("-------------------------------------------------");
     }
 }

@@ -36,12 +36,13 @@ class ApiService extends GetxService {
           "birthday": birthdayString,
         }),
       );
-
       // User postUserRegisterResponse = User.fromJson(response.data);
       // DbService.instance.userBox.put(UserDbKey.userInfo.key, postUserRegisterResponse.toJson());
       // ApiResponse<PostUserLoginResponse> loginResponse = await userLogin(email: email, password: password);
       // return loginResponse;
-      return ApiResponse(result: false);
+      return ApiResponse(
+        result: false,
+      );
     } catch (e) {
       return ApiResponse<PostUserLoginResponse>(result: false, errorMsg: e.toString());
     }
