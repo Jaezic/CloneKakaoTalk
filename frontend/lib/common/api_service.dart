@@ -41,7 +41,7 @@ class ApiService extends GetxService {
       // ApiResponse<PostUserLoginResponse> loginResponse = await userLogin(email: email, password: password);
       // return loginResponse;
       return ApiResponse(
-        result: false,
+        result: true,
       );
     } catch (e) {
       return ApiResponse<PostUserLoginResponse>(result: false, errorMsg: e.toString());
