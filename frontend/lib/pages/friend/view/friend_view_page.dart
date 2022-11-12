@@ -12,7 +12,7 @@ class FriendViewPage extends StatelessWidget {
   static const url = '/friend';
   static CommonAppBar appBar = CommonAppBar(
     titleString: '친구',
-    fontSize: 25,
+    fontSize: 20,
     fontWeight: FontWeight.bold,
     centerTitle: false,
     // elevation: 1.0,

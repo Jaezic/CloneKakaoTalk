@@ -9,7 +9,7 @@ class ChatListViewPage extends StatelessWidget {
   static const url = '/chat_list';
   static CommonAppBar appBar = CommonAppBar(
     titleString: '채팅',
-    fontSize: 25,
+    fontSize: 20,
     fontWeight: FontWeight.bold,
     centerTitle: false,
     // elevation: 1.0,
