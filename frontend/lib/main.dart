@@ -1,9 +1,13 @@
+import 'package:KakaoTalk/common/api_service.dart';
+import 'package:KakaoTalk/common/common.dart';
 import 'package:KakaoTalk/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:get/get_navigation/get_navigation.dart';
+import 'package:get/get.dart';
 
-void main() {
+void main() async {
+  await Get.putAsync(() => Common().init());
+  await initServices();
   runApp(GetMaterialApp(
     debugShowCheckedModeBanner: false,
     theme: ThemeData(
@@ -21,4 +25,8 @@ void main() {
       Locale('ko', ''),
     ],
   ));
+}
+
+Future<void> initServices() async {
+  await Get.putAsync(() => ApiService().init());
 }
