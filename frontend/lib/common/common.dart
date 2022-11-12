@@ -1,10 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:logger/logger.dart';
 
 class Common extends GetxService {
+  static const int serverport = 9999;
+  static const String serverIP = "43.200.206.18";
+  static const bool isDev = true;
   static Common get instance => Get.find<Common>();
 
   static double get getWidth => GetPlatform.isMobile ? Get.width : 500;
+
+  static Logger logger = Logger(filter: MyFilter());
+
+  Future<Common> init() async {
+    Common.logger.d('$runtimeType init!');
+    return this;
+  }
 
   static SnackbarController showSnackBar(
       {required String messageText, Color textColor = Colors.white, Color backgroundColor = Colors.black87, dynamic position = SnackPosition.TOP}) {
@@ -40,5 +51,12 @@ class Common extends GetxService {
 
   static Container divider({EdgeInsetsGeometry? margin = EdgeInsets.zero}) {
     return Container(margin: margin, child: const Divider(thickness: 0.6, height: 0.6));
+  }
+}
+
+class MyFilter extends LogFilter {
+  @override
+  bool shouldLog(LogEvent event) {
+    return Common.isDev ? true : false;
   }
 }

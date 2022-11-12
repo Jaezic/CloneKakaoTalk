@@ -39,6 +39,9 @@ dependencies:
   cupertino_icons: ^1.0.2
   get: ^4.6.5
   line_icons: ^2.0.1
+  logger: ^1.1.0
+  udp: ^5.0.3
+  web_socket_channel: ^2.2.0
 
 dev_dependencies:
   flutter_test:
