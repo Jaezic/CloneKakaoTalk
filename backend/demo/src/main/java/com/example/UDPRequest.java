@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 
 public class UDPRequest {
     String method;
+    String route;
     JSONObject data;
     InetAddress ip;
     int port;
@@ -21,6 +22,7 @@ public class UDPRequest {
 
     void fromJson(JSONObject message) {
         this.method = message.get("method").toString();
+        this.route = message.get("route").toString();
         this.data = new JSONObject(message.get("data").toString());
     }
 
@@ -28,6 +30,7 @@ public class UDPRequest {
         JSONObject json = new JSONObject();
         json.put("method", method);
         json.put("data", data);
+        json.put("route", route);
         return json;
     }
 }
