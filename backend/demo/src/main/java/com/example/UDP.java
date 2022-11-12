@@ -16,7 +16,6 @@ public class UDP {
     static UDPRequest receive(DatagramSocket ds) throws IOException {
         byte[] bf = new byte[300];
         DatagramPacket dp = new DatagramPacket(bf, bf.length);
-        ObjectMapper mapper = new ObjectMapper();
         ds.receive(dp);
 
         System.out.println("-------------------------------------------------");
@@ -27,6 +26,7 @@ public class UDP {
         UDPRequest request = new UDPRequest(jsonObject, dp.getAddress(), dp.getPort());
         System.out.println("IP:" + dp.getAddress() + " Port#:" + dp.getPort());
         System.out.println("method: " + request.method);
+        System.out.println("route: " + request.route);
         System.out.println(request.data);
         System.out.println("-------------------------------------------------");
         return request;
@@ -42,7 +42,7 @@ public class UDP {
         System.out.println("[UDP Send]");
         System.out.println("IP:" + ip + " Port#:" + port);
         System.out.println(
-                "statusCode: " + Integer.toString(message.statusCode) + " statusmessage: " + message.statusMessage);
+                "statusCode: " + Integer.toString(message.statusCode) + " statusMessage: " + message.statusMessage);
         System.out.println("data:\n" + message.data);
         System.out.println("-------------------------------------------------");
     }
