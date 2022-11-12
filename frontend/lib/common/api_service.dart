@@ -40,9 +40,29 @@ class ApiService extends GetxService {
       // DbService.instance.userBox.put(UserDbKey.userInfo.key, postUserRegisterResponse.toJson());
       // ApiResponse<PostUserLoginResponse> loginResponse = await userLogin(email: email, password: password);
       // return loginResponse;
-      return ApiResponse(
+      return ApiResponse<PostUserLoginResponse>(
         result: true,
       );
+    } catch (e) {
+      return ApiResponse<PostUserLoginResponse>(result: false, errorMsg: e.toString());
+    }
+  }
+
+  Future<ApiResponse<PostUserLoginResponse>> userLogin({
+    required String id,
+    required String password,
+  }) async {
+    try {
+      var response = await Udp.post(
+        'login',
+        data: jsonEncode({
+          "id": id,
+          "password": password,
+        }),
+      );
+      PostUserLoginResponse postUserLoginResponse = PostUserLoginResponse.fromJson(response.data);
+
+      return ApiResponse<PostUserLoginResponse>(result: true, value: postUserLoginResponse);
     } catch (e) {
       return ApiResponse<PostUserLoginResponse>(result: false, errorMsg: e.toString());
     }
