@@ -22,18 +22,21 @@ public class UDP {
         System.out.println("A new message has been received:");
         JSONObject jsonObject = new JSONObject(
                 new String(bf));
-        System.out.println(jsonObject);
-        Map<String, String> message = mapper.readValue(new String(bf), new TypeReference<Map<String, String>>() {
-        });
-        UDPRequest request = new UDPRequest(message, dp.getAddress(), dp.getPort());
-        // System.out.println("IP:" + dp.getAddress() + " Port#:" + dp.getPort());
-        // System.out.println("Method : " + request.method);
-        // System.out.println(request.data);
+
+        UDPRequest request = new UDPRequest(jsonObject, dp.getAddress(), dp.getPort());
+        System.out.println("IP:" + dp.getAddress() + " Port#:" + dp.getPort());
+        System.out.println("Method : " + request.method);
+        System.out.println(request.data);
+
+        response(new UDPResponse(200, "OK", jsonObject), ds, request.ip, request.port);
         return request;
 
     }
 
-    static void response(DatagramSocket ds, InetAddress ip, int port) {
-
+    static void response(UDPResponse message, DatagramSocket ds, InetAddress ip, int port) throws IOException {
+        String msg = message.getMessage();
+        byte[] bf = msg.getBytes();
+        DatagramPacket dp = new DatagramPacket(bf, bf.length, ip, port);
+        ds.send(dp);
     }
 }

@@ -7,13 +7,20 @@ import org.json.JSONObject;
 public class UDPResponse {
     int statusCode;
     String statusMessage;
-    Map<String, String> data;
+    JSONObject data;
 
-    UDPResponse(int statusCode, String statusMessage, Map<String, String> data) {
+    UDPResponse(int statusCode, String statusMessage, JSONObject data) {
         this.statusCode = statusCode;
         this.statusMessage = statusMessage;
         this.data = data;
-        JSONObject asd;
 
+    }
+
+    String getMessage() {
+        JSONObject json = new JSONObject();
+        json.put("statusCode", statusCode);
+        json.put("statusMessage", statusMessage);
+        json.put("data", data);
+        return json.toString();
     }
 }
