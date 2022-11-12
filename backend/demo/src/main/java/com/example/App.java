@@ -42,12 +42,12 @@ public class App {
 
                         UDP.response(new UDPResponse(200, "OK", json), ds, request.ip, request.port); // 데이터 다시 보내기
                     }else
-                    UDP.response(new UDPResponse(0, "Bad Route", null), ds, request.ip, request.port);
+                    UDP.response(new UDPResponse(0, "Invalid Route requested.", null), ds, request.ip, request.port);
                 }
                 else if(request.method.equalsIgnoreCase("GET")){
 
                 }else
-                UDP.response(new UDPResponse(0, "Bad Request", null), ds, request.ip, request.port);
+                UDP.response(new UDPResponse(0, "Invalid method requested.", null), ds, request.ip, request.port);
             } catch (IOException e) {
             }
         }
