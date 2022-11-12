@@ -39,8 +39,9 @@ public class App {
 
                         JSONObject json = new JSONObject();
                         json.put("value", "test");
+                        
 
-                        UDP.response(new UDPResponse(200, "OK", json), ds, request.ip, request.port); // 데이터 다시 보내기
+                        UDP.response(new UDPResponse(200, "OK", request.data), ds, request.ip, request.port); // 데이터 다시 보내기
                     }else
                     UDP.response(new UDPResponse(0, "Invalid Route requested.", null), ds, request.ip, request.port);
                 }
