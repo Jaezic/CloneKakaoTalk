@@ -39,6 +39,7 @@ class UserLoginViewPage extends StatelessWidget {
                 UserLoginViewController.textField(
                   textEditController: controller.passFieldController,
                   hintText: '비밀번호',
+                  pass: true
                 ),
                 const SizedBox(
                   height: 45,
