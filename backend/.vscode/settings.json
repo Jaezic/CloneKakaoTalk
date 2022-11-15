@@ -1,5 +1,6 @@
 {
     "java.project.sourcePaths": [
-        "demo/src/main/java/com/example"
-    ]
+        "java/src/main/java/com/example"
+    ],
+    "java.configuration.updateBuildConfiguration": "interactive"
 }

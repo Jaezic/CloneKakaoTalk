@@ -1,0 +1,12 @@
+{
+  "name": "kakaotalk",
+  "version": "0.0.0",
+  "description": "KakaoTalk Clone Coding - Gachon university, 2022-2 Computer Network Team Project",
+  "scripts": {
+    "serve": "pm2 start ./bin/www --name kakaotalk-v1"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "uuid": "^9.0.0"
+  }
+}
