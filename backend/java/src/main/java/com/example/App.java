@@ -11,22 +11,34 @@ import java.sql.*; // sql 접속 라이브러리.
 
 public class App {
 
-    private Connection conn; // 데이터베이스에 접근하게 해주는 객체.
-    private PreparedStatement pstmt;
-    private ResultSet rs; // 결과값을 담을 객체.
+    static Statement stmt;
+    // private Connection conn; // 데이터베이스에 접근하게 해주는 객체.
+    // private PreparedStatement pstmt;
+    // private ResultSet rs; // 결과값을 담을 객체.
 
-    public App(){
-        try{
-            String dbURL = "jtbc:mysql://localhost:3306/networkDB"; //
-            String dbID = "root";
+    // public App(){
+    //     try{
+    //         String dbURL = "jtbc:mysql://localhost:3306/networkDB"; //
+    //         String dbID = "root";
+    //         String dbPassword = "gachon";
+    //         Class.forName("com.mysql.");
 
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-    }
+    //     }catch(Exception e){
+    //         e.printStackTrace();
+    //     }
+    // }
 
     public static void main(String[] args) throws Exception {
         try {
+            Class.forName("com.mysql.Jdbc.Driver"); 
+            String jdbc_url = "jdbc:mysql://localhost:3306/networkDB";
+            Connection con = DriverManager.getConnection(jdbc_url, "root", "gachon");
+            stmt = con.createStatement(); 
+
+            String sql = "select * from User";
+            ResultSet result = stmt.executeQuery(sql);  
+            System.out.println(result);
+            
             DatagramSocket ds = new DatagramSocket(9999);
             ExecutorService pool = Executors.newFixedThreadPool(20);
             while (true) {
@@ -53,7 +65,7 @@ public class App {
                 if(request.method.equalsIgnoreCase("POST")){
                     if(request.route.equalsIgnoreCase("register")){
                         //System.out.println(request.data.get("name")); // 들어온 데이터 읽기
-
+                        request.data.get("id");
                         JSONObject json = new JSONObject();
                         System.out.println("Connect");
                         json.put("value", "test");
