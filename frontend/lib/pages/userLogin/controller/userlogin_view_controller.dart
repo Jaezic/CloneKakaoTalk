@@ -32,6 +32,7 @@ class UserLoginViewController extends GetxController {
             ),
           ),
         ),
+        obscureText: pass,
         cursorColor: Colors.black38,
         style: _textStyle,
       ),
