@@ -30,6 +30,13 @@ class UserRegisterViewController extends GetxController {
           border: InputBorder.none,
           contentPadding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
           hintStyle: _hintStyle,
+          suffix: GestureDetector(
+            onTap: textEditController.clear,
+            child: const Icon(
+              Icons.clear_outlined,
+              size: 17,
+            ),
+          ),
         ),
         obscureText: pass,
         cursorColor: Colors.black38,

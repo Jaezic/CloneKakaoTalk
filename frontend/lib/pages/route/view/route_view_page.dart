@@ -15,8 +15,8 @@ class RouteViewPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Get.put(RouteViewController());
     return Scaffold(
-        body: SafeArea(
-      child: SingleChildScrollView(
+        body: SingleChildScrollView(
+      child: SafeArea(
         child: Center(
           child: Column(
             children: [
