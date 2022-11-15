@@ -12,32 +12,12 @@ import java.sql.*; // sql 접속 라이브러리.
 public class App {
 
     static Statement stmt;
-    // private Connection conn; // 데이터베이스에 접근하게 해주는 객체.
-    // private PreparedStatement pstmt;
-    // private ResultSet rs; // 결과값을 담을 객체.
-
-    // public App(){
-    //     try{
-    //         String dbURL = "jtbc:mysql://localhost:3306/networkDB"; //
-    //         String dbID = "root";
-    //         String dbPassword = "gachon";
-    //         Class.forName("com.mysql.");
-
-    //     }catch(Exception e){
-    //         e.printStackTrace();
-    //     }
-    // }
-
     public static void main(String[] args) throws Exception {
         try {
-            Class.forName("com.mysql.Jdbc.Driver"); 
-            String jdbc_url = "jdbc:mysql://localhost:3306/networkDB";
+            String jdbc_url = "jdbc:mysql://43.200.206.18:3306/networkDB";
+            //String jdbc_url = "jdbc:mysql://localhost:3306/networkDB";
             Connection con = DriverManager.getConnection(jdbc_url, "root", "gachon");
             stmt = con.createStatement(); 
-
-            String sql = "select * from User";
-            ResultSet result = stmt.executeQuery(sql);  
-            System.out.println(result);
             
             DatagramSocket ds = new DatagramSocket(9999);
             ExecutorService pool = Executors.newFixedThreadPool(20);
@@ -65,13 +45,21 @@ public class App {
                 if(request.method.equalsIgnoreCase("POST")){
                     if(request.route.equalsIgnoreCase("register")){
                         //System.out.println(request.data.get("name")); // 들어온 데이터 읽기
-                        request.data.get("id");
-                        JSONObject json = new JSONObject();
-                        System.out.println("Connect");
-                        json.put("value", "test");
-                        
+                        // request.data.get("id");
+                        // JSONObject json = new JSONObject();
+                        // System.out.println("Connect");
+                        // json.put("value", "test");
 
-                        UDP.response(new UDPResponse(200, "OK", request.data), ds, request.ip, request.port); // 데이터 다시 보내기
+                        
+                        String sql = String.format("select * from User where ID = \"%s\"", request.data.get("id"));
+                        ResultSet result = stmt.executeQuery(sql);
+                        if(!result.next()){
+                            sql = String.format("insert into User(ID, PassWord, Name, EMail, Birthday) Values(\"%s\", \"%s\", \"%s\", \"%s\", \"%s\");", request.data.get("id"),request.data.get("pass"),request.data.get("name"),request.data.get("email"),request.data.get("birthday"));
+                            stmt.executeUpdate(sql);
+                            sql = String.format("insert into UserStatus(ID, NickName) Values(\"%s\", \"%s\");", request.data.get("id"),request.data.get("nickname"));
+                            stmt.executeUpdate(sql);
+                            UDP.response(new UDPResponse(200, "OK",request.data), ds, request.ip, request.port); // 데이터 다시 보내기
+                        }else UDP.response(new UDPResponse(0, "Duplicated ID",null), ds, request.ip, request.port); // 데이터 다시 보내기
                     }
                     else if(request.route.equalsIgnoreCase("login")){
                             //로그인 요청시 id,password insert
@@ -92,7 +80,14 @@ public class App {
 
                 }else
                 UDP.response(new UDPResponse(0, "Invalid method requested.", null), ds, request.ip, request.port);
-            } catch (IOException e) {
+            } catch (Exception e) {
+                try {
+                    UDP.response(new UDPResponse(0, e.getMessage(), null), ds, request.ip, request.port);
+                } catch (IOException e1) {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
+                }
+                e.printStackTrace();
             }
         }
     }
