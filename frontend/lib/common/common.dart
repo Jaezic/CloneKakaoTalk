@@ -49,8 +49,14 @@ class Common extends GetxService {
     return displayTime;
   }
 
-  static Container divider({EdgeInsetsGeometry? margin = EdgeInsets.zero}) {
-    return Container(margin: margin, child: const Divider(thickness: 0.6, height: 0.6));
+  static Container divider({EdgeInsetsGeometry? margin = EdgeInsets.zero, Color? color, double size = 0.6}) {
+    return Container(
+        margin: margin,
+        child: Divider(
+          thickness: size,
+          height: size,
+          color: color,
+        ));
   }
 }
 
