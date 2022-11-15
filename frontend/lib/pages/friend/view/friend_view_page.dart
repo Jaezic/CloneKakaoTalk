@@ -2,6 +2,7 @@ import 'package:KakaoTalk/common/common.dart';
 import 'package:KakaoTalk/common/widget/common_appbar.dart';
 import 'package:KakaoTalk/common/widget/common_button.dart';
 import 'package:KakaoTalk/pages/friend/controller/friend_view_controller.dart';
+import 'package:KakaoTalk/pages/profile/view/profile_view_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:line_icons/line_icons.dart';
@@ -42,15 +43,20 @@ class FriendViewPage extends StatelessWidget {
               children: [
                 CommonButton(
                   padding: EdgeInsets.zero,
-                  onTap: () {},
+                  onTap: () {
+                    Get.toNamed(ProfileViewPage.url);
+                  },
                   child: Row(
                     children: [
                       ClipRRect(
                         borderRadius: BorderRadius.circular(23),
-                        child: Container(
+                        child: SizedBox(
                           height: 55,
                           width: 55,
-                          color: Colors.black,
+                          child: Image.asset(
+                            "./assets/images/profile.jpg",
+                            fit: BoxFit.fill,
+                          ),
                         ),
                       ),
                       const SizedBox(
