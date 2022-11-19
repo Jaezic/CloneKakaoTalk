@@ -6,14 +6,14 @@ import org.json.JSONObject;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
-public class UDPRequest {
+public class Request {
     String method;
     String route;
     JSONObject data;
     InetAddress ip;
     int port;
 
-    UDPRequest(JSONObject message, InetAddress ip, int port)
+    Request(JSONObject message, InetAddress ip, int port)
             throws JsonMappingException, JsonProcessingException {
         fromJson(message);
         this.ip = ip;

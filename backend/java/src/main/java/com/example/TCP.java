@@ -1,30 +1,28 @@
 package com.example;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
-import java.net.DatagramPacket;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.util.Map;
+import java.net.Socket;
 
 import org.json.JSONObject;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-public class UDP {
-
-    static Request receive(DatagramSocket ds) throws IOException {
-        byte[] bf = new byte[300];
-        DatagramPacket dp = new DatagramPacket(bf, bf.length);
-        ds.receive(dp);
+public class TCP {
+    static Request receive(Socket socket) throws IOException {
+        BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        String inputMessage = in.readLine();
 
         System.out.println("-------------------------------------------------");
-        System.out.println("[UDP Receive]");
+        System.out.println("[TCP Receive]");
         JSONObject jsonObject = new JSONObject(
-                new String(bf));
+                inputMessage);
 
-        Request request = new Request(jsonObject, dp.getAddress(), dp.getPort());
-        System.out.println("IP:" + dp.getAddress() + " Port#:" + dp.getPort());
+        Request request = new Request(jsonObject, socket.getInetAddress(), socket.getPort());
+        System.out.println("IP:" + socket.getInetAddress() + " Port#:" + socket.getPort());
         System.out.println("method: " + request.method);
         System.out.println("route: " + request.route);
         System.out.println(request.data);
@@ -33,13 +31,13 @@ public class UDP {
 
     }
 
-    static void response(Response message, DatagramSocket ds, InetAddress ip, int port) throws IOException {
+    static void response(Response message, Socket socket, InetAddress ip, int port) throws IOException {
         String msg = message.toJson().toString();
-        byte[] bf = msg.getBytes();
-        DatagramPacket dp = new DatagramPacket(bf, bf.length, ip, port);
-        ds.send(dp);
+        BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+        out.write(msg);
+        out.flush();
         System.out.println("-------------------------------------------------");
-        System.out.println("[UDP Send]");
+        System.out.println("[TCP Send]");
         System.out.println("IP:" + ip + " Port#:" + port);
         System.out.println(
                 "statusCode: " + Integer.toString(message.statusCode) + " statusMessage: " + message.statusMessage);
