@@ -118,21 +118,25 @@ public class App {
                                 request.data.get("id"));
                         ResultSet result = stmt.executeQuery(login_sql);
 
-                        // 내가 입력한 id가 table에 없다면
+                        // user id가 table에 없다면
                         if (!result.next()) {
                             // 회원가입 해달라 메세지 출력
                             socket.response(new Response(0, "Please sign up for membership first", null),
                                     request.ip, request.port);
                         } else {
-                            String password_sql = String.format("select password from User where ID  = \"%s\"",
+                            // user가 입력한 id의 password를 password_sql에 저장.
+                            String password_sql = String.format("select password from User where ID = \"%s\"",
                                     request.data.get("id"));
                             ResultSet password_result = stmt.executeQuery(password_sql);
-                            if (request.data.get("password") == password_result.getString(1)) {
-                                socket.response(new Response(200, "OK", request.data), request.ip,
-                                        request.port);
+                            // next()로 커서를 넘겨주고 읽어야 오류 안남.
+                            password_result.next();
+
+                            // password_sql과 user가 입력한 password가 같다면
+                            // == 안됨!! 명심..
+                            if (request.data.get("pass").equals(password_result.getString("password"))) {
+                                socket.response(new Response(200, "OK", request.data), request.ip, request.port);
                             } else {
-                                socket.response(new Response(0, "The password is different.", null),
-                                        request.ip,
+                                socket.response(new Response(0, "The password is different.", null), request.ip,
                                         request.port);
                             }
 
