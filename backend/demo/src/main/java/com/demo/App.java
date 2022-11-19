@@ -22,17 +22,13 @@ public class App {
         try {
             JSONObject message = new JSONObject();
             JSONObject data = new JSONObject();
-            data.put("id", "asd");
-            data.put("pass", "asd");
-            data.put("name", "asd");
-            data.put("nickname", "asd");
-            data.put("email", "asd");
-            data.put("birthday", "2022-9-15");
+            data.put("id", "gachon");
+            data.put("pass", "1234");
 
             message.put("method", "POST");
-            message.put("route", "register");
+            message.put("route", "login");
             message.put("data", data);
-            tcpRequest(message);
+            udpRequest(message);
         } catch (Exception e) {
         }
     }
