@@ -4,6 +4,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:logger/logger.dart';
 
 class Common extends GetxService {
+  static const String serverUrl = "https://kakaotalk.mingyu-dev.kro.kr/api/";
   static const int serverUDPport = 9998;
   static const int serverTCPport = 9997;
   static const String serverIP = "43.200.206.18";
