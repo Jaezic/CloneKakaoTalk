@@ -25,7 +25,7 @@ public class App {
 
         // String jdbc_url = "jdbc:mysql://43.200.206.18:3306/networkDB";
         String jdbc_url = "jdbc:mysql://127.0.0.1:3306/networkDB";
-        Connection con = DriverManager.getConnection(jdbc_url, "networkDB", "gachon");
+        Connection con = DriverManager.getConnection(jdbc_url, "root", "gachon");
         stmt = con.createStatement();
 
         pool = Executors.newFixedThreadPool(20);
