@@ -1,6 +1,7 @@
 import 'package:KakaoTalk/common/common.dart';
 import 'package:KakaoTalk/pages/profile/controller/profile_view_controller.dart';
 import 'package:KakaoTalk/pages/profile_change/view/profile_change_view_page.dart';
+import 'package:KakaoTalk/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:line_icons/line_icons.dart';
@@ -67,14 +68,21 @@ class ProfileViewPage extends StatelessWidget {
                   const SizedBox(
                     height: 5,
                   ),
-                  const Text(
-                    '정민규',
-                    style: TextStyle(color: Colors.white),
-                  )
+                  Text(
+                    AuthService.instance.user.value!.nickname!,
+                    style: const TextStyle(color: Colors.white),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    AuthService.instance.user.value!.bio!,
+                    style: const TextStyle(color: Colors.white54),
+                  ),
                 ],
               ),
               const SizedBox(
-                height: 60,
+                height: 35,
               ),
               Common.divider(color: Colors.white54, size: 0.4),
               Padding(

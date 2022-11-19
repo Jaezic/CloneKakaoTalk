@@ -4,8 +4,8 @@ class PostUserLoginResponse {
   PostUserLoginResponse({this.message, this.user});
 
   PostUserLoginResponse.fromJson(Map<String, dynamic> json) {
-    message = json['message'];
-    user = json['user'] != null ? User.fromJson(json['user']) : null;
+    message = json.toString();
+    user = User.fromJson(json);
   }
 
   Map<String, dynamic> toJson() {
@@ -19,7 +19,7 @@ class PostUserLoginResponse {
 }
 
 class User {
-  int? id;
+  String? id;
   String? email;
   String? name;
   String? nickname;
@@ -33,6 +33,15 @@ class User {
     this.birthday,
     this.bio,
   });
+
+  void clear() {
+    id = null;
+    email = null;
+    name = null;
+    nickname = null;
+    birthday = null;
+    bio = null;
+  }
 
   User.fromJson(Map<String, dynamic> json) {
     id = json['id'];

@@ -3,6 +3,7 @@ import 'package:KakaoTalk/common/common.dart';
 import 'package:KakaoTalk/common/service_response.dart';
 import 'package:KakaoTalk/models/post_user_login_response.dart';
 import 'package:KakaoTalk/pages/main/view/main_view_page.dart';
+import 'package:KakaoTalk/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -51,6 +52,7 @@ class UserLoginViewController extends GetxController {
     );
     if (response.result) {
       Get.offAllNamed(MainViewPage.url);
+      print(AuthService.instance.user.value!.toJson());
       //Common.showSnackBar(messageText: "로그인에 성공하였습니다.");
     } else {
       Common.showSnackBar(messageText: response.errorMsg);

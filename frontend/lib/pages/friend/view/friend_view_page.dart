@@ -3,6 +3,7 @@ import 'package:KakaoTalk/common/widget/common_appbar.dart';
 import 'package:KakaoTalk/common/widget/common_button.dart';
 import 'package:KakaoTalk/pages/friend/controller/friend_view_controller.dart';
 import 'package:KakaoTalk/pages/profile/view/profile_view_page.dart';
+import 'package:KakaoTalk/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:line_icons/line_icons.dart';
@@ -17,20 +18,24 @@ class FriendViewPage extends StatelessWidget {
     fontWeight: FontWeight.bold,
     centerTitle: false,
     // elevation: 1.0,
-    actions: const [
-      Icon(Icons.search),
-      SizedBox(
+    actions: [
+      GestureDetector(onTap: () {}, child: const Icon(Icons.search)),
+      const SizedBox(
         width: 20,
       ),
-      Icon(LineIcons.cog),
-      SizedBox(
+      GestureDetector(
+          onTap: () {
+            FriendViewController.instance.showSettingDialog();
+          },
+          child: const Icon(LineIcons.cog)),
+      const SizedBox(
         width: 10,
       )
     ],
   );
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(FriendViewController());
+    final controller = Get.put(FriendViewController(context));
     return SingleChildScrollView(
       child: Center(
         child: SizedBox(
@@ -62,9 +67,14 @@ class FriendViewPage extends StatelessWidget {
                       const SizedBox(
                         width: 15,
                       ),
-                      const Text(
-                        '정민규',
-                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                      Text(
+                        AuthService.instance.user.value!.nickname!,
+                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                      ),
+                      const Spacer(),
+                      Text(AuthService.instance.user.value!.bio!, style: const TextStyle(fontSize: 12, color: Colors.black54)),
+                      const SizedBox(
+                        width: 10,
                       )
                     ],
                   ),

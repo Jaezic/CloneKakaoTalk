@@ -1,6 +1,7 @@
 import 'package:KakaoTalk/common/api_service.dart';
 import 'package:KakaoTalk/common/common.dart';
 import 'package:KakaoTalk/routes.dart';
+import 'package:KakaoTalk/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
@@ -29,4 +30,5 @@ void main() async {
 
 Future<void> initServices() async {
   await Get.putAsync(() => ApiService().init());
+  await Get.putAsync(() => AuthService().init());
 }

@@ -11,7 +11,7 @@ class SplashViewPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Get.put(SplashController());
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 247, 226, 75),
+      backgroundColor: const Color.fromARGB(255, 249, 224, 0),
       body: Center(
           child: Image.asset(
         'assets/images/icon.png',

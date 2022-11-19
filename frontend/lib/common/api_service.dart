@@ -6,6 +6,7 @@ import 'package:KakaoTalk/common/service_response.dart';
 import 'package:KakaoTalk/common/udp.dart';
 import 'package:KakaoTalk/models/post_upload_response.dart';
 import 'package:KakaoTalk/models/post_user_login_response.dart';
+import 'package:KakaoTalk/services/auth_service.dart';
 import 'package:dio/dio.dart';
 import 'package:get/get_instance/get_instance.dart';
 import 'package:get/state_manager.dart';
@@ -119,9 +120,14 @@ class ApiService extends GetxService {
         }),
       );
       PostUserLoginResponse postUserLoginResponse = PostUserLoginResponse.fromJson(response.data);
-
+      AuthService.instance.user.value = User.fromJson(postUserLoginResponse.toJson()['user']);
+      if (AuthService.instance.user.value!.id == null) {
+        return ApiResponse<PostUserLoginResponse>(result: false, errorMsg: "유저 정보를 가져올 수 없습니다.");
+      }
       return ApiResponse<PostUserLoginResponse>(result: true, value: postUserLoginResponse);
     } catch (e) {
+      e.printError();
+
       return ApiResponse<PostUserLoginResponse>(result: false, errorMsg: e.toString());
     }
   }
