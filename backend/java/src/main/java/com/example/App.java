@@ -24,7 +24,7 @@ public class App {
     public static void main(String[] args) throws Exception {
 
         // String jdbc_url = "jdbc:mysql://43.200.206.18:3306/networkDB";
-        String jdbc_url = "jdbc:mysql://localhost:3306/networkDB";
+        String jdbc_url = "jdbc:mysql://127.0.0.1:3306/networkDB";
         Connection con = DriverManager.getConnection(jdbc_url, "root", "gachon");
         stmt = con.createStatement();
 
@@ -133,7 +133,7 @@ public class App {
 
                             // password_sql과 user가 입력한 password가 같다면
                             // == 안됨!! 명심..
-                            if (request.data.get("pass").equals(password_result.getString("password"))) {
+                            if (request.data.get("password").equals(password_result.getString("password"))) {
                                 socket.response(new Response(200, "OK", request.data), request.ip, request.port);
                             } else {
                                 socket.response(new Response(0, "The password is different.", null), request.ip,
