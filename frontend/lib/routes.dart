@@ -1,5 +1,6 @@
 import 'package:KakaoTalk/pages/main/view/main_view_page.dart';
 import 'package:KakaoTalk/pages/profile/view/profile_view_page.dart';
+import 'package:KakaoTalk/pages/profile_change/view/profile_change_view_page.dart';
 import 'package:KakaoTalk/pages/route/view/route_view_page.dart';
 import 'package:KakaoTalk/pages/splash/view/splash_view_page.dart';
 import 'package:KakaoTalk/pages/userLogin/page/userlogin_view_page.dart';
@@ -31,6 +32,10 @@ class CustomRouter {
     GetPage(
       name: ProfileViewPage.url,
       page: () => const ProfileViewPage(),
+    ),
+    GetPage(
+      name: ProfileChangeViewPage.url,
+      page: () => const ProfileChangeViewPage(),
     ),
   ];
 }

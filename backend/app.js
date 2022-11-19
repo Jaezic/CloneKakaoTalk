@@ -1,9 +1,12 @@
 var express = require('express');
 var app = express();
 
+var uploadRouter = require("./routes/upload");
+
 app.use(express.json({ limit: "100mb" }));
 app.use(express.urlencoded({ limit: "100mb", extended: false }));
 
+app.use("/api/upload", uploadRouter);
 app.use("/upload", express.static("upload"));
 
 // catch 404 and forward to error handler
