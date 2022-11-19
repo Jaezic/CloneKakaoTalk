@@ -148,8 +148,29 @@ public class App {
                     } else
                         socket.response(new Response(0, "Invalid Route requested.", null), request.ip,
                                 request.port);
-                } else if (request.method.equalsIgnoreCase("GET")) {
+                } else if (request.method.equalsIgnoreCase("FINDUSER")) {// FINDUSER method 생성
+                    if (request.route.equalsIgnoreCase("search")) { // search route 생성
 
+                        JSONObject finduser_json = new JSONObject();
+
+                        finduser_json.put("id", request.data.get("id")); // json file에서 load하여 finduser_json 에 저장.
+
+                        String finduser_sql = String.format("select * from User where ID = \"%s%\"", // id의 첫글자와 유사한 것
+                                                                                                     // 출력
+                                request.data.get("id")); // data로 id를 얻는다.
+
+                        ResultSet result = stmt.executeQuery(finduser_sql); // finduser_sql에 작성한 sql문을 mysql에 방출.
+
+                        if (!result.next()) { // 값을 받을 때 아무것도 없으면 해당 아이디와 유사한 사람은 없다고 출력.
+                            socket.response(new Response(0, "No one uses the id similar to it.", null),
+                                    request.ip, request.port);
+                        } else { // 출력해야 한다.
+                            if (!result.next()) { // 값을 받을 때 아무것도 없으면 해당 아이디와 유사한 사람은 없다고 출력.
+                                System.out.println(result);
+                            }
+
+                        }
+                    }
                 } else
                     socket.response(new Response(0, "Invalid method requested.", null), request.ip, request.port);
             } catch (Exception e) {
