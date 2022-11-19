@@ -199,7 +199,7 @@ public class App {
                         String UpdateMyData_sql = String.format("select * from User where ID = \"%s\"",
                                 request.data.get("id"));
                         querystmt = con.createStatement();
-                        ResultSet result = querystmt.executeQuery(UpdateMyData_sql);
+                        ResultSet user_result = querystmt.executeQuery(UpdateMyData_sql);
 
                         String sql = String.format(
                                 "select NickName, StatusMessage from UserStatus where ID = \"%s\"",
@@ -209,7 +209,7 @@ public class App {
                         userStatus_result.next();
 
                         socket.response(
-                                new Response(200, "OK", new User(result, userStatus_result).getJson()),
+                                new Response(200, "OK", new User(user_result, userStatus_result).getJson()),
                                 request.ip,
                                 request.port);
                     } else
