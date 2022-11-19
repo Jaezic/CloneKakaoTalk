@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:logger/logger.dart';
 
 class Common extends GetxService {
-  static const int serverport = 9999;
+  static const int serverport = 9998;
   static const String serverIP = "43.200.206.18";
   static const bool isDev = true;
   static Common get instance => Get.find<Common>();
