@@ -4,12 +4,12 @@ import java.util.Map;
 
 import org.json.JSONObject;
 
-public class UDPResponse {
+public class Response {
     int statusCode;
     String statusMessage;
     JSONObject data;
 
-    UDPResponse(int statusCode, String statusMessage, JSONObject data) {
+    Response(int statusCode, String statusMessage, JSONObject data) {
         this.statusCode = statusCode;
         this.statusMessage = statusMessage;
         this.data = data;
