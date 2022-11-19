@@ -24,7 +24,7 @@ public class App {
     public static void main(String[] args) throws Exception {
 
         // String jdbc_url = "jdbc:mysql://43.200.206.18:3306/networkDB";
-        String jdbc_url = "jdbc:mysql://localhost:3306/networkDB";
+        String jdbc_url = "jdbc:mysql://127.0.0.1:3306/networkDB";
         Connection con = DriverManager.getConnection(jdbc_url, "root", "gachon");
         stmt = con.createStatement();
 
@@ -107,7 +107,7 @@ public class App {
                             socket.response(new Response(0, "Duplicated ID", null), request.ip, request.port); // 데이터
                         // 다시
                         // 보내기
-                    } else if (request.route.equalsIgnoreCase("login")) {
+                    } else if (request.route.equalsIgnoreCase("login")) { // login api
                         // 로그인 요청시 id,password insert
 
                         JSONObject login_json = new JSONObject();
@@ -145,6 +145,49 @@ public class App {
 
                         // UDP.response(new UDPResponse(200, "OK", request.data), ds, request.ip,
                         // request.port); // 데이터 다시 보내기
+                    }else if (request.route.equalsIgnoreCase("addFriend")){ // 친구 추가 api
+                        JSONObject addFriend_json = new JSONObject();
+                        addFriend_json.put("myId", request.data.get("myId"));
+                        addFriend_json.put("friendId", request.data.get("friendId"));
+
+                        // 친구 id가 이 메신저에 등록되어있는지 우선 확인.
+                        String exist_friend = String.format("select * from User where ID = \"%s\"", request.data.get("friendId"));
+                        ResultSet exist_result = stmt.executeQuery(exist_friend);
+                        if (!exist_result.next()){ // 메신저에 등록되어있지 않다면
+                            socket.response(new Response(0, "User is not registered.", null), request.ip, request.port);
+                        }else{
+                            // 메신저에 등록되어있다면.
+                            // 내가 검색한 친구의 id가 내 table에 있나 확인.
+                            String find_friend = String.format("select * from Friend_List where ID = \"%s\" and Friend_ID = \"%s\"", request.data.get("myId"), request.data.get("friendId"));
+                            ResultSet friend_result = stmt.executeQuery(find_friend);
+
+                            // 친구목록에 존재하면 추가 안함.
+                            if(friend_result.next()){
+                                socket.response(new Response(0, "Already on the Friends list!", null), request.ip, request.port);
+                            }else{
+                                // 존재하면 추가.
+                                String add_sql = String.format("insert into Friend_List values(\"%s\", \"%s\")", request.data.get("myId"), request.data.get("friendId"));
+                                stmt.executeUpdate(add_sql);
+                                socket.response(new Response(200, "OK", request.data), request.ip, request.port);
+                            }
+                        }
+
+
+                        
+
+                    }else if(request.route.equalsIgnoreCase("myProfile")){ // 프로필 편집 버튼
+                        JSONObject myProfile_json = new JSONObject();
+                        myProfile_json.put("id", request.data.get("id"));
+                        myProfile_json.put("nickName", request.data.get("nickName"));
+                        myProfile_json.put("statusMessage", request.data.get("statusMessage"));
+
+                        // 상태메세지 update하는 구문.
+                        String update_profile_sql = String.format("update UserStatus set statusMessage = \"%s\" where id = \"%s\"", request.data.get("statusMessage"), request.data.get("id"));
+                        stmt.executeUpdate(update_profile_sql);
+                        update_profile_sql = String.format("update UserStatus set NickName = \"%s\" where id = \"%s\"", request.data.get("nickName"), request.data.get("id"));
+                        stmt.executeUpdate(update_profile_sql);
+                        socket.response(new Response(200, "OK", request.data), request.ip, request.port);
+
                     } else
                         socket.response(new Response(0, "Invalid Route requested.", null), request.ip,
                                 request.port);
