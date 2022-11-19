@@ -24,7 +24,8 @@ public class Network {
             // if (this.tcpSocket == null)
             // this.udpSocket.close();
             // else
-            this.tcpSocket.close();
+            if (this.tcpSocket != null)
+                this.tcpSocket.close();
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
