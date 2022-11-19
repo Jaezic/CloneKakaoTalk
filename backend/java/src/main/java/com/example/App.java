@@ -187,6 +187,31 @@ public class App {
                         updatestmt.executeUpdate(update_profile_sql);
                         socket.response(new Response(200, "OK", request.data), request.ip, request.port);
 
+                    }
+
+                    else if (request.route.equalsIgnoreCase("UpdateMyData")) { // load my data api
+                        // 갱신 요청시에 userid를 얻어서 User,UserStatus 넣어서 전송.
+
+                        JSONObject UpdateMyData_json = new JSONObject();
+
+                        UpdateMyData_json.put("id", request.data.get("id")); // json file에서 load하여 login_json에 저장.
+
+                        String UpdateMyData_sql = String.format("select * from User where ID = \"%s\"",
+                                request.data.get("id"));
+                        querystmt = con.createStatement();
+                        ResultSet result = querystmt.executeQuery(UpdateMyData_sql);
+
+                        String sql = String.format(
+                                "select NickName, StatusMessage from UserStatus where ID = \"%s\"",
+                                request.data.get("id"));
+                        querystmt = con.createStatement();
+                        ResultSet userStatus_result = querystmt.executeQuery(sql);
+                        userStatus_result.next();
+
+                        socket.response(
+                                new Response(200, "OK", new User(result, userStatus_result).getJson()),
+                                request.ip,
+                                request.port);
                     } else
                         socket.response(new Response(100, "Invalid Route requested.", null), request.ip,
                                 request.port);
