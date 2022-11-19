@@ -95,7 +95,7 @@ public class App {
                             // 다시
                             // 보내기
                         } else
-                            socket.response(new Response(0, "Duplicated ID", null), request.ip, request.port); // 데이터
+                            socket.response(new Response(1, "Duplicated ID", null), request.ip, request.port); // 데이터
                         // 다시
                         // 보내기
                     } else if (request.route.equalsIgnoreCase("login")) { // login api
@@ -113,7 +113,7 @@ public class App {
                         // user id가 table에 없다면
                         if (!result.next()) {
                             // 회원가입 해달라 메세지 출력
-                            socket.response(new Response(0, "Please sign up for membership first", null),
+                            socket.response(new Response(2, "Please sign up for membership first", null),
                                     request.ip, request.port);
                         } else {
                             // password_sql과 user가 입력한 password가 같다면
@@ -131,7 +131,7 @@ public class App {
                                         request.ip,
                                         request.port);
                             } else {
-                                socket.response(new Response(0, "The password is different.", null), request.ip,
+                                socket.response(new Response(3, "The password is different.", null), request.ip,
                                         request.port);
                             }
 
@@ -147,7 +147,7 @@ public class App {
                         querystmt = con.createStatement();
                         ResultSet exist_result = querystmt.executeQuery(exist_friend);
                         if (!exist_result.next()) { // 메신저에 등록되어있지 않다면
-                            socket.response(new Response(0, "User is not registered.", null), request.ip, request.port);
+                            socket.response(new Response(4, "User is not registered.", null), request.ip, request.port);
                         } else {
                             // 메신저에 등록되어있다면.
                             // 내가 검색한 친구의 id가 내 table에 있나 확인.
@@ -159,7 +159,7 @@ public class App {
 
                             // 친구목록에 존재하면 추가 안함.
                             if (friend_result.next()) {
-                                socket.response(new Response(0, "Already on the Friends list!", null), request.ip,
+                                socket.response(new Response(5, "Already on the Friends list!", null), request.ip,
                                         request.port);
                             } else {
                                 // 존재하면 추가.
@@ -188,12 +188,12 @@ public class App {
                         socket.response(new Response(200, "OK", request.data), request.ip, request.port);
 
                     } else
-                        socket.response(new Response(0, "Invalid Route requested.", null), request.ip,
+                        socket.response(new Response(100, "Invalid Route requested.", null), request.ip,
                                 request.port);
                 } else if (request.method.equalsIgnoreCase("GET")) {
 
                 } else
-                    socket.response(new Response(0, "Invalid method requested.", null), request.ip, request.port);
+                    socket.response(new Response(101, "Invalid method requested.", null), request.ip, request.port);
             } catch (Exception e) {
                 try {
                     socket.response(new Response(0, e.getMessage(), null), request.ip, request.port);
