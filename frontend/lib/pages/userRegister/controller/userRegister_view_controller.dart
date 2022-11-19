@@ -69,7 +69,7 @@ class UserRegisterViewController extends GetxController {
       birthday: birthday.value!,
     );
     if (response.result) {
-      //Get.back();
+      Get.back();
       Common.showSnackBar(messageText: "회원가입, 로그인에 성공하였습니다.");
     } else {
       Common.showSnackBar(messageText: response.errorMsg);
