@@ -24,7 +24,15 @@ class UserLoginViewController extends GetxController {
           border: InputBorder.none,
           contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
           hintStyle: _hintStyle,
+          suffix: GestureDetector(
+            onTap: textEditController.clear,
+            child: const Icon(
+              Icons.clear_outlined,
+              size: 17,
+            ),
+          ),
         ),
+        obscureText: pass,
         cursorColor: Colors.black38,
         style: _textStyle,
       ),
