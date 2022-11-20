@@ -38,7 +38,7 @@ public class POST {
         login_json.put("id", request.data.get("id")); // json file에서 load하여 login_json에 저장.
         login_json.put("password", request.data.get("password")); // json file에서 load하여 login_json에 저장.
         String login_sql = String.format(
-                "SELECT User.ID,PassWord,Name,EMail,Birthday,NickName,StatusMessage,UF.path as profile_image_path,UF2.path as profile_background_path FROM User JOIN UserStatus ON User.ID = UserStatus.ID JOIN User_file UF ON UserStatus.profile_image_id = UF.id JOIN User_file UF2 ON UserStatus.profile_background_id = UF2.id WHERE User.ID = \"%s\"",
+                "SELECT User.ID,PassWord,Name,EMail,Birthday,NickName,StatusMessage,UF.path as profile_image_path,UF2.path as profile_background_path FROM User LEFT JOIN UserStatus ON User.ID = UserStatus.ID LEFT JOIN User_file UF ON UserStatus.profile_image_id = UF.id LEFT JOIN User_file UF2 ON UserStatus.profile_background_id = UF2.id WHERE User.ID = \"%s\"",
                 request.data.get("id"));
         querystmt = con.createStatement();
         ResultSet result = querystmt.executeQuery(login_sql);
