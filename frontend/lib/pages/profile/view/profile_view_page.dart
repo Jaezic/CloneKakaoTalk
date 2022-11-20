@@ -156,6 +156,7 @@ class ProfileViewPage extends StatelessWidget {
                             ApiResponse response = await ApiService.instance.addFriend(frinedId: controller.user.value!.id!);
                             if (response.result) {
                               Common.showSnackBar(messageText: "${controller.user.value!.nickname}와 친구가 되었습니다!");
+                              ApiService.instance.fetchFriends();
                             } else {
                               Common.showSnackBar(messageText: response.errorMsg);
                             }
