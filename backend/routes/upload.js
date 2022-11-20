@@ -1,5 +1,8 @@
 var express = require("express");
 var router = express.Router();
+var multer = require("multer");
+const crypto = require("crypto");
+var pool = require("../mysql");
 
 var storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -17,6 +20,10 @@ var storage = multer.diskStorage({
 
 var upload = multer({ storage: storage });
 
+router.get("/", (req, res) => {
+  res.render("post");
+});
+
 router.post("/", upload.single("userfile"), async (req, res) => {
     // res.send("Uploaded! : " + req.file); // object를 리턴함
     let {
@@ -30,32 +37,31 @@ router.post("/", upload.single("userfile"), async (req, res) => {
       size,
     } = req.file; 
     
-    //let user_id = req.id;
-    // sql = `insert into User_file(fieldname, user_id, originalname, encoding, mimetype, destination, filename, path, size) values (?,?,?,?,?,?,?,?,?)`;
-    // result = await pool.query(sql, [
-    //   fieldname,
-    //   user_id,
-    //   originalname,
-    //   encoding,
-    //   mimetype,
-    //   destination,
-    //   filename,
-    //   path,
-    //   size,
-    // ]);
-    console.log(req); // 콘솔(터미널)을 통해서 req.file Object 내용 확인 가능.
-    // res.json({
-    //   id: result[0].insertId,
-    //   user_id,
-    //   fieldname,
-    //   originalname,
-    //   encoding,
-    //   mimetype,
-    //   destination,
-    //   filename,
-    //   path,
-    //   size,
-    // });
+    let user_id = req.body.id;
+    sql = `insert into User_file(fieldname, user_id, originalname, encoding, mimetype, destination, filename, path, size) values (?,?,?,?,?,?,?,?,?)`;
+    result = await pool.query(sql, [
+      fieldname,
+      user_id,
+      originalname,
+      encoding,
+      mimetype,
+      destination,
+      filename,
+      path,
+      size,
+    ]);
+    res.status(200).json({
+      id: result[0].insertId,
+      user_id,
+      fieldname,
+      originalname,
+      encoding,
+      mimetype,
+      destination,
+      filename,
+      path,
+      size,
+    });
 });
 
 module.exports = router;

@@ -125,7 +125,7 @@ public class App {
                                         request.data.get("id"));
                                 querystmt = con.createStatement();
                                 ResultSet userStatus_result = querystmt.executeQuery(sql);
-                                userStatus_result.next();   
+                                userStatus_result.next();
 
                                 socket.response(
                                         new Response(200, "OK", new User(result, userStatus_result).getJson()),
@@ -188,9 +188,12 @@ public class App {
                         updatestmt.executeUpdate(update_profile_sql);
                         socket.response(new Response(200, "OK", request.data), request.ip, request.port);
 
-                    }
+                    } else
+                        socket.response(new Response(100, "Invalid Route requested.", null), request.ip,
+                                request.port);
+                } else if (request.method.equalsIgnoreCase("GET")) {
 
-                    else if (request.route.equalsIgnoreCase("UpdateMyData")) { // load my data api
+                    if (request.route.equalsIgnoreCase("UpdateMyData")) { // load my data api
                         // 갱신 요청시에 userid를 얻어서 User,UserStatus 넣어서 전송.
 
                         JSONObject UpdateMyData_json = new JSONObject();
@@ -201,23 +204,26 @@ public class App {
                                 request.data.get("id"));
                         querystmt = con.createStatement();
                         ResultSet user_result = querystmt.executeQuery(UpdateMyData_sql);
+                        if (!user_result.next()) {
+                            socket.response(new Response(2, "Not Founded User Data", null),
+                                    request.ip, request.port);
+                        } else {
 
-                        String sql = String.format(
-                                "select NickName, StatusMessage from UserStatus where ID = \"%s\"",
-                                request.data.get("id"));
-                        querystmt = con.createStatement();
-                        ResultSet userStatus_result = querystmt.executeQuery(sql);
-                        userStatus_result.next();
+                            String sql = String.format(
+                                    "select NickName, StatusMessage from UserStatus where ID = \"%s\"",
+                                    request.data.get("id"));
+                            querystmt = con.createStatement();
+                            ResultSet userStatus_result = querystmt.executeQuery(sql);
+                            userStatus_result.next();
 
-                        socket.response(
-                                new Response(200, "OK", new User(user_result, userStatus_result).getJson()),
-                                request.ip,
-                                request.port);
+                            socket.response(
+                                    new Response(200, "OK", new User(user_result, userStatus_result).getJson()),
+                                    request.ip,
+                                    request.port);
+                        }
                     } else
                         socket.response(new Response(100, "Invalid Route requested.", null), request.ip,
                                 request.port);
-                } else if (request.method.equalsIgnoreCase("GET")) {
-
                 } else
                     socket.response(new Response(101, "Invalid method requested.", null), request.ip, request.port);
             } catch (Exception e) {
