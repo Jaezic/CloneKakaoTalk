@@ -6,6 +6,7 @@ import 'package:KakaoTalk/common/service_response.dart';
 import 'package:KakaoTalk/common/udp.dart';
 import 'package:KakaoTalk/models/post_upload_response.dart';
 import 'package:KakaoTalk/models/post_user_login_response.dart';
+import 'package:KakaoTalk/services/auth_service.dart';
 import 'package:dio/dio.dart';
 import 'package:get/get_instance/get_instance.dart';
 import 'package:get/state_manager.dart';
@@ -23,32 +24,44 @@ class ApiService extends GetxService {
     return this;
   }
 
-  Future<ApiResponse<PostUploadResponse>> upload({required XFile userFile}) async {
+  Future<ApiResponse<PostUploadResponse>> upload(
+      {required XFile userFile}) async {
     try {
       FormData data;
       if (GetPlatform.isWeb) {
         final bytes = await userFile.readAsBytes();
-        final MultipartFile file = MultipartFile.fromBytes(bytes, filename: userFile.name);
+        final MultipartFile file =
+            MultipartFile.fromBytes(bytes, filename: userFile.name);
         data = FormData.fromMap({'userfile': file});
       } else {
-        data = FormData.fromMap({'userfile': await MultipartFile.fromFile(userFile.path, filename: userFile.name)});
+        data = FormData.fromMap({
+          'userfile': await MultipartFile.fromFile(userFile.path,
+              filename: userFile.name)
+        });
       }
       var response = await dio.post('/upload', options: dioOptions, data: data);
-      PostUploadResponse postUploadResponse = PostUploadResponse.fromJson(response.data);
-      return ApiResponse<PostUploadResponse>(result: response.isSuccessful, value: postUploadResponse);
+      PostUploadResponse postUploadResponse =
+          PostUploadResponse.fromJson(response.data);
+      return ApiResponse<PostUploadResponse>(
+          result: response.isSuccessful, value: postUploadResponse);
     } on DioError catch (e) {
       Common.logger.d(e);
       try {
-        return ApiResponse<PostUploadResponse>(result: false, errorMsg: e.response?.data['message'] ?? "오류가 발생했습니다.");
+        return ApiResponse<PostUploadResponse>(
+            result: false,
+            errorMsg: e.response?.data['message'] ?? "오류가 발생했습니다.");
       } catch (e) {
-        return ApiResponse<PostUploadResponse>(result: false, errorMsg: "오류가 발생했습니다.");
+        return ApiResponse<PostUploadResponse>(
+            result: false, errorMsg: "오류가 발생했습니다.");
       }
     } catch (e) {
-      return ApiResponse<PostUploadResponse>(result: false, errorMsg: "오류가 발생했습니다.");
+      return ApiResponse<PostUploadResponse>(
+          result: false, errorMsg: "오류가 발생했습니다.");
     }
   }
 
-  Future<ApiResponse<String>> changeProfileImage({required int userFileId}) async {
+  Future<ApiResponse<String>> changeProfileImage(
+      {required int userFileId}) async {
     try {
       var response = await dio.post(
         '/v1/user/change_profile_image',
@@ -59,11 +72,14 @@ class ApiService extends GetxService {
           },
         ),
       );
-      return ApiResponse<String>(result: response.isSuccessful, value: response.data["message"]);
+      return ApiResponse<String>(
+          result: response.isSuccessful, value: response.data["message"]);
     } on DioError catch (e) {
       Common.logger.d(e);
       try {
-        return ApiResponse<String>(result: false, errorMsg: e.response?.data['message'] ?? "오류가 발생했습니다.");
+        return ApiResponse<String>(
+            result: false,
+            errorMsg: e.response?.data['message'] ?? "오류가 발생했습니다.");
       } catch (e) {
         return ApiResponse<String>(result: false, errorMsg: "오류가 발생했습니다.");
       }
@@ -79,9 +95,11 @@ class ApiService extends GetxService {
     required String nickname,
     required String email,
     required DateTime birthday,
+    required String homeaddress,
   }) async {
     try {
-      String birthdayString = "${birthday.year}-${birthday.month}-${birthday.day}";
+      String birthdayString =
+          "${birthday.year}-${birthday.month}-${birthday.day}";
 
       var response = await Udp.post(
         'register',
@@ -91,6 +109,7 @@ class ApiService extends GetxService {
           "name": name,
           "nickname": nickname,
           "email": email,
+          "homeaddress": homeaddress,
           "birthday": birthdayString,
         }),
       );
@@ -102,7 +121,8 @@ class ApiService extends GetxService {
         result: true,
       );
     } catch (e) {
-      return ApiResponse<PostUserLoginResponse>(result: false, errorMsg: e.toString());
+      return ApiResponse<PostUserLoginResponse>(
+          result: false, errorMsg: e.toString());
     }
   }
 
@@ -118,11 +138,21 @@ class ApiService extends GetxService {
           "password": password,
         }),
       );
-      PostUserLoginResponse postUserLoginResponse = PostUserLoginResponse.fromJson(response.data);
-
-      return ApiResponse<PostUserLoginResponse>(result: true, value: postUserLoginResponse);
+      PostUserLoginResponse postUserLoginResponse =
+          PostUserLoginResponse.fromJson(response.data);
+      AuthService.instance.user.value =
+          User.fromJson(postUserLoginResponse.toJson()['user']);
+      if (AuthService.instance.user.value!.id == null) {
+        return ApiResponse<PostUserLoginResponse>(
+            result: false, errorMsg: "유저 정보를 가져올 수 없습니다.");
+      }
+      return ApiResponse<PostUserLoginResponse>(
+          result: true, value: postUserLoginResponse);
     } catch (e) {
-      return ApiResponse<PostUserLoginResponse>(result: false, errorMsg: e.toString());
+      e.printError();
+
+      return ApiResponse<PostUserLoginResponse>(
+          result: false, errorMsg: e.toString());
     }
   }
 }

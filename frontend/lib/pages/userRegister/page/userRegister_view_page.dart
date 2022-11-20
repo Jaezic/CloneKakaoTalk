@@ -18,7 +18,8 @@ class UserRegisterViewPage extends StatelessWidget {
             child: SizedBox(
               width: GetPlatform.isMobile ? null : 500,
               child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 20),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 40, horizontal: 20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -33,7 +34,9 @@ class UserRegisterViewPage extends StatelessWidget {
                       '카카오계정 아이디',
                       style: namefieldstyle,
                     ),
-                    UserRegisterViewController.textField(textEditController: controller.idFieldController, hintText: '아이디'),
+                    UserRegisterViewController.textField(
+                        textEditController: controller.idFieldController,
+                        hintText: '아이디'),
                     const SizedBox(
                       height: 40,
                     ),
@@ -41,11 +44,18 @@ class UserRegisterViewPage extends StatelessWidget {
                       '비밀번호',
                       style: namefieldstyle,
                     ),
-                    UserRegisterViewController.textField(textEditController: controller.passFieldController, hintText: '비밀번호', pass: true),
+                    UserRegisterViewController.textField(
+                        textEditController: controller.passFieldController,
+                        hintText: '비밀번호',
+                        pass: true),
                     const SizedBox(
                       height: 10,
                     ),
-                    UserRegisterViewController.textField(textEditController: controller.passVerifyFieldController, hintText: '비밀번호 확인', pass: true),
+                    UserRegisterViewController.textField(
+                        textEditController:
+                            controller.passVerifyFieldController,
+                        hintText: '비밀번호 확인',
+                        pass: true),
                     const SizedBox(
                       height: 40,
                     ),
@@ -53,7 +63,9 @@ class UserRegisterViewPage extends StatelessWidget {
                       '이름',
                       style: namefieldstyle,
                     ),
-                    UserRegisterViewController.textField(textEditController: controller.nameFieldController, hintText: '이름'),
+                    UserRegisterViewController.textField(
+                        textEditController: controller.nameFieldController,
+                        hintText: '이름'),
                     const SizedBox(
                       height: 40,
                     ),
@@ -61,7 +73,9 @@ class UserRegisterViewPage extends StatelessWidget {
                       '닉네임',
                       style: namefieldstyle,
                     ),
-                    UserRegisterViewController.textField(textEditController: controller.nicknameFieldController, hintText: '닉네임'),
+                    UserRegisterViewController.textField(
+                        textEditController: controller.nicknameFieldController,
+                        hintText: '닉네임'),
                     const SizedBox(
                       height: 40,
                     ),
@@ -69,7 +83,19 @@ class UserRegisterViewPage extends StatelessWidget {
                       '이메일',
                       style: namefieldstyle,
                     ),
-                    UserRegisterViewController.textField(textEditController: controller.emailFieldController, hintText: 'ooo@ooo.ooo'),
+                    UserRegisterViewController.textField(
+                        textEditController: controller.emailFieldController,
+                        hintText: 'ooo@ooo.ooo'),
+                    const SizedBox(
+                      height: 40,
+                    ),
+                    const Text(
+                      '집주소',
+                      style: namefieldstyle,
+                    ),
+                    UserRegisterViewController.textField(
+                        textEditController: controller.emailFieldController,
+                        hintText: '경기도 성남시'),
                     const SizedBox(
                       height: 40,
                     ),
@@ -85,7 +111,8 @@ class UserRegisterViewPage extends StatelessWidget {
                       child: Container(
                         decoration: BoxDecoration(
                           // color: Colors.black.withOpacity(0.02),
-                          border: Border.all(width: 0.6, color: Colors.black.withOpacity(0.3)),
+                          border: Border.all(
+                              width: 0.6, color: Colors.black.withOpacity(0.3)),
                           borderRadius: BorderRadius.circular(4),
                         ),
                         child: Row(
@@ -93,10 +120,15 @@ class UserRegisterViewPage extends StatelessWidget {
                             Expanded(
                               child: Obx(() => CommonButton(
                                     onTap: () {
-                                      controller.openBirthDayPickerPopup(context: context);
+                                      controller.openBirthDayPickerPopup(
+                                          context: context);
                                     },
-                                    title: controller.birthday.value == null ? "생일 정보를 입력해주세요." : controller.birthdayString.value,
-                                    textStyle: controller.birthday.value == null ? namefieldstyle : namefieldstyle,
+                                    title: controller.birthday.value == null
+                                        ? "생일 정보를 입력해주세요."
+                                        : controller.birthdayString.value,
+                                    textStyle: controller.birthday.value == null
+                                        ? namefieldstyle
+                                        : namefieldstyle,
                                   )),
                             ),
                           ],
@@ -114,7 +146,9 @@ class UserRegisterViewPage extends StatelessWidget {
                         child: Container(
                             width: GetPlatform.isMobile ? null : 460,
                             height: 50,
-                            decoration: BoxDecoration(borderRadius: BorderRadius.circular(2.5), color: const Color.fromARGB(255, 254, 229, 0)),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(2.5),
+                                color: const Color.fromARGB(255, 254, 229, 0)),
                             child: const Center(
                                 child: Text(
                               '회원가입',
