@@ -13,7 +13,7 @@ class Udp {
     Map<String, dynamic> message = {"method": "POST", 'route': route, 'data': data};
     var json = jsonEncode(message);
 
-    var dataLength = await sender.send(json.codeUnits, Endpoint.multicast(InternetAddress(Common.serverIP), port: const Port(Common.serverUDPport)));
+    var dataLength = await sender.send(utf8.encode(json), Endpoint.multicast(InternetAddress(Common.serverIP), port: const Port(Common.serverUDPport)));
     print('-------------------------------------------------');
     print('[UDP Send]');
     print('IP: ${Common.serverIP} Port#: ${Common.serverUDPport}');
@@ -23,7 +23,7 @@ class Udp {
     print('-------------------------------------------------');
     Response returnObject = Response();
     sender.asStream(timeout: const Duration(seconds: 10)).listen((datagram) {
-      var json = jsonDecode(String.fromCharCodes(datagram!.data));
+      var json = jsonDecode(utf8.decode(datagram!.data));
 
       print('-------------------------------------------------');
       print('[UDP Receive]');
@@ -49,7 +49,7 @@ class Udp {
     Map<String, dynamic> message = {"method": "GET", 'route': route, 'data': data};
     var json = jsonEncode(message);
 
-    var dataLength = await sender.send(json.codeUnits, Endpoint.multicast(InternetAddress(Common.serverIP), port: const Port(Common.serverUDPport)));
+    var dataLength = await sender.send(utf8.encode(json), Endpoint.multicast(InternetAddress(Common.serverIP), port: const Port(Common.serverUDPport)));
     print('-------------------------------------------------');
     print('[UDP Send]');
     print('IP: ${Common.serverIP} Port#: ${Common.serverUDPport}');
@@ -59,7 +59,7 @@ class Udp {
     print('-------------------------------------------------');
     Response returnObject = Response();
     sender.asStream(timeout: const Duration(seconds: 10)).listen((datagram) {
-      var json = jsonDecode(String.fromCharCodes(datagram!.data));
+      var json = jsonDecode(utf8.decode(datagram!.data));
 
       print('-------------------------------------------------');
       print('[UDP Receive]');

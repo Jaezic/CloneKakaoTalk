@@ -4,6 +4,7 @@ import 'package:KakaoTalk/common/common.dart';
 import 'package:KakaoTalk/common/dio_extension.dart';
 import 'package:KakaoTalk/common/service_response.dart';
 import 'package:KakaoTalk/common/udp.dart';
+import 'package:KakaoTalk/models/get_friend_list_respone.dart';
 import 'package:KakaoTalk/models/post_upload_response.dart';
 import 'package:KakaoTalk/models/post_user_login_response.dart';
 import 'package:KakaoTalk/services/auth_service.dart';
@@ -168,7 +169,7 @@ class ApiService extends GetxService {
         }),
       );
       PostUserLoginResponse getUserResponse = PostUserLoginResponse.fromJson(response.data);
-      AuthService.instance.user.value = User.fromJson(getUserResponse.toJson()['user']);
+      AuthService.instance.user.value = getUserResponse.user;
 
       if (AuthService.instance.user.value!.id == null) {
         return ApiResponse<PostUserLoginResponse>(result: false, errorMsg: "유저 정보를 가져올 수 없습니다.");
@@ -191,12 +192,12 @@ class ApiService extends GetxService {
       );
       PostUserLoginResponse getUserResponse = PostUserLoginResponse.fromJson(response.data);
 
-      if (!response.isSuccessful) {
-        return ApiResponse<PostUserLoginResponse>(result: false, errorMsg: "유저 정보를 가져올 수 없습니다.");
-      }
+      // if (!response.isSuccessful) {
+      //   return ApiResponse<PostUserLoginResponse>(result: false, errorMsg: "유저 정보를 가져올 수 없습니다.");
+      // }
       return ApiResponse<PostUserLoginResponse>(result: true, value: getUserResponse);
     } catch (e) {
-      e.printError();
+      Common.logger.d(e);
 
       return ApiResponse<PostUserLoginResponse>(result: false, errorMsg: e.toString());
     }
@@ -217,6 +218,23 @@ class ApiService extends GetxService {
       e.printError();
 
       return ApiResponse<String>(result: false, errorMsg: e.toString());
+    }
+  }
+
+  Future<ApiResponse<GetFriendListResponse>> fetchFriends() async {
+    try {
+      var response = await Udp.get(
+        'friendList',
+        data: jsonEncode({
+          "id": AuthService.instance.user.value!.id,
+        }),
+      );
+      GetFriendListResponse getFriendListResponse = GetFriendListResponse.fromJson(response.data);
+      return ApiResponse<GetFriendListResponse>(result: response.isSuccessful, value: getFriendListResponse);
+    } catch (e) {
+      e.printError();
+
+      return ApiResponse<GetFriendListResponse>(result: false, errorMsg: e.toString());
     }
   }
 }

@@ -5,13 +5,11 @@ import 'package:get/get.dart';
 class AuthService extends GetxService {
   static AuthService get instance => Get.find<AuthService>();
   Rxn<User> user = Rxn();
-
+  RxList<String> FriendIdList = RxList();
   Future<AuthService> init() async {
     Common.logger.d('$runtimeType init!');
     return this;
   }
-
-  void rx_update() {}
 
   Future<void> logout() async {
     user.value!.clear();

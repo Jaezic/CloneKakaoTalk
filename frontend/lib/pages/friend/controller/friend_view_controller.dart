@@ -1,4 +1,11 @@
+import 'package:KakaoTalk/common/api_service.dart';
+import 'package:KakaoTalk/common/service_response.dart';
+import 'package:KakaoTalk/models/get_friend_list_respone.dart';
+import 'package:KakaoTalk/models/post_user_login_response.dart';
+import 'package:KakaoTalk/pages/friend/view/friend_view_page.dart';
 import 'package:KakaoTalk/pages/friend/view/setting_dialog.dart';
+import 'package:KakaoTalk/pages/profile/view/profile_view_page.dart';
+import 'package:KakaoTalk/services/auth_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -7,6 +14,33 @@ class FriendViewController extends GetxController {
   RxInt friendCnt = 0.obs;
   FriendViewController();
   static FriendViewController get instance => Get.find<FriendViewController>();
+  RxList<Widget> friendWidgetList = RxList();
+
+  @override
+  void onInit() {
+    super.onInit();
+    friendWidgetList.value = [];
+    AuthService.instance.FriendIdList.value = [];
+    fetchFriendList();
+  }
+
+  Future<void> fetchFriendList() async {
+    ApiResponse<GetFriendListResponse> asd = await ApiService.instance.fetchFriends();
+    if (asd.result) {
+      friendWidgetList.clear();
+      AuthService.instance.FriendIdList.clear();
+      for (var element in asd.value!.datas!) {
+        friendWidgetList.add(FriendViewPage.FriendTuple(
+            user: User.fromJson(element),
+            onTap: () {
+              Get.toNamed(ProfileViewPage.url, arguments: {"user": User.fromJson(element)});
+            }));
+        AuthService.instance.FriendIdList.add(element['id']);
+      }
+      friendCnt.value = friendWidgetList.value.length;
+      update();
+    }
+  }
 
   Future<void> showSettingDialog(BuildContext context) {
     return showCupertinoModalPopup(

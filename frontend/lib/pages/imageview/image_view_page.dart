@@ -18,7 +18,11 @@ class ImageViewPage extends StatelessWidget {
         width: double.infinity,
         child: Stack(
           children: [
-            PhotoView(imageProvider: CachedNetworkImageProvider(arg)),
+            arg[0] == true
+                ? PhotoView(
+                    imageProvider: AssetImage(arg[1]), // 배경 이미지
+                  )
+                : PhotoView(imageProvider: CachedNetworkImageProvider(arg[1])),
             SafeArea(
               child: GestureDetector(
                 child: Align(

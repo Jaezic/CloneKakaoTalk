@@ -7,12 +7,9 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import org.json.JSONObject;
 
-import java.sql.*; // sql 접속 라이브러리.
 
 public class App {
     static String serverip = "43.200.206.18";
@@ -22,11 +19,10 @@ public class App {
         try {
             JSONObject message = new JSONObject();
             JSONObject data = new JSONObject();
-            data.put("myId", "gachon");
-            data.put("friendId", "psh");
+            data.put("id", "test");
 
-            message.put("method", "POST");
-            message.put("route", "deleteFriend");
+            message.put("method", "GET");
+            message.put("route", "friendList");
             message.put("data", data);
             udpRequest(message);
         } catch (Exception e) {

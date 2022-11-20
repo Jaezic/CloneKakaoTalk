@@ -103,9 +103,11 @@ class FriendViewPage extends StatelessWidget {
                       '친구 ${controller.friendCnt}',
                       style: const TextStyle(color: Colors.black54, fontSize: 12),
                     )),
-                // FriendTuple(),
-                // FriendTuple(),
-                // FriendTuple(),
+                Obx(
+                  () => Column(
+                    children: controller.friendWidgetList.value,
+                  ),
+                )
               ],
             ),
           ),

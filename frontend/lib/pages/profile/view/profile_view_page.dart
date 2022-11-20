@@ -2,7 +2,6 @@ import 'package:KakaoTalk/common/api_service.dart';
 import 'package:KakaoTalk/common/common.dart';
 import 'package:KakaoTalk/common/service_response.dart';
 import 'package:KakaoTalk/common/widget/image_loader.dart';
-import 'package:KakaoTalk/models/post_user_login_response.dart';
 import 'package:KakaoTalk/pages/imageview/image_view_page.dart';
 import 'package:KakaoTalk/pages/profile/controller/profile_view_controller.dart';
 import 'package:KakaoTalk/pages/profile_change/view/profile_change_view_page.dart';
@@ -19,20 +18,22 @@ class ProfileViewPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(ProfileViewController());
-    var arg = Get.arguments;
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: GestureDetector(
-        onTap: () => Get.toNamed(ImageViewPage.url, arguments: AuthService.instance.user.value!.profilebackgroundpath!),
+        onTap: () => Get.toNamed(ImageViewPage.url, arguments: [
+          controller.user.value!.profilebackgroundpath == null,
+          controller.user.value!.profilebackgroundpath ?? "./assets/images/background.jpg"
+        ]),
         child: Container(
-          decoration: AuthService.instance.user.value!.profilebackgroundpath == null
+          decoration: controller.user.value!.profilebackgroundpath == null
               ? const BoxDecoration(
                   color: Color.fromARGB(255, 135, 145, 152),
                 )
               : BoxDecoration(
                   image: DecorationImage(
                     fit: BoxFit.cover,
-                    image: CachedNetworkImageProvider(AuthService.instance.user.value!.profilebackgroundpath!), // 배경 이미지
+                    image: CachedNetworkImageProvider(controller.user.value!.profilebackgroundpath!), // 배경 이미지
                   ),
                 ),
           width: GetPlatform.isMobile ? null : 500,
@@ -54,7 +55,7 @@ class ProfileViewPage extends StatelessWidget {
                         ),
                       ),
                       const Spacer(),
-                      if ((arg['user'] as User).id! == AuthService.instance.user.value!.id)
+                      if (controller.user.value!.id == AuthService.instance.user.value!.id)
                         GestureDetector(
                           onTap: () {
                             Get.toNamed(ProfileChangeViewPage.url);
@@ -74,18 +75,21 @@ class ProfileViewPage extends StatelessWidget {
                     children: [
                       ClipRRect(
                           borderRadius: BorderRadius.circular(200),
-                          child: Obx(() => AuthService.instance.user.value!.profileimagepath == null
+                          child: Obx(() => controller.user.value!.profileimagepath == null
                               ? Container(
                                   decoration: const BoxDecoration(image: DecorationImage(image: AssetImage("./assets/images/profile.jpg"))),
                                   height: 100,
                                   width: 100)
                               : GestureDetector(
-                                  onTap: () => Get.toNamed(ImageViewPage.url, arguments: AuthService.instance.user.value!.profileimagepath!),
+                                  onTap: () => Get.toNamed(ImageViewPage.url, arguments: [
+                                    controller.user.value!.profileimagepath == null,
+                                    controller.user.value!.profileimagepath ?? "./assets/images/profile.jpg"
+                                  ]),
                                   child: SizedBox(
                                     width: 100,
                                     height: 100,
                                     child: ImageLoader(
-                                      url: AuthService.instance.user.value!.profileimagepath!,
+                                      url: controller.user.value!.profileimagepath!,
                                       boxfit: BoxFit.cover,
                                       width: 100,
                                       height: 100,
@@ -96,14 +100,14 @@ class ProfileViewPage extends StatelessWidget {
                         height: 5,
                       ),
                       Text(
-                        ((arg['user'] as User).id! == AuthService.instance.user.value!.id) ? AuthService.instance.user.value!.nickname! : arg['user'].nickname,
+                        controller.user.value!.nickname!,
                         style: const TextStyle(color: Colors.white),
                       ),
                       const SizedBox(
                         height: 10,
                       ),
                       Text(
-                        ((arg['user'] as User).id! == AuthService.instance.user.value!.id) ? AuthService.instance.user.value!.bio! : arg['user'].bio,
+                        controller.user.value!.bio!,
                         style: const TextStyle(color: Colors.white54),
                       ),
                     ],
@@ -118,7 +122,7 @@ class ProfileViewPage extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      ((arg['user'] as User).id! == AuthService.instance.user.value!.id)
+                      (controller.user.value!.id! == AuthService.instance.user.value!.id)
                           ? Column(children: const [
                               Icon(
                                 Icons.chat_bubble,
@@ -145,12 +149,13 @@ class ProfileViewPage extends StatelessWidget {
                                 style: TextStyle(color: Colors.white, fontSize: 12),
                               )
                             ]),
-                      if ((arg['user'] as User).id! != AuthService.instance.user.value!.id)
+                      if (controller.user.value!.id! != AuthService.instance.user.value!.id &&
+                          !AuthService.instance.FriendIdList.contains(controller.user.value!.id!))
                         GestureDetector(
                           onTap: () async {
-                            ApiResponse response = await ApiService.instance.addFriend(frinedId: (arg['user'] as User).id!);
+                            ApiResponse response = await ApiService.instance.addFriend(frinedId: controller.user.value!.id!);
                             if (response.result) {
-                              Common.showSnackBar(messageText: "${arg['user'].nickname}와 친구가 되었습니다!");
+                              Common.showSnackBar(messageText: "${controller.user.value!.nickname}와 친구가 되었습니다!");
                             } else {
                               Common.showSnackBar(messageText: response.errorMsg);
                             }
