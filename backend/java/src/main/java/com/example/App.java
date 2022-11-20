@@ -171,7 +171,40 @@ public class App {
                             }
                         }
 
-                    } else if (request.route.equalsIgnoreCase("myProfile")) { // 프로필 편집 버튼
+                    } else if(request.route.equalsIgnoreCase("deleteFriend")){ // 친구 삭제 api
+                        JSONObject deleteFriend_json = new JSONObject();
+                        deleteFriend_json.put("myId", request.data.get("myId"));
+                        deleteFriend_json.put("friendId", request.data.get("friendId"));
+
+                        String exist_friend = String.format("select * from User where ID = \"%s\"",
+                                request.data.get("friendId"));
+                        querystmt = con.createStatement();
+                        ResultSet exist_result = querystmt.executeQuery(exist_friend);
+                        if (!exist_result.next()) { // 메신저에 등록되어있지 않다면
+                            socket.response(new Response(4, "User is not registered.", null), request.ip, request.port);
+                        } else {
+                            // 메신저에 등록되어있다면.
+                            // 내가 검색한 친구의 id가 내 table에 있나 확인.
+                            String find_friend = String.format(
+                                    "select * from Friend_List where ID = \"%s\" and Friend_ID = \"%s\"",
+                                    request.data.get("myId"), request.data.get("friendId"));
+                            querystmt = con.createStatement();
+                            ResultSet friend_result = querystmt.executeQuery(find_friend);
+
+                            // 친구목록에 존재 안하면 추가 안함.
+                            if (!friend_result.next()) {
+                                socket.response(new Response(5, "This friend is not in the list!", null), request.ip,
+                                        request.port);
+                            } else {
+                                // 존재하면 삭제.
+                                String delete_sql = String.format("delete from Friend_List where ID = \"%s\" and Friend_ID = \"%s\"",
+                                        request.data.get("myId"), request.data.get("friendId"));
+                                updatestmt.executeUpdate(delete_sql);
+                                socket.response(new Response(200, "OK", request.data), request.ip, request.port);
+                            }
+                        }
+
+                    }else if (request.route.equalsIgnoreCase("myProfile")) { // 프로필 편집 버튼
                         JSONObject myProfile_json = new JSONObject();
                         myProfile_json.put("id", request.data.get("id"));
                         myProfile_json.put("nickName", request.data.get("nickName"));
