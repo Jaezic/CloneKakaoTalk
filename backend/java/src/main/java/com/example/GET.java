@@ -13,7 +13,8 @@ public class GET {
 
         UpdateMyData_json.put("id", request.data.get("id")); // json file에서 load하여 login_json에 저장.
 
-        String UpdateMyData_sql = String.format("select * from User where ID = \"%s\"",
+        String UpdateMyData_sql = String.format(
+                "SELECT User.ID,PassWord,Name,EMail,Birthday,NickName,StatusMessage,UF.path as profile_image_path,UF2.path as profile_background_path FROM User JOIN UserStatus ON User.ID = UserStatus.ID JOIN User_file UF ON UserStatus.profile_image_id = UF.id JOIN User_file UF2 ON UserStatus.profile_background_id = UF2.id WHERE User.ID = \"%s\"",
                 request.data.get("id"));
         querystmt = con.createStatement();
         ResultSet user_result = querystmt.executeQuery(UpdateMyData_sql);
@@ -21,16 +22,8 @@ public class GET {
             socket.response(new Response(2, "Not Founded User Data", null),
                     request.ip, request.port);
         } else {
-
-            String sql = String.format(
-                    "select NickName, StatusMessage from UserStatus where ID = \"%s\"",
-                    request.data.get("id"));
-            querystmt = con.createStatement();
-            ResultSet userStatus_result = querystmt.executeQuery(sql);
-            userStatus_result.next();
-
             socket.response(
-                    new Response(200, "OK", new User(user_result, userStatus_result).getJson()),
+                    new Response(200, "OK", new User(user_result).getJson()),
                     request.ip,
                     request.port);
         }

@@ -15,6 +15,7 @@ public class App {
     static Connection con;
     static Statement updatestmt;
     static ExecutorService pool;
+    static String apiurl = "http://kakaotalk.mingyu-dev.kro.kr:3000/";
 
     public static void main(String[] args) throws Exception {
 
@@ -84,9 +85,13 @@ public class App {
                         POST.addFriend(socket, request, con, updatestmt);
                     else if (request.route.equalsIgnoreCase("deleteFriend"))
                         POST.deleteFriend(socket, request, con, updatestmt);// 친구 삭제 api
-                    else if (request.route.equalsIgnoreCase("myProfile")) { // 프로필 편집 버튼
+                    else if (request.route.equalsIgnoreCase("myProfile"))
                         POST.myProfile(socket, request, con, updatestmt);
-                    } else
+                    else if (request.route.equalsIgnoreCase("changeProfileImage")) // 프로필 편집 버튼
+                        POST.changeProfileImage(socket, request, con, updatestmt);
+                    else if (request.route.equalsIgnoreCase("changeProfileBackground")) // 프로필 편집 버튼
+                        POST.changeProfileBackground(socket, request, con, updatestmt);
+                    else
                         socket.response(new Response(100, "Invalid Route requested.", null), request.ip,
                                 request.port);
                 } else if (request.method.equalsIgnoreCase("GET")) {

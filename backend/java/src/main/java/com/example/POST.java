@@ -21,7 +21,7 @@ public class POST {
                     "insert into UserStatus(ID, NickName, StatusMessage) Values(\"%s\", \"%s\", \"\");",
                     request.data.get("id"), request.data.get("nickname"));
             updatestmt.executeUpdate(sql);
-            socket.response(new Response(200, "OK", request.data), request.ip, request.port); // 데이터
+            socket.response(new Response(200, "OK", null), request.ip, request.port); // 데이터
             // 다시
             // 보내기
         } else
@@ -37,7 +37,8 @@ public class POST {
 
         login_json.put("id", request.data.get("id")); // json file에서 load하여 login_json에 저장.
         login_json.put("password", request.data.get("password")); // json file에서 load하여 login_json에 저장.
-        String login_sql = String.format("select * from User where ID = \"%s\"",
+        String login_sql = String.format(
+                "SELECT User.ID,PassWord,Name,EMail,Birthday,NickName,StatusMessage,UF.path as profile_image_path,UF2.path as profile_background_path FROM User JOIN UserStatus ON User.ID = UserStatus.ID JOIN User_file UF ON UserStatus.profile_image_id = UF.id JOIN User_file UF2 ON UserStatus.profile_background_id = UF2.id WHERE User.ID = \"%s\"",
                 request.data.get("id"));
         querystmt = con.createStatement();
         ResultSet result = querystmt.executeQuery(login_sql);
@@ -48,18 +49,12 @@ public class POST {
             socket.response(new Response(2, "Please sign up for membership first", null),
                     request.ip, request.port);
         } else {
+
             // password_sql과 user가 입력한 password가 같다면
             // == 안됨!! 명심..
-            if (request.data.get("password").equals(result.getString("password"))) {
-                String sql = String.format(
-                        "select NickName, StatusMessage from UserStatus where ID = \"%s\"",
-                        request.data.get("id"));
-                querystmt = con.createStatement();
-                ResultSet userStatus_result = querystmt.executeQuery(sql);
-                userStatus_result.next();
-
+            if (request.data.get("password").equals(result.getString("PassWord"))) {
                 socket.response(
-                        new Response(200, "OK", new User(result, userStatus_result).getJson()),
+                        new Response(200, "OK", new User(result).getJson()),
                         request.ip,
                         request.port);
             } else {
@@ -100,7 +95,7 @@ public class POST {
                 String add_sql = String.format("insert into Friend_List values(\"%s\", \"%s\")",
                         request.data.get("myId"), request.data.get("friendId"));
                 updatestmt.executeUpdate(add_sql);
-                socket.response(new Response(200, "OK", request.data), request.ip, request.port);
+                socket.response(new Response(200, "OK", null), request.ip, request.port);
             }
         }
     }
@@ -136,7 +131,7 @@ public class POST {
                         "delete from Friend_List where ID = \"%s\" and Friend_ID = \"%s\"",
                         request.data.get("myId"), request.data.get("friendId"));
                 updatestmt.executeUpdate(delete_sql);
-                socket.response(new Response(200, "OK", request.data), request.ip, request.port);
+                socket.response(new Response(200, "OK", null), request.ip, request.port);
             }
         }
     }
@@ -157,6 +152,34 @@ public class POST {
         update_profile_sql = String.format("update UserStatus set NickName = \"%s\" where id = \"%s\"",
                 request.data.get("nickName"), request.data.get("id"));
         updatestmt.executeUpdate(update_profile_sql);
-        socket.response(new Response(200, "OK", request.data), request.ip, request.port);
+        socket.response(new Response(200, "OK", null), request.ip, request.port);
+    }
+
+    static void changeProfileImage(Network socket, Request request, Connection con, Statement updatestmt)
+            throws Exception {
+        Statement querystmt;
+        JSONObject request_json = new JSONObject();
+        request_json.put("myId", request.data.get("myId"));
+        request_json.put("imageId", request.data.get("imageId"));
+        String update_profile_sql = String.format(
+                "update UserStatus set profile_image_id = \"%s\" where id = \"%s\"",
+                request.data.get("imageId"), request.data.get("myId"));
+
+        updatestmt.executeUpdate(update_profile_sql);
+        socket.response(new Response(200, "OK", null), request.ip, request.port);
+    }
+
+    static void changeProfileBackground(Network socket, Request request, Connection con, Statement updatestmt)
+            throws Exception {
+        Statement querystmt;
+        JSONObject request_json = new JSONObject();
+        request_json.put("myId", request.data.get("myId"));
+        request_json.put("imageId", request.data.get("imageId"));
+        String update_profile_sql = String.format(
+                "update UserStatus set profile_background_id = \"%s\" where id = \"%s\"",
+                request.data.get("imageId"), request.data.get("myId"));
+
+        updatestmt.executeUpdate(update_profile_sql);
+        socket.response(new Response(200, "OK", null), request.ip, request.port);
     }
 }

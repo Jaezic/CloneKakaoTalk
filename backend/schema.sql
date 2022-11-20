@@ -15,7 +15,9 @@ create table UserStatus(
     ConnectionStatus text, -- 접속상태 online /+ offline --
     ResentlyConnectionTime int, -- 마지막 login 시간 --
     NumberOfLogins int, -- log in 한 횟수 --
-    ResentlyLogOutTime int -- log out 시간 --
+    ResentlyLogOutTime int, -- log out 시간 --
+    profile_image_id int,
+    profile_background_id int
 );
 
 create table Friend_List(
