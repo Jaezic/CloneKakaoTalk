@@ -14,7 +14,7 @@ import 'package:get/utils.dart';
 import 'package:image_picker/image_picker.dart';
 
 class ApiService extends GetxService {
-  Dio dio = Dio(BaseOptions(baseUrl: Common.serverUrl));
+  Dio dio = Dio(BaseOptions(baseUrl: Common.apiUrl));
   Options dioOptions = Options();
 
   static ApiService get instance => Get.find<ApiService>();
@@ -127,9 +127,8 @@ class ApiService extends GetxService {
         }),
       );
       PostUserLoginResponse postUserLoginResponse = PostUserLoginResponse.fromJson(response.data);
-      AuthService.instance.user.value = User.fromJson(postUserLoginResponse.toJson()['user']);
+      AuthService.instance.user.value = postUserLoginResponse.user;
 
-      print(AuthService.instance.user.value);
       if (AuthService.instance.user.value!.id == null) {
         return ApiResponse<PostUserLoginResponse>(result: false, errorMsg: "유저 정보를 가져올 수 없습니다.");
       }

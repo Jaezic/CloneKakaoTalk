@@ -1,3 +1,5 @@
+import 'package:KakaoTalk/common/common.dart';
+
 class PostUserLoginResponse {
   String? message;
   User? user;
@@ -49,8 +51,11 @@ class User {
     birthday = json['birthday'];
     //gender = json['gender'];
     bio = json['bio'];
-    profileimagepath = json['profile_image_path'];
-    profilebackgroundpath = json['profile_background_path'];
+
+    profileimagepath = json['profile_image_path'] == "null" ? null : Common.baseUrl + json['profile_image_path'];
+    profilebackgroundpath = json['profile_background_path'] == "null" ? null : Common.baseUrl + json['profile_background_path'];
+    print(profileimagepath);
+    print('r');
     //profileImagePath = json['profile_image_path'];
   }
 
