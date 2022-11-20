@@ -1,6 +1,6 @@
 class PostUploadResponse {
   int? id;
-  int? userId;
+  String? userId;
   String? fieldname;
   String? originalname;
   String? encoding;
