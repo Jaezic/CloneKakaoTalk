@@ -12,7 +12,7 @@ class SearchController extends GetxController {
   RxString birthdayString = RxString('');
   RxnBool isGenderMale = RxnBool();
   Rx<bool> check = false.obs;
-  RxList searchUserList = [].obs;
+  RxList<Widget> searchUserList = RxList();
 
   @override
   void onInit() {

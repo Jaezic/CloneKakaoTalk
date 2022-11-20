@@ -124,14 +124,14 @@ class FriendViewPage extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 10),
         child: Row(
           children: [
-            user.profilebackgroundpath != null
+            user.profileimagepath != null
                 ? ClipRRect(
                     borderRadius: BorderRadius.circular(23),
                     child: SizedBox(
                       width: 40,
                       height: 40,
                       child: ImageLoader(
-                        url: user.profilebackgroundpath!,
+                        url: user.profileimagepath!,
                         boxfit: BoxFit.cover,
                         width: 40,
                         height: 40,
