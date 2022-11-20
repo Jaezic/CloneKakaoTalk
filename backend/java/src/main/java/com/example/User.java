@@ -14,8 +14,8 @@ public class User {
         response_json.put("birthday", user_result.getString("Birthday"));
         response_json.put("nickname", user_result.getString("NickName"));
         response_json.put("bio", user_result.getString("StatusMessage"));
-        response_json.put("profile_image_path", App.apiurl + user_result.getString("profile_image_path"));
-        response_json.put("profile_background_path", App.apiurl + user_result.getString("profile_background_path"));
+        response_json.put("profile_image_path", user_result.getString("profile_image_path"));
+        response_json.put("profile_background_path", user_result.getString("profile_background_path"));
     }
 
     JSONObject getJson() {
