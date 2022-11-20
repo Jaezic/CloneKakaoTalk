@@ -125,7 +125,7 @@ public class App {
                                         request.data.get("id"));
                                 querystmt = con.createStatement();
                                 ResultSet userStatus_result = querystmt.executeQuery(sql);
-                                userStatus_result.next();
+                                userStatus_result.next();   
 
                                 socket.response(
                                         new Response(200, "OK", new User(result, userStatus_result).getJson()),
