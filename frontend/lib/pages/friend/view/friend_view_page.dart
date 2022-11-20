@@ -1,6 +1,7 @@
 import 'package:KakaoTalk/common/common.dart';
 import 'package:KakaoTalk/common/widget/common_appbar.dart';
 import 'package:KakaoTalk/common/widget/common_button.dart';
+import 'package:KakaoTalk/common/widget/image_loader.dart';
 import 'package:KakaoTalk/models/post_user_login_response.dart';
 import 'package:KakaoTalk/pages/friend/controller/friend_view_controller.dart';
 import 'package:KakaoTalk/pages/profile/view/profile_view_page.dart';
@@ -65,16 +66,22 @@ class FriendViewPage extends StatelessWidget {
                     () => Row(
                       children: [
                         ClipRRect(
-                          borderRadius: BorderRadius.circular(23),
-                          child: SizedBox(
-                            height: 55,
-                            width: 55,
-                            child: Image.asset(
-                              "./assets/images/profile.jpg",
-                              fit: BoxFit.fill,
-                            ),
-                          ),
-                        ),
+                            borderRadius: BorderRadius.circular(23),
+                            child: Obx(() => AuthService.instance.user.value!.profileimagepath == null
+                                ? Container(
+                                    decoration: const BoxDecoration(image: DecorationImage(image: AssetImage("./assets/images/profile.jpg"))),
+                                    height: 55,
+                                    width: 55)
+                                : SizedBox(
+                                    width: 55,
+                                    height: 55,
+                                    child: ImageLoader(
+                                      url: AuthService.instance.user.value!.profileimagepath!,
+                                      boxfit: BoxFit.cover,
+                                      width: 55,
+                                      height: 55,
+                                    ),
+                                  ))),
                         const SizedBox(
                           width: 11,
                         ),
@@ -115,17 +122,30 @@ class FriendViewPage extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 10),
         child: Row(
           children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(23),
-              child: SizedBox(
-                height: 40,
-                width: 40,
-                child: Image.asset(
-                  "./assets/images/profile.jpg",
-                  fit: BoxFit.fill,
-                ),
-              ),
-            ),
+            user.profilebackgroundpath != null
+                ? ClipRRect(
+                    borderRadius: BorderRadius.circular(23),
+                    child: SizedBox(
+                      width: 40,
+                      height: 40,
+                      child: ImageLoader(
+                        url: AuthService.instance.user.value!.profileimagepath!,
+                        boxfit: BoxFit.cover,
+                        width: 40,
+                        height: 40,
+                      ),
+                    ))
+                : ClipRRect(
+                    borderRadius: BorderRadius.circular(23),
+                    child: SizedBox(
+                      height: 40,
+                      width: 40,
+                      child: Image.asset(
+                        "./assets/images/profile.jpg",
+                        fit: BoxFit.fill,
+                      ),
+                    ),
+                  ),
             const SizedBox(
               width: 12,
             ),

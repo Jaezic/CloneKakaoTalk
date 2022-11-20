@@ -1,3 +1,4 @@
+import 'package:KakaoTalk/pages/imageview/image_view_page.dart';
 import 'package:KakaoTalk/pages/main/view/main_view_page.dart';
 import 'package:KakaoTalk/pages/profile/view/profile_view_page.dart';
 import 'package:KakaoTalk/pages/profile_change/view/profile_change_view_page.dart';
@@ -41,6 +42,10 @@ class CustomRouter {
     GetPage(
       name: SearchViewPage.url,
       page: () => const SearchViewPage(),
+    ),
+    GetPage(
+      name: ImageViewPage.url,
+      page: () => const ImageViewPage(),
     ),
   ];
 }
