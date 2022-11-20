@@ -25,14 +25,10 @@ class User {
   String? nickname;
   String? birthday;
   String? bio;
+  String? profileimagepath;
+  String? profilebackgroundpath;
 
-  User({
-    this.id,
-    this.email,
-    this.name,
-    this.birthday,
-    this.bio,
-  });
+  User({this.id, this.email, this.name, this.birthday, this.bio, this.profileimagepath});
 
   void clear() {
     id = null;
@@ -41,6 +37,8 @@ class User {
     nickname = null;
     birthday = null;
     bio = null;
+    profileimagepath = null;
+    profilebackgroundpath = null;
   }
 
   User.fromJson(Map<String, dynamic> json) {
@@ -51,6 +49,8 @@ class User {
     birthday = json['birthday'];
     //gender = json['gender'];
     bio = json['bio'];
+    profileimagepath = json['profile_image_path'];
+    profilebackgroundpath = json['profile_background_path'];
     //profileImagePath = json['profile_image_path'];
   }
 
@@ -62,6 +62,8 @@ class User {
     data['nickname'] = nickname;
     data['birthday'] = birthday;
     data['bio'] = bio;
+    data['profile_image_path'] = profileimagepath;
+    data['profile_background_path'] = profilebackgroundpath;
     //data['profile_image_path'] = profileImagePath;
     return data;
   }

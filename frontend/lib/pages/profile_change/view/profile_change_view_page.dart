@@ -1,7 +1,9 @@
 import 'package:KakaoTalk/common/common.dart';
 import 'package:KakaoTalk/common/widget/common_appbar.dart';
 import 'package:KakaoTalk/common/widget/common_button.dart';
+import 'package:KakaoTalk/common/widget/image_loader.dart';
 import 'package:KakaoTalk/pages/profile_change/controller/profile_change_controller.dart';
+import 'package:KakaoTalk/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -39,85 +41,66 @@ class ProfileChangeViewPage extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 16),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(100.0),
-                            child: CommonButton(
-                              padding: EdgeInsets.zero,
-                              onTap: () {
-                                //controller.changeProfileImage();
-                              },
-                              child: Container(
-                                  decoration: const BoxDecoration(image: DecorationImage(image: AssetImage("./assets/images/profile.jpg"))),
-                                  height: 80,
-                                  width: 80),
-                              // child: Obx(
-                              //   () => null == null
-                              //       ? Container(color: Colors.black, height: 80, width: 80)
-                              //       : const SizedBox(
-                              //           width: 80,
-                              //           height: 80,
-                              //           child: ImageLoader(
-                              //             url: "",
-                              //             boxfit: BoxFit.cover,
-                              //             width: 80,
-                              //             height: 80,
-                              //           ),
-                              //         ),
-                              // ),
+                    GestureDetector(
+                      onTap: () => controller.changeProfileImage(),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 16),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(100.0),
+                              child: Obx(
+                                () => AuthService.instance.user.value!.profileimagepath == null
+                                    ? Container(
+                                        decoration: const BoxDecoration(image: DecorationImage(image: AssetImage("./assets/images/profile.jpg"))),
+                                        height: 80,
+                                        width: 80)
+                                    : SizedBox(
+                                        width: 80,
+                                        height: 80,
+                                        child: ImageLoader(
+                                          url: AuthService.instance.user.value!.profileimagepath!,
+                                          boxfit: BoxFit.cover,
+                                          width: 80,
+                                          height: 80,
+                                        ),
+                                      ),
+                              ),
                             ),
                           ),
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            //controller.changeProfileImage();
-                          },
-                          child: const Text('프로필 사진 바꾸기', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.lightBlue, fontSize: 12)),
-                        )
-                      ],
+                          const Text('프로필 사진 바꾸기', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.lightBlue, fontSize: 12))
+                        ],
+                      ),
                     ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 16),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(10.0),
-                            child: CommonButton(
-                              padding: EdgeInsets.zero,
-                              onTap: () {
-                                controller.changeProfileImage();
-                              },
-
-                              child: Container(color: const Color.fromARGB(255, 135, 145, 152), height: 80, width: 80),
-                              // child: Obx(
-                              //   () => null == null
-                              //       ? Container(color: Colors.black, height: 80, width: 80)
-                              //       : const SizedBox(
-                              //           width: 80,
-                              //           height: 80,
-                              //           child: ImageLoader(
-                              //             url: "",
-                              //             boxfit: BoxFit.cover,
-                              //             width: 80,
-                              //             height: 80,
-                              //           ),
-                              //         ),
-                              // ),
+                    GestureDetector(
+                      onTap: () => controller.changeProfileBackground(),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 16),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(10.0),
+                              child: Obx(
+                                () => AuthService.instance.user.value!.profilebackgroundpath == null
+                                    ? Container(decoration: const BoxDecoration(color: Color.fromARGB(255, 135, 145, 152)), height: 80, width: 80)
+                                    : SizedBox(
+                                        width: 80,
+                                        height: 80,
+                                        child: ImageLoader(
+                                          url: AuthService.instance.user.value!.profilebackgroundpath!,
+                                          boxfit: BoxFit.cover,
+                                          width: 80,
+                                          height: 80,
+                                        ),
+                                      ),
+                              ),
                             ),
                           ),
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            //controller.changeProfileImage();
-                          },
-                          child: const Text('프로필 배경 바꾸기', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.lightBlue, fontSize: 12)),
-                        )
-                      ],
+                          const Text('프로필 배경 바꾸기', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.lightBlue, fontSize: 12))
+                        ],
+                      ),
                     ),
                   ],
                 ),

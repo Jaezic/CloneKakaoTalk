@@ -49,27 +49,37 @@ class ApiService extends GetxService {
     }
   }
 
-  Future<ApiResponse<String>> changeProfileImage({required int userFileId}) async {
+  Future<ApiResponse<String>> changeProfileImage({required int imageId}) async {
     try {
-      var response = await dio.post(
-        '/v1/user/change_profile_image',
-        options: dioOptions,
-        data: jsonEncode(
-          {
-            "profile_image_id": userFileId,
-          },
-        ),
+      var response = await Udp.post(
+        'changeProfileImage',
+        data: jsonEncode({
+          "myId": AuthService.instance.user.value!.id,
+          "imageId": imageId,
+        }),
       );
-      return ApiResponse<String>(result: response.isSuccessful, value: response.data["message"]);
-    } on DioError catch (e) {
-      Common.logger.d(e);
-      try {
-        return ApiResponse<String>(result: false, errorMsg: e.response?.data['message'] ?? "오류가 발생했습니다.");
-      } catch (e) {
-        return ApiResponse<String>(result: false, errorMsg: "오류가 발생했습니다.");
-      }
+      return ApiResponse<String>(result: response.isSuccessful, value: response.statusMessage);
     } catch (e) {
-      return ApiResponse<String>(result: false, errorMsg: "오류가 발생했습니다.");
+      e.printError();
+
+      return ApiResponse<String>(result: false, errorMsg: e.toString());
+    }
+  }
+
+  Future<ApiResponse<String>> changeProfileBackground({required int imageId}) async {
+    try {
+      var response = await Udp.post(
+        'changeProfileBackground',
+        data: jsonEncode({
+          "myId": AuthService.instance.user.value!.id,
+          "imageId": imageId,
+        }),
+      );
+      return ApiResponse<String>(result: response.isSuccessful, value: response.statusMessage);
+    } catch (e) {
+      e.printError();
+
+      return ApiResponse<String>(result: false, errorMsg: e.toString());
     }
   }
 
