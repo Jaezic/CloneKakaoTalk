@@ -7,8 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class UserRegisterViewController extends GetxController {
-  static TextStyle get _hintStyle => const TextStyle(color: Colors.black54, fontSize: 14);
-  static TextStyle get _textStyle => const TextStyle(color: Colors.black, fontSize: 14);
+  static TextStyle get _hintStyle =>
+      const TextStyle(color: Colors.black54, fontSize: 14);
+  static TextStyle get _textStyle =>
+      const TextStyle(color: Colors.black, fontSize: 14);
 
   Rxn<DateTime> birthday = Rxn();
   RxString birthdayString = RxString('');
@@ -18,17 +20,25 @@ class UserRegisterViewController extends GetxController {
   TextEditingController nameFieldController = TextEditingController();
   TextEditingController nicknameFieldController = TextEditingController();
   TextEditingController emailFieldController = TextEditingController();
-  static Widget textField({required textEditController, required String hintText, bool pass = false}) {
+  TextEditingController homeaddressFieldController = TextEditingController();
+
+  static Widget textField(
+      {required textEditController,
+      required String hintText,
+      bool pass = false}) {
     return Container(
       decoration: BoxDecoration(
-        border: Border(bottom: BorderSide(width: 0.6, color: Colors.black.withOpacity(0.3))),
+        border: Border(
+            bottom:
+                BorderSide(width: 0.6, color: Colors.black.withOpacity(0.3))),
       ),
       child: TextField(
         controller: textEditController,
         decoration: InputDecoration(
           hintText: hintText,
           border: InputBorder.none,
-          contentPadding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
           hintStyle: _hintStyle,
           suffix: GestureDetector(
             onTap: textEditController.clear,
@@ -52,6 +62,7 @@ class UserRegisterViewController extends GetxController {
         nameFieldController.text.isEmpty ||
         nicknameFieldController.text.isEmpty ||
         emailFieldController.text.isEmpty ||
+        homeaddressFieldController.text.isEmpty ||
         birthday.value == null) {
       Common.showSnackBar(messageText: "모든 항목을 작성해주세요.");
       return;
@@ -60,12 +71,14 @@ class UserRegisterViewController extends GetxController {
       Common.showSnackBar(messageText: "비밀번호 확인이 일치해야 합니다.");
       return;
     }
-    ApiResponse<PostUserLoginResponse> response = await ApiService.instance.userRegister(
+    ApiResponse<PostUserLoginResponse> response =
+        await ApiService.instance.userRegister(
       id: idFieldController.text,
       pass: passFieldController.text,
       name: nameFieldController.text,
       nickname: nicknameFieldController.text,
       email: emailFieldController.text,
+      homeaddress: homeaddressFieldController.text,
       birthday: birthday.value!,
     );
     if (response.result) {

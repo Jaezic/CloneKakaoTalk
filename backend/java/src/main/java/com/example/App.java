@@ -83,9 +83,10 @@ public class App {
                         ResultSet result = updatestmt.executeQuery(sql);
                         if (!result.next()) {
                             sql = String.format(
-                                    "insert into User(ID, PassWord, Name, EMail, Birthday) Values(\"%s\", \"%s\", \"%s\", \"%s\", \"%s\");",
+                                    "insert into User(ID, PassWord, Name, EMail, HomeAddress, Birthday) Values(\"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\");",
                                     request.data.get("id"), request.data.get("pass"), request.data.get("name"),
-                                    request.data.get("email"), request.data.get("birthday"));
+                                    request.data.get("email"), request.data.get("homeaddress"),
+                                    request.data.get("birthday"));
                             updatestmt.executeUpdate(sql);
                             sql = String.format(
                                     "insert into UserStatus(ID, NickName, StatusMessage) Values(\"%s\", \"%s\", \"\");",
