@@ -42,26 +42,30 @@ public class GET {
 
         ResultSet friend_result = querystmt.executeQuery(UpdateMyData_sql);
 
-        if (!friend_result.next()) {
-            socket.response(new Response(10, "Not Founded User Friend Data", null),
-                    request.ip, request.port);
-        } else {
-            String sql = String.format(
-                    "SELECT User.ID,Name,EMail,Birthday,NickName,StatusMessage,UF.path as profile_image_path,UF2.path as profile_background_path FROM User LEFT JOIN UserStatus ON User.ID = UserStatus.ID LEFT JOIN User_file UF ON UserStatus.profile_image_id = UF.id LEFT JOIN User_file UF2 ON UserStatus.profile_background_id = UF2.id WHERE User.ID = \"%s\"", // 친구
-                    // id를
-                    // 기반으로
-                    // UserStatus에
-                    // 저장된
-                    // statusMessage 가져옴.
-                    request.data.get("Friend_ID"));
-            querystmt = con.createStatement();
-            ResultSet FriendStatus_result = querystmt.executeQuery(sql);
-            FriendStatus_result.next();
+        while (friend_result.next()) {
 
-            socket.response(
-                    new Response(200, "OK", new User(FriendStatus_result).getJson()),
-                    request.ip,
-                    request.port);
+            if (!friend_result.next()) {
+                socket.response(new Response(10, "Not Founded User Friend Data", null),
+                        request.ip, request.port);
+            } else {
+                String sql = String.format(
+                        "SELECT User.ID,Name,EMail,Birthday,NickName,StatusMessage,UF.path as profile_image_path,UF2.path as profile_background_path FROM User LEFT JOIN UserStatus ON User.ID = UserStatus.ID LEFT JOIN User_file UF ON UserStatus.profile_image_id = UF.id LEFT JOIN User_file UF2 ON UserStatus.profile_background_id = UF2.id WHERE User.ID = \"%s\"", // 친구
+                        // id를
+                        // 기반으로
+                        // UserStatus에
+                        // 저장된
+                        // statusMessage 가져옴.
+                        request.data.get("Friend_ID"));
+                querystmt = con.createStatement();
+                ResultSet FriendStatus_result = querystmt.executeQuery(sql);
+                FriendStatus_result.next();
+
+                socket.response(
+                        new Response(200, "OK", new User(FriendStatus_result).getJson()),
+                        request.ip,
+                        request.port);
+            }
+
         }
     }
 }
