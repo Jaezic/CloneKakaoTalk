@@ -131,7 +131,7 @@ class FriendViewPage extends StatelessWidget {
                       width: 40,
                       height: 40,
                       child: ImageLoader(
-                        url: AuthService.instance.user.value!.profileimagepath!,
+                        url: user.profilebackgroundpath!,
                         boxfit: BoxFit.cover,
                         width: 40,
                         height: 40,
