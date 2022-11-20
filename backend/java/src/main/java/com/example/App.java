@@ -15,7 +15,6 @@ public class App {
     static Connection con;
     static Statement updatestmt;
     static ExecutorService pool;
-    static String apiurl = "http://kakaotalk.mingyu-dev.kro.kr:3000/";
 
     public static void main(String[] args) throws Exception {
 

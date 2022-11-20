@@ -2,6 +2,7 @@ package com.example;
 
 import java.sql.*;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class GET {
@@ -35,42 +36,41 @@ public class GET {
         JSONObject myfriend_json = new JSONObject();
 
         myfriend_json.put("id", request.data.get("id"));
-        myfriend_json.put("Friend_ID", request.data.get("Friend_ID")); 
+        myfriend_json.put("Friend_ID", request.data.get("Friend_ID"));
 
         String UpdateMyData_sql = String.format("select Friend_ID from Friend_List where ID = \"%s\"",
-        myfriend_json.get("Friend_ID"));
+                myfriend_json.get("Friend_ID"));
         querystmt = con.createStatement();
 
         ResultSet friend_result = querystmt.executeQuery(UpdateMyData_sql);
-        
-        bool check;
+
         if (!friend_result.next()) {
             socket.response(new Response(10, "Not Founded User Friend Data", null),
                     request.ip, request.port);
             return;
-        } 
+        }
 
         JSONObject data = new JSONObject();
         JSONArray array = new JSONArray();
         while (friend_result.next()) {
-                String sql = String.format(
-                        "SELECT User.ID,Name,EMail,Birthday,NickName,StatusMessage,UF.path as profile_image_path,UF2.path as profile_background_path FROM User LEFT JOIN UserStatus ON User.ID = UserStatus.ID LEFT JOIN User_file UF ON UserStatus.profile_image_id = UF.id LEFT JOIN User_file UF2 ON UserStatus.profile_background_id = UF2.id WHERE User.ID = \"%s\"", // 친구
-                        // id를
-                        // 기반으로
-                        // UserStatus에
-                        // 저장된
-                        // statusMessage 가져옴.
-                        friend_result.getString("Friend_ID"));
-                querystmt = con.createStatement();
-                ResultSet FriendStatus_result = querystmt.executeQuery(sql);
-                FriendStatus_result.next();
-                array.put(new User(FriendStatus_result).getJson());
+            String sql = String.format(
+                    "SELECT User.ID,Name,EMail,Birthday,NickName,StatusMessage,UF.path as profile_image_path,UF2.path as profile_background_path FROM User LEFT JOIN UserStatus ON User.ID = UserStatus.ID LEFT JOIN User_file UF ON UserStatus.profile_image_id = UF.id LEFT JOIN User_file UF2 ON UserStatus.profile_background_id = UF2.id WHERE User.ID = \"%s\"", // 친구
+                    // id를
+                    // 기반으로
+                    // UserStatus에
+                    // 저장된
+                    // statusMessage 가져옴.
+                    friend_result.getString("Friend_ID"));
+            querystmt = con.createStatement();
+            ResultSet FriendStatus_result = querystmt.executeQuery(sql);
+            FriendStatus_result.next();
+            array.put(new User(FriendStatus_result).getJson());
 
         }
-        data.put("datas",array);
+        data.put("datas", array);
         socket.response(
-            new Response(200, "OK", data),
-            request.ip,
-            request.port);
+                new Response(200, "OK", data),
+                request.ip,
+                request.port);
     }
 }
