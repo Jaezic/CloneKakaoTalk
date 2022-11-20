@@ -51,7 +51,10 @@ class ProfileChangeViewPage extends StatelessWidget {
                               onTap: () {
                                 //controller.changeProfileImage();
                               },
-                              child: Container(color: Colors.black, height: 80, width: 80),
+                              child: Container(
+                                  decoration: const BoxDecoration(image: DecorationImage(image: AssetImage("./assets/images/profile.jpg"))),
+                                  height: 80,
+                                  width: 80),
                               // child: Obx(
                               //   () => null == null
                               //       ? Container(color: Colors.black, height: 80, width: 80)
@@ -89,7 +92,8 @@ class ProfileChangeViewPage extends StatelessWidget {
                               onTap: () {
                                 controller.changeProfileImage();
                               },
-                              child: Container(color: Colors.black, height: 80, width: 80),
+
+                              child: Container(color: const Color.fromARGB(255, 135, 145, 152), height: 80, width: 80),
                               // child: Obx(
                               //   () => null == null
                               //       ? Container(color: Colors.black, height: 80, width: 80)

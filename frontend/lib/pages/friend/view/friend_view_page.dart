@@ -116,11 +116,14 @@ class FriendViewPage extends StatelessWidget {
         child: Row(
           children: [
             ClipRRect(
-              borderRadius: BorderRadius.circular(15),
-              child: Container(
+              borderRadius: BorderRadius.circular(23),
+              child: SizedBox(
                 height: 40,
                 width: 40,
-                color: Colors.black,
+                child: Image.asset(
+                  "./assets/images/profile.jpg",
+                  fit: BoxFit.fill,
+                ),
               ),
             ),
             const SizedBox(
