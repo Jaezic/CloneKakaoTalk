@@ -22,11 +22,11 @@ public class App {
         try {
             JSONObject message = new JSONObject();
             JSONObject data = new JSONObject();
-            data.put("id", "gachon");
-            data.put("pass", "1234");
+            data.put("myId", "gachon");
+            data.put("friendId", "psh");
 
             message.put("method", "POST");
-            message.put("route", "login");
+            message.put("route", "deleteFriend");
             message.put("data", data);
             udpRequest(message);
         } catch (Exception e) {

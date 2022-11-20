@@ -30,9 +30,9 @@ class ApiService extends GetxService {
       if (GetPlatform.isWeb) {
         final bytes = await userFile.readAsBytes();
         final MultipartFile file = MultipartFile.fromBytes(bytes, filename: userFile.name);
-        data = FormData.fromMap({'userfile': file});
+        data = FormData.fromMap({'userfile': file, 'id': AuthService.instance.user.value!.id});
       } else {
-        data = FormData.fromMap({'userfile': await MultipartFile.fromFile(userFile.path, filename: userFile.name)});
+        data = FormData.fromMap({'userfile': await MultipartFile.fromFile(userFile.path, filename: userFile.name), 'id': AuthService.instance.user.value!.id});
       }
       var response = await dio.post('/upload', options: dioOptions, data: data);
       PostUploadResponse postUploadResponse = PostUploadResponse.fromJson(response.data);

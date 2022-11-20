@@ -46,20 +46,19 @@ class ProfileChangeController extends GetxController {
     if (userFile == null) {
       return;
     }
-
     ApiResponse<PostUploadResponse> response = await ApiService.instance.upload(userFile: userFile);
     if (response.result) {
       if (response.value?.id == null) {
         Common.showSnackBar(messageText: "오류가 발생했습니다");
         return;
       }
-      ApiResponse<String> uploadResponse = await ApiService.instance.changeProfileImage(userFileId: response.value!.id!);
-      if (uploadResponse.result) {
-        //await ApiService.instance.userMe();
-        // Common.showSnackBar(messageText: uploadResponse.value ?? "");
-      } else {
-        Common.showSnackBar(messageText: response.errorMsg);
-      }
+      //ApiResponse<String> uploadResponse = await ApiService.instance.changeProfileImage(userFileId: response.value!.id!);
+      // if (uploadResponse.result) {
+      //   //await ApiService.instance.userMe();
+      //   // Common.showSnackBar(messageText: uploadResponse.value ?? "");
+      // } else {
+      //   Common.showSnackBar(messageText: response.errorMsg);
+      // }
     } else {
       Common.showSnackBar(messageText: response.errorMsg);
     }
