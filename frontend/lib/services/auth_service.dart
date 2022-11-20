@@ -11,6 +11,8 @@ class AuthService extends GetxService {
     return this;
   }
 
+  void rx_update() {}
+
   Future<void> logout() async {
     user.value!.clear();
   }

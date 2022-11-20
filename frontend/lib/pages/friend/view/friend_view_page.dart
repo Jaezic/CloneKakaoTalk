@@ -23,11 +23,15 @@ class FriendViewPage extends StatelessWidget {
       const SizedBox(
         width: 20,
       ),
-      GestureDetector(
-          onTap: () {
-            FriendViewController.instance.showSettingDialog();
-          },
-          child: const Icon(LineIcons.cog)),
+      Builder(
+        builder: (BuildContext context) {
+          return GestureDetector(
+              onTap: () {
+                FriendViewController.instance.showSettingDialog(context);
+              },
+              child: const Icon(LineIcons.cog));
+        },
+      ),
       const SizedBox(
         width: 10,
       )
@@ -35,7 +39,7 @@ class FriendViewPage extends StatelessWidget {
   );
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(FriendViewController(context));
+    final controller = Get.put(FriendViewController());
     return SingleChildScrollView(
       child: Center(
         child: SizedBox(
@@ -51,32 +55,34 @@ class FriendViewPage extends StatelessWidget {
                   onTap: () {
                     Get.toNamed(ProfileViewPage.url);
                   },
-                  child: Row(
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(23),
-                        child: SizedBox(
-                          height: 55,
-                          width: 55,
-                          child: Image.asset(
-                            "./assets/images/profile.jpg",
-                            fit: BoxFit.fill,
+                  child: Obx(
+                    () => Row(
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(23),
+                          child: SizedBox(
+                            height: 55,
+                            width: 55,
+                            child: Image.asset(
+                              "./assets/images/profile.jpg",
+                              fit: BoxFit.fill,
+                            ),
                           ),
                         ),
-                      ),
-                      const SizedBox(
-                        width: 15,
-                      ),
-                      Text(
-                        AuthService.instance.user.value!.nickname!,
-                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                      ),
-                      const Spacer(),
-                      Text(AuthService.instance.user.value!.bio!, style: const TextStyle(fontSize: 12, color: Colors.black54)),
-                      const SizedBox(
-                        width: 10,
-                      )
-                    ],
+                        const SizedBox(
+                          width: 11,
+                        ),
+                        Text(
+                          AuthService.instance.user.value!.nickname!,
+                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
+                        ),
+                        const Spacer(),
+                        Text(AuthService.instance.user.value!.bio!, style: const TextStyle(fontSize: 12, color: Colors.black54)),
+                        const SizedBox(
+                          width: 10,
+                        )
+                      ],
+                    ),
                   ),
                 ),
                 Common.divider(margin: const EdgeInsets.symmetric(vertical: 15)),
@@ -112,7 +118,7 @@ class FriendViewPage extends StatelessWidget {
               ),
             ),
             const SizedBox(
-              width: 10,
+              width: 12,
             ),
             const Text(
               '정민규',

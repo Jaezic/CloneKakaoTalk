@@ -55,31 +55,33 @@ class ProfileViewPage extends StatelessWidget {
                 ),
               ),
               const Spacer(),
-              Column(
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(200),
-                    child: Container(
-                      height: 100,
-                      width: 100,
-                      decoration: const BoxDecoration(image: DecorationImage(image: AssetImage("./assets/images/profile.jpg"))),
+              Obx(
+                () => Column(
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(200),
+                      child: Container(
+                        height: 100,
+                        width: 100,
+                        decoration: const BoxDecoration(image: DecorationImage(image: AssetImage("./assets/images/profile.jpg"))),
+                      ),
                     ),
-                  ),
-                  const SizedBox(
-                    height: 5,
-                  ),
-                  Text(
-                    AuthService.instance.user.value!.nickname!,
-                    style: const TextStyle(color: Colors.white),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Text(
-                    AuthService.instance.user.value!.bio!,
-                    style: const TextStyle(color: Colors.white54),
-                  ),
-                ],
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    Text(
+                      AuthService.instance.user.value!.nickname!,
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      AuthService.instance.user.value!.bio!,
+                      style: const TextStyle(color: Colors.white54),
+                    ),
+                  ],
+                ),
               ),
               const SizedBox(
                 height: 35,

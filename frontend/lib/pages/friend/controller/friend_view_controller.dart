@@ -5,11 +5,10 @@ import 'package:get/get.dart';
 
 class FriendViewController extends GetxController {
   RxInt friendCnt = 0.obs;
-  FriendViewController(this.context);
-  BuildContext context;
+  FriendViewController();
   static FriendViewController get instance => Get.find<FriendViewController>();
 
-  Future<void> showSettingDialog() {
+  Future<void> showSettingDialog(BuildContext context) {
     return showCupertinoModalPopup(
         barrierColor: Colors.black54,
         context: context,

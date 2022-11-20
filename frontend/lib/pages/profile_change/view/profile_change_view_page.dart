@@ -23,7 +23,7 @@ class ProfileChangeViewPage extends StatelessWidget {
         actions: [
           CommonButton(
             onTap: () {
-              //controller.updateProfile();
+              controller.updateProfile();
             },
             child: const Text('완료', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.lightBlue)),
           ),
