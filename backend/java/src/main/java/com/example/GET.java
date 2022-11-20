@@ -55,7 +55,7 @@ public class GET {
             FriendStatus_result.next();
 
             socket.response(
-                    new Response(200, "OK", new User(friend_result, FriendStatus_result).getJson()),
+                    new Response(200, "OK", new User(FriendStatus_result).getJson()),
                     request.ip,
                     request.port);
         }
