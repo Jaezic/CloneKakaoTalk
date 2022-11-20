@@ -14,7 +14,7 @@ public class GET {
         UpdateMyData_json.put("id", request.data.get("id")); // json file에서 load하여 login_json에 저장.
 
         String UpdateMyData_sql = String.format(
-                "SELECT User.ID,PassWord,Name,EMail,Birthday,NickName,StatusMessage,UF.path as profile_image_path,UF2.path as profile_background_path FROM User JOIN UserStatus ON User.ID = UserStatus.ID JOIN User_file UF ON UserStatus.profile_image_id = UF.id JOIN User_file UF2 ON UserStatus.profile_background_id = UF2.id WHERE User.ID = \"%s\"",
+                "SELECT User.ID,Name,EMail,Birthday,NickName,StatusMessage,UF.path as profile_image_path,UF2.path as profile_background_path FROM User JOIN UserStatus ON User.ID = UserStatus.ID JOIN User_file UF ON UserStatus.profile_image_id = UF.id JOIN User_file UF2 ON UserStatus.profile_background_id = UF2.id WHERE User.ID = \"%s\"",
                 request.data.get("id"));
         querystmt = con.createStatement();
         ResultSet user_result = querystmt.executeQuery(UpdateMyData_sql);
@@ -47,7 +47,7 @@ public class GET {
                     request.ip, request.port);
         } else {
             String sql = String.format(
-                    "select StatusMessage from UserStatus where ID = \"%s\"", // 친구 id를 기반으로 UserStatus에 저장된
+                    "SELECT User.ID,Name,EMail,Birthday,NickName,StatusMessage,UF.path as profile_image_path,UF2.path as profile_background_path FROM User JOIN UserStatus ON User.ID = UserStatus.ID JOIN User_file UF ON UserStatus.profile_image_id = UF.id JOIN User_file UF2 ON UserStatus.profile_background_id = UF2.id WHERE User.ID = \"%s\"", // 친구 id를 기반으로 UserStatus에 저장된
                                                                               // statusMessage 가져옴.
                     request.data.get("Friend_ID"));
             querystmt = con.createStatement();

@@ -69,10 +69,9 @@ public class POST {
         JSONObject addFriend_json = new JSONObject();
         addFriend_json.put("myId", request.data.get("myId"));
         addFriend_json.put("friendId", request.data.get("friendId"));
-
         // 친구 id가 이 메신저에 등록되어있는지 우선 확인.
         String exist_friend = String.format("select * from User where ID = \"%s\"",
-                request.data.get("friendId"));
+        addFriend_json.get("friendId"));
         querystmt = con.createStatement();
         ResultSet exist_result = querystmt.executeQuery(exist_friend);
         if (!exist_result.next()) { // 메신저에 등록되어있지 않다면
@@ -82,7 +81,7 @@ public class POST {
             // 내가 검색한 친구의 id가 내 table에 있나 확인.
             String find_friend = String.format(
                     "select * from Friend_List where ID = \"%s\" and Friend_ID = \"%s\"",
-                    request.data.get("myId"), request.data.get("friendId"));
+                    addFriend_json.get("myId"), addFriend_json.get("friendId"));
             querystmt = con.createStatement();
             ResultSet friend_result = querystmt.executeQuery(find_friend);
 
@@ -93,7 +92,7 @@ public class POST {
             } else {
                 // 존재하면 추가.
                 String add_sql = String.format("insert into Friend_List values(\"%s\", \"%s\")",
-                        request.data.get("myId"), request.data.get("friendId"));
+                addFriend_json.get("myId"), addFriend_json.get("friendId"));
                 updatestmt.executeUpdate(add_sql);
                 socket.response(new Response(200, "OK", null), request.ip, request.port);
             }
