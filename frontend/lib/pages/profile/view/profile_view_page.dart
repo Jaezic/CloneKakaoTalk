@@ -1,4 +1,7 @@
+import 'package:KakaoTalk/common/api_service.dart';
 import 'package:KakaoTalk/common/common.dart';
+import 'package:KakaoTalk/common/service_response.dart';
+import 'package:KakaoTalk/models/post_user_login_response.dart';
 import 'package:KakaoTalk/pages/profile/controller/profile_view_controller.dart';
 import 'package:KakaoTalk/pages/profile_change/view/profile_change_view_page.dart';
 import 'package:KakaoTalk/services/auth_service.dart';
@@ -13,6 +16,7 @@ class ProfileViewPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(ProfileViewController());
+    var arg = Get.arguments;
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: Container(
@@ -41,16 +45,17 @@ class ProfileViewPage extends StatelessWidget {
                       ),
                     ),
                     const Spacer(),
-                    GestureDetector(
-                      onTap: () {
-                        Get.toNamed(ProfileChangeViewPage.url);
-                      },
-                      child: const Icon(
-                        Icons.settings,
-                        size: 25,
-                        color: Colors.white,
+                    if ((arg['user'] as User).id! == AuthService.instance.user.value!.id)
+                      GestureDetector(
+                        onTap: () {
+                          Get.toNamed(ProfileChangeViewPage.url);
+                        },
+                        child: const Icon(
+                          Icons.settings,
+                          size: 25,
+                          color: Colors.white,
+                        ),
                       ),
-                    ),
                   ],
                 ),
               ),
@@ -70,14 +75,14 @@ class ProfileViewPage extends StatelessWidget {
                       height: 5,
                     ),
                     Text(
-                      AuthService.instance.user.value!.nickname!,
+                      ((arg['user'] as User).id! == AuthService.instance.user.value!.id) ? AuthService.instance.user.value!.nickname! : arg['user'].nickname,
                       style: const TextStyle(color: Colors.white),
                     ),
                     const SizedBox(
                       height: 10,
                     ),
                     Text(
-                      AuthService.instance.user.value!.bio!,
+                      ((arg['user'] as User).id! == AuthService.instance.user.value!.id) ? AuthService.instance.user.value!.bio! : arg['user'].bio,
                       style: const TextStyle(color: Colors.white54),
                     ),
                   ],
@@ -92,19 +97,60 @@ class ProfileViewPage extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Column(children: const [
-                      Icon(
-                        Icons.chat_bubble,
-                        color: Colors.white,
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        "1:1 채팅",
-                        style: TextStyle(color: Colors.white, fontSize: 12),
+                    ((arg['user'] as User).id! == AuthService.instance.user.value!.id)
+                        ? Column(children: const [
+                            Icon(
+                              Icons.chat_bubble,
+                              color: Colors.white,
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Text(
+                              "나와의 채팅",
+                              style: TextStyle(color: Colors.white, fontSize: 12),
+                            )
+                          ])
+                        : Column(children: const [
+                            Icon(
+                              Icons.chat_bubble,
+                              color: Colors.white,
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Text(
+                              "1:1 채팅",
+                              style: TextStyle(color: Colors.white, fontSize: 12),
+                            )
+                          ]),
+                    if ((arg['user'] as User).id! != AuthService.instance.user.value!.id)
+                      GestureDetector(
+                        onTap: () async {
+                          ApiResponse response = await ApiService.instance.addFriend(frinedId: (arg['user'] as User).id!);
+                          if (response.result) {
+                            Common.showSnackBar(messageText: "${arg['user'].nickname}와 친구가 되었습니다!");
+                          } else {
+                            Common.showSnackBar(messageText: response.errorMsg);
+                          }
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 40),
+                          child: Column(children: const [
+                            Icon(
+                              Icons.person_add_alt_1,
+                              color: Colors.white,
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Text(
+                              "친구 추가",
+                              style: TextStyle(color: Colors.white, fontSize: 12),
+                            )
+                          ]),
+                        ),
                       )
-                    ])
                   ],
                 ),
               )

@@ -131,6 +131,25 @@ class ApiService extends GetxService {
     }
   }
 
+  Future<ApiResponse<String>> addFriend({
+    required String frinedId,
+  }) async {
+    try {
+      var response = await Udp.post(
+        'addFriend',
+        data: jsonEncode({
+          "myId": AuthService.instance.user.value!.id,
+          "friendId": frinedId,
+        }),
+      );
+      return ApiResponse<String>(result: response.isSuccessful, value: response.statusMessage);
+    } catch (e) {
+      e.printError();
+
+      return ApiResponse<String>(result: false, errorMsg: e.toString());
+    }
+  }
+
   Future<ApiResponse<PostUserLoginResponse>> userMe() async {
     try {
       var response = await Udp.get(
@@ -143,6 +162,27 @@ class ApiService extends GetxService {
       AuthService.instance.user.value = User.fromJson(getUserResponse.toJson()['user']);
 
       if (AuthService.instance.user.value!.id == null) {
+        return ApiResponse<PostUserLoginResponse>(result: false, errorMsg: "유저 정보를 가져올 수 없습니다.");
+      }
+      return ApiResponse<PostUserLoginResponse>(result: true, value: getUserResponse);
+    } catch (e) {
+      e.printError();
+
+      return ApiResponse<PostUserLoginResponse>(result: false, errorMsg: e.toString());
+    }
+  }
+
+  Future<ApiResponse<PostUserLoginResponse>> getUserInfo({required String userId}) async {
+    try {
+      var response = await Udp.get(
+        'UpdateMyData',
+        data: jsonEncode({
+          "id": userId,
+        }),
+      );
+      PostUserLoginResponse getUserResponse = PostUserLoginResponse.fromJson(response.data);
+
+      if (!response.isSuccessful) {
         return ApiResponse<PostUserLoginResponse>(result: false, errorMsg: "유저 정보를 가져올 수 없습니다.");
       }
       return ApiResponse<PostUserLoginResponse>(result: true, value: getUserResponse);

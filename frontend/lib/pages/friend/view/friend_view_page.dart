@@ -1,8 +1,10 @@
 import 'package:KakaoTalk/common/common.dart';
 import 'package:KakaoTalk/common/widget/common_appbar.dart';
 import 'package:KakaoTalk/common/widget/common_button.dart';
+import 'package:KakaoTalk/models/post_user_login_response.dart';
 import 'package:KakaoTalk/pages/friend/controller/friend_view_controller.dart';
 import 'package:KakaoTalk/pages/profile/view/profile_view_page.dart';
+import 'package:KakaoTalk/pages/search/view/search_view_page.dart';
 import 'package:KakaoTalk/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -19,7 +21,11 @@ class FriendViewPage extends StatelessWidget {
     centerTitle: false,
     // elevation: 1.0,
     actions: [
-      GestureDetector(onTap: () {}, child: const Icon(Icons.search)),
+      GestureDetector(
+          onTap: () {
+            Get.toNamed(SearchViewPage.url);
+          },
+          child: const Icon(Icons.search)),
       const SizedBox(
         width: 20,
       ),
@@ -53,7 +59,7 @@ class FriendViewPage extends StatelessWidget {
                 CommonButton(
                   padding: EdgeInsets.zero,
                   onTap: () {
-                    Get.toNamed(ProfileViewPage.url);
+                    Get.toNamed(ProfileViewPage.url, arguments: {"user": AuthService.instance.user.value});
                   },
                   child: Obx(
                     () => Row(
@@ -90,9 +96,9 @@ class FriendViewPage extends StatelessWidget {
                       '친구 ${controller.friendCnt}',
                       style: const TextStyle(color: Colors.black54, fontSize: 12),
                     )),
-                FriendTuple(),
-                FriendTuple(),
-                FriendTuple(),
+                // FriendTuple(),
+                // FriendTuple(),
+                // FriendTuple(),
               ],
             ),
           ),
@@ -101,10 +107,10 @@ class FriendViewPage extends StatelessWidget {
     );
   }
 
-  CommonButton FriendTuple() {
+  static CommonButton FriendTuple({required User user, required Function() onTap}) {
     return CommonButton(
       padding: EdgeInsets.zero,
-      onTap: () {},
+      onTap: onTap,
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 10),
         child: Row(
@@ -120,9 +126,14 @@ class FriendViewPage extends StatelessWidget {
             const SizedBox(
               width: 12,
             ),
-            const Text(
-              '정민규',
-              style: TextStyle(fontSize: 15),
+            Text(
+              user.nickname!,
+              style: const TextStyle(fontSize: 15),
+            ),
+            const Spacer(),
+            Text(user.bio!, style: const TextStyle(fontSize: 12, color: Colors.black54)),
+            const SizedBox(
+              width: 10,
             )
           ],
         ),
