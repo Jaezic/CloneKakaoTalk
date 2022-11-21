@@ -22,7 +22,8 @@ class ImageViewPage extends StatelessWidget {
                 ? PhotoView(
                     imageProvider: AssetImage(arg[1]), // 배경 이미지
                   )
-                : PhotoView(imageProvider: CachedNetworkImageProvider(arg[1])),
+                : PhotoView(
+                    maxScale: PhotoViewComputedScale.contained, minScale: PhotoViewComputedScale.contained, imageProvider: CachedNetworkImageProvider(arg[1])),
             SafeArea(
               child: GestureDetector(
                 child: Align(
