@@ -20,6 +20,7 @@ class ImageViewPage extends StatelessWidget {
           children: [
             arg[0] == true
                 ? PhotoView(
+                    maxScale: PhotoViewComputedScale.contained, minScale: PhotoViewComputedScale.contained,
                     imageProvider: AssetImage(arg[1]), // 배경 이미지
                   )
                 : PhotoView(
