@@ -252,6 +252,25 @@ public class POST {
         request_json.put("myId", request.data.get("myId"));
         request_json.put("friendId", request.data.get("friendId"));
 
+        // 나와 상대방이 들어있는 방 중에 1 : 1 방 검색
+        String find_one_to_one = 
+        String.format("select id, onetoone from room where id in (select a.id from room_user as a, room_user as b where a.id = b.id and a.userid = '%s' and b.userid = '%s');", request.data.get("myId"), request.data.get("friendId"));
+        querystmt = con.createStatement();
+        ResultSet result = querystmt.executeQuery(find_one_to_one);
+        while(result.next()){
+            // 1 : 1 채팅방이라면
+            if (result.getBoolean("onetoone") == true){
+                JSONObject reponse_json = new JSONObject();
+                reponse_json.put("roomId", result.getInt("id"));
+                socket.response(new Response(200, "OK", reponse_json), request.ip, request.port);
+                return ;
+            }else{
+                socket.response(new Response(5, "There is no 1:1 chat room.", null), request.ip, request.port);
+            }
+        }
+        // result.next()가 false인 경우도 있기 때문에 따로 빼놓음.
+        socket.response(new Response(5, "There is no 1:1 chat room.", null), request.ip, request.port);
+        
     }
 
     static void sendChat(Network socket, Request request, Connection con, Statement updatestmt) throws Exception {

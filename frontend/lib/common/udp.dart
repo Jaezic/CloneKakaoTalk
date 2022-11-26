@@ -6,7 +6,7 @@ import 'package:KakaoTalk/common/response.dart';
 import 'package:udp/udp.dart';
 
 class Udp {
-  static int timeout = 500;
+  static int timeout = 1000;
   static Future<Response> post(String route, {required dynamic data}) async {
     Endpoint clinet = Endpoint.any();
     var sender = await UDP.bind(clinet);

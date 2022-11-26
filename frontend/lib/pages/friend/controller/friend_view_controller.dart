@@ -30,11 +30,11 @@ class FriendViewController extends GetxController {
   }
 
   Future<void> fetchFriendList() async {
-    ApiResponse<GetFriendListResponse> asd = await ApiService.instance.fetchFriends();
-    if (asd.result) {
+    ApiResponse<GetFriendListResponse> fetchResponse = await ApiService.instance.fetchFriends();
+    if (fetchResponse.result) {
       friendWidgetList.clear();
       AuthService.instance.FriendIdList.clear();
-      for (var element in asd.value!.datas!) {
+      for (var element in fetchResponse.value!.datas!) {
         friendWidgetList.add(FriendWidgets.FriendTuple(
             user: User.fromJson(element),
             onTap: () {
