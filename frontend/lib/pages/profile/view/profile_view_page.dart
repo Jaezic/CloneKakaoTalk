@@ -2,6 +2,7 @@ import 'package:KakaoTalk/common/api_service.dart';
 import 'package:KakaoTalk/common/common.dart';
 import 'package:KakaoTalk/common/service_response.dart';
 import 'package:KakaoTalk/common/widget/image_loader.dart';
+import 'package:KakaoTalk/pages/friend/controller/friend_view_controller.dart';
 import 'package:KakaoTalk/pages/imageview/image_view_page.dart';
 import 'package:KakaoTalk/pages/profile/controller/profile_view_controller.dart';
 import 'package:KakaoTalk/pages/profile_change/view/profile_change_view_page.dart';
@@ -158,7 +159,7 @@ class ProfileViewPage extends StatelessWidget {
                             ApiResponse response = await ApiService.instance.addFriend(frinedId: controller.user.value!.id!);
                             if (response.result) {
                               Common.showSnackBar(messageText: "${controller.user.value!.nickname}와 친구가 되었습니다!");
-                              ApiService.instance.fetchFriends();
+                              await FriendViewController.instance.fetchFriendList();
                             } else {
                               Common.showSnackBar(messageText: response.errorMsg);
                             }
