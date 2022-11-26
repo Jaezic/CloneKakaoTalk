@@ -16,9 +16,6 @@ class ProfileChangeController extends GetxController {
     if (nameFieldController!.text == "") {
       Common.showSnackBar(messageText: "이름을 입력하세요.");
       return;
-    } else if (bioFieldController!.text == "") {
-      Common.showSnackBar(messageText: "상태 메시지를 선택하세요.");
-      return;
     }
 
     ApiResponse<String> response = await ApiService.instance.updateProfile(
