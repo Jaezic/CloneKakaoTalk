@@ -73,19 +73,21 @@ class ProfileViewPage extends StatelessWidget {
                 Obx(
                   () => Column(
                     children: [
-                      ClipRRect(
-                          borderRadius: BorderRadius.circular(200),
-                          child: Obx(() => controller.user.value!.profileimagepath == null
-                              ? Container(
-                                  decoration: const BoxDecoration(image: DecorationImage(image: AssetImage("./assets/images/profile.jpg"))),
-                                  height: 100,
-                                  width: 100)
-                              : GestureDetector(
-                                  onTap: () => Get.toNamed(ImageViewPage.url, arguments: [
-                                    controller.user.value!.profileimagepath == null,
-                                    controller.user.value!.profileimagepath ?? "./assets/images/profile.jpg"
-                                  ]),
-                                  child: SizedBox(
+                      GestureDetector(
+                        onTap: () {
+                          Get.toNamed(ImageViewPage.url, arguments: [
+                            controller.user.value!.profileimagepath == null,
+                            controller.user.value!.profileimagepath ?? "./assets/images/profile.jpg"
+                          ]);
+                        },
+                        child: ClipRRect(
+                            borderRadius: BorderRadius.circular(200),
+                            child: Obx(() => controller.user.value!.profileimagepath == null
+                                ? Container(
+                                    decoration: const BoxDecoration(image: DecorationImage(image: AssetImage("./assets/images/profile.jpg"))),
+                                    height: 100,
+                                    width: 100)
+                                : SizedBox(
                                     width: 100,
                                     height: 100,
                                     child: ImageLoader(
@@ -94,8 +96,8 @@ class ProfileViewPage extends StatelessWidget {
                                       width: 100,
                                       height: 100,
                                     ),
-                                  ),
-                                ))),
+                                  ))),
+                      ),
                       const SizedBox(
                         height: 5,
                       ),

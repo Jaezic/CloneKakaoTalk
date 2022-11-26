@@ -1,9 +1,10 @@
 package com.example;
 
 import java.sql.*;
-
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import org.json.JSONObject;
-
+import java.util.Random;
 public class POST {
     static void register(Network socket, Request request, Connection con, Statement updatestmt) throws Exception {
         Statement querystmt;
@@ -90,7 +91,7 @@ public class POST {
                 socket.response(new Response(5, "Already on the Friends list!", null), request.ip,
                         request.port);
             } else {
-                // 존재하면 추가.
+                // 존재안하면 추가.
                 String add_sql = String.format("insert into Friend_List values(\"%s\", \"%s\")",
                 addFriend_json.get("myId"), addFriend_json.get("friendId"));
                 updatestmt.executeUpdate(add_sql);
@@ -120,7 +121,7 @@ public class POST {
             querystmt = con.createStatement();
             ResultSet friend_result = querystmt.executeQuery(find_friend);
 
-            // 친구목록에 존재 안하면 추가 안함.
+            // 친구목록에 존재 안하면 삭제 안함.
             if (!friend_result.next()) {
                 socket.response(new Response(5, "This friend is not in the list!", null), request.ip,
                         request.port);
@@ -179,6 +180,50 @@ public class POST {
                 request.data.get("imageId"), request.data.get("myId"));
 
         updatestmt.executeUpdate(update_profile_sql);
+        socket.response(new Response(200, "OK", null), request.ip, request.port);
+    }
+
+    static void createRoom(Network socket, Request request, Connection con, Statement updatestmt) throws Exception{
+        Statement querystmt;
+        JSONObject request_json = new JSONObject();
+        request_json.put("myId", request.data.get("myId"));
+        request_json.put("title", request.data.get("title"));
+
+        String create_room = String.format("insert into room(title, onetoone) values('%s', %d);", request.data.get("title"), 0);
+        updatestmt.executeUpdate(create_room);
+
+        // 가장 최근에 수행된 INSERT 문에서 처음으로 자동생성된 값 반환 connection기준으로
+        String get_room_id = String.format("select last_insert_id() as id;");
+        querystmt = con.createStatement();
+        ResultSet result = querystmt.executeQuery(get_room_id);
+        result.next();
+
+        int roomId = result.getInt("id");
+        String create_room_user = String.format("insert into room_user values(%d, '%s');", roomId, request.data.get("myId"));
+        updatestmt.executeUpdate(create_room_user);
+        socket.response(new Response(200, "OK", null), request.ip, request.port);
+    }
+
+    static void findOneToOne(Network socket, Request request, Connection con, Statement updatestmt) throws Exception{
+        Statement querystmt;
+        JSONObject request_json = new JSONObject();
+        request_json.put("myId", request.data.get("myId"));
+        request_json.put("friendId", request.data.get("friendId"));
+
+    }
+
+    static void sendChat(Network socket, Request request, Connection con, Statement updatestmt) throws Exception{
+        // 현재 날짜, 시간
+        LocalDateTime now = LocalDateTime.now();
+        String formatedNow = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")); // 년, 월, 일, 시, 분, 초로 string formatting
+
+        JSONObject request_json = new JSONObject();
+        request_json.put("roomId", request.data.get("roomId"));
+        request_json.put("myId", request.data.get("myId"));
+        request_json.put("message", request.data.get("message"));
+
+        String send_chat = String.format("insert into chat values('%s', '%s', '%s', '%s');", request.data.get("roomId"), request.data.get("myId"), request.data.get("message"), formatedNow);
+        updatestmt.executeUpdate(send_chat);
         socket.response(new Response(200, "OK", null), request.ip, request.port);
     }
 }
