@@ -90,6 +90,12 @@ public class App {
                         POST.changeProfileImage(socket, request, con, updatestmt);
                     else if (request.route.equalsIgnoreCase("changeProfileBackground")) // 프로필 편집 버튼
                         POST.changeProfileBackground(socket, request, con, updatestmt);
+                    else if(request.route.equalsIgnoreCase("createRoom")) // 방 만들기
+                        POST.createRoom(socket, request, con, updatestmt);
+                    else if(request.route.equalsIgnoreCase("findOneToOne")) // 1 : 1방 찾기
+                        POST.findOneToOne(socket, request, con, updatestmt);
+                    else if(request.route.equalsIgnoreCase("sendChat")) // 채팅 보내기
+                        POST.sendChat(socket, request, con, updatestmt);
                     else
                         socket.response(new Response(100, "Invalid Route requested.", null), request.ip,
                                 request.port);
