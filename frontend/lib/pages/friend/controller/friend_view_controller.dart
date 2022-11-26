@@ -4,6 +4,7 @@ import 'package:KakaoTalk/models/get_friend_list_respone.dart';
 import 'package:KakaoTalk/models/post_user_login_response.dart';
 import 'package:KakaoTalk/pages/friend/view/friend_widgets.dart';
 import 'package:KakaoTalk/pages/friend/view/setting_dialog.dart';
+import 'package:KakaoTalk/pages/friend/view/weather.dart';
 import 'package:KakaoTalk/pages/profile/view/profile_view_page.dart';
 import 'package:KakaoTalk/services/auth_service.dart';
 import 'package:flutter/cupertino.dart';
@@ -15,13 +16,17 @@ class FriendViewController extends GetxController {
   FriendViewController();
   static FriendViewController get instance => Get.find<FriendViewController>();
   RxList<Widget> friendWidgetList = RxList();
+  Rxn<Weather> weather = Rxn();
 
   @override
-  void onInit() {
+  void onInit() async {
     super.onInit();
     friendWidgetList.value = [];
     AuthService.instance.FriendIdList.value = [];
-    fetchFriendList();
+    var weather = Weather(latitude: 37.449768910451795, longitude: 127.1293218455751);
+    await weather.weatherInfoGet();
+    this.weather.value = weather;
+    await fetchFriendList();
   }
 
   Future<void> fetchFriendList() async {

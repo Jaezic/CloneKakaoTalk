@@ -3,6 +3,7 @@ import 'package:KakaoTalk/common/widget/common_appbar.dart';
 import 'package:KakaoTalk/common/widget/common_button.dart';
 import 'package:KakaoTalk/common/widget/image_loader.dart';
 import 'package:KakaoTalk/pages/friend/controller/friend_view_controller.dart';
+import 'package:KakaoTalk/pages/friend/view/friend_widgets.dart';
 import 'package:KakaoTalk/pages/profile/view/profile_view_page.dart';
 import 'package:KakaoTalk/pages/search/view/search_view_page.dart';
 import 'package:KakaoTalk/services/auth_service.dart';
@@ -19,7 +20,7 @@ class FriendViewPage extends StatelessWidget {
     fontSize: 20,
     fontWeight: FontWeight.bold,
     centerTitle: false,
-    // elevation: 1.0,
+    elevation: 0.0,
     actions: [
       GestureDetector(
           onTap: () {
@@ -51,11 +52,12 @@ class FriendViewPage extends StatelessWidget {
         child: SizedBox(
           width: GetPlatform.isMobile ? null : 500,
           child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 12),
+            padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
+                FriendWidgets.friendBanner(controller),
                 CommonButton(
                   padding: EdgeInsets.zero,
                   onTap: () {

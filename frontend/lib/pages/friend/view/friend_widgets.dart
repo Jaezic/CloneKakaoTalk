@@ -1,9 +1,72 @@
 import 'package:KakaoTalk/common/widget/common_button.dart';
 import 'package:KakaoTalk/common/widget/image_loader.dart';
 import 'package:KakaoTalk/models/post_user_login_response.dart';
+import 'package:KakaoTalk/pages/friend/controller/friend_view_controller.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get_state_manager/get_state_manager.dart';
 
 class FriendWidgets {
+  static Container friendBanner(FriendViewController controller) {
+    return Container(
+        margin: const EdgeInsets.only(top: 5, bottom: 20),
+        padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(6), color: const Color.fromARGB(255, 243, 243, 243)),
+        child: Center(
+          child: Obx(() {
+            const color2 = Color.fromARGB(255, 77, 77, 77);
+            return controller.weather.value != null
+                ? Row(
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: const [
+                              Text('가천대학교', style: TextStyle(fontSize: 17, color: color2)),
+                              SizedBox(
+                                width: 3,
+                              ),
+                              Icon(
+                                CupertinoIcons.location_fill,
+                                color: color2,
+                                size: 12,
+                              )
+                            ],
+                          ),
+                          Text(
+                            controller.weather.value!.weatherinfo['오늘온도'] + '°',
+                            style: const TextStyle(fontSize: 28, color: color2),
+                          )
+                        ],
+                      ),
+                      const Spacer(),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Icon(
+                            controller.weather.value!.weatherinfo['시간대'] == "밤" ? CupertinoIcons.moon_fill : CupertinoIcons.brightness_solid,
+                            color: color2,
+                            size: 15,
+                          ),
+                          Text(
+                            '${controller.weather.value!.weatherinfo['하늘형태']}\n${controller.weather.value!.weatherinfo['풍속']}',
+                            textAlign: TextAlign.right,
+                            style: const TextStyle(fontSize: 10, color: color2),
+                          ),
+                          Text(
+                            '습도:${controller.weather.value!.weatherinfo['습도']}% 강수확률:${controller.weather.value!.weatherinfo['강수확률']}%',
+                            style: const TextStyle(fontSize: 10, color: color2),
+                          )
+                        ],
+                      )
+                    ],
+                  )
+                : const Text('날씨 정보를 불러오는 중 입니다...', style: TextStyle(color: color2, fontWeight: FontWeight.bold));
+          }),
+        ));
+  }
+
   static CommonButton FriendTuple({required User user, required Function() onTap}) {
     return CommonButton(
       padding: EdgeInsets.zero,
