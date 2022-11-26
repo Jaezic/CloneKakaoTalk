@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import org.json.JSONObject;
 import java.util.Random;
+
 public class POST {
     static void register(Network socket, Request request, Connection con, Statement updatestmt) throws Exception {
         Statement querystmt;
@@ -55,9 +56,17 @@ public class POST {
             // == 안됨!! 명심..
             if (request.data.get("password").equals(result.getString("PassWord"))) {
                 socket.response(
+                        // 로그인 성공시 해당 유저 아이디 UserStatus 갱신
+                        // querystmt
                         new Response(200, "OK", new User(result).getJson()),
                         request.ip,
                         request.port);
+
+                // 로그인 시간 now, 횟수 더하기.
+                String statusUpdate = String.format(
+                        "update UserStatus set ResentlyLogOutTime = now(), ResentlyConnectionTime = now() , NumberOfLogins = NumberOfLogins + 1");
+                int ret = querystmt.executeUpdate(statusUpdate);
+
             } else {
                 socket.response(new Response(3, "The password is different.", null), request.ip,
                         request.port);
@@ -71,8 +80,8 @@ public class POST {
         addFriend_json.put("myId", request.data.get("myId"));
         addFriend_json.put("friendId", request.data.get("friendId"));
         // 친구 id가 이 메신저에 등록되어있는지 우선 확인.
-        String exist_friend = String.format("select * from User where ID = \"%s\"",
-        addFriend_json.get("friendId"));
+        String exist_friend = String.format("select * from User where ID = \"%s%\"", // %추가
+                addFriend_json.get("friendId"));
         querystmt = con.createStatement();
         ResultSet exist_result = querystmt.executeQuery(exist_friend);
         if (!exist_result.next()) { // 메신저에 등록되어있지 않다면
@@ -93,7 +102,7 @@ public class POST {
             } else {
                 // 존재안하면 추가.
                 String add_sql = String.format("insert into Friend_List values(\"%s\", \"%s\")",
-                addFriend_json.get("myId"), addFriend_json.get("friendId"));
+                        addFriend_json.get("myId"), addFriend_json.get("friendId"));
                 updatestmt.executeUpdate(add_sql);
                 socket.response(new Response(200, "OK", null), request.ip, request.port);
             }
@@ -183,13 +192,14 @@ public class POST {
         socket.response(new Response(200, "OK", null), request.ip, request.port);
     }
 
-    static void createRoom(Network socket, Request request, Connection con, Statement updatestmt) throws Exception{
+    static void createRoom(Network socket, Request request, Connection con, Statement updatestmt) throws Exception {
         Statement querystmt;
         JSONObject request_json = new JSONObject();
         request_json.put("myId", request.data.get("myId"));
         request_json.put("title", request.data.get("title"));
 
-        String create_room = String.format("insert into room(title, onetoone) values('%s', %d);", request.data.get("title"), 0);
+        String create_room = String.format("insert into room(title, onetoone) values('%s', %d);",
+                request.data.get("title"), 0);
         updatestmt.executeUpdate(create_room);
 
         // 가장 최근에 수행된 INSERT 문에서 처음으로 자동생성된 값 반환 connection기준으로
@@ -199,12 +209,44 @@ public class POST {
         result.next();
 
         int roomId = result.getInt("id");
-        String create_room_user = String.format("insert into room_user values(%d, '%s');", roomId, request.data.get("myId"));
+        String create_room_user = String.format("insert into room_user values(%d, '%s');", roomId,
+                request.data.get("myId"));
         updatestmt.executeUpdate(create_room_user);
         socket.response(new Response(200, "OK", null), request.ip, request.port);
     }
 
-    static void findOneToOne(Network socket, Request request, Connection con, Statement updatestmt) throws Exception{
+    // 사람 초대
+    static void InvitePeople(Network socket, Request request, Connection con, Statement updatestmt) throws Exception {
+
+        JSONObject request_json = new JSONObject();
+        request_json.put("roomId", request.data.get("roomId"));
+        request_json.put("Id", request.data.get("Id"));
+
+        String send_invite = String.format("insert into Room_User valuse('%s', '%s');", request.data.get("roomId"), // room
+                                                                                                                    // table
+                                                                                                                    // ID
+                request.data.get("Id")); // user table ID
+
+        updatestmt.executeQuery(send_invite);
+        socket.response(new Response(200, "OK", null), request.ip, request.port);
+    }
+
+    // room 퇴장
+    static void ExitRoom(Network socket, Request request, Connection con, Statement updatestmt) throws Exception {
+
+        JSONObject request_json = new JSONObject();
+        request_json.put("roomId", request.data.get("roomId"));
+        request_json.put("Id", request.data.get("Id"));
+
+        String send_ExitRoom = String.format("delete from Room_User where id = '%s' and UserId = '%s';",
+                request.data.get("roomId"), // room table ID
+                request.data.get("Id")); // user table ID
+
+        updatestmt.executeUpdate(send_ExitRoom);
+        socket.response(new Response(200, "OK", null), request.ip, request.port);
+    }
+
+    static void findOneToOne(Network socket, Request request, Connection con, Statement updatestmt) throws Exception {
         Statement querystmt;
         JSONObject request_json = new JSONObject();
         request_json.put("myId", request.data.get("myId"));
@@ -212,17 +254,19 @@ public class POST {
 
     }
 
-    static void sendChat(Network socket, Request request, Connection con, Statement updatestmt) throws Exception{
+    static void sendChat(Network socket, Request request, Connection con, Statement updatestmt) throws Exception {
         // 현재 날짜, 시간
         LocalDateTime now = LocalDateTime.now();
-        String formatedNow = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")); // 년, 월, 일, 시, 분, 초로 string formatting
+        String formatedNow = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")); // 년, 월, 일, 시, 분, 초로 string
+                                                                                             // formatting
 
         JSONObject request_json = new JSONObject();
         request_json.put("roomId", request.data.get("roomId"));
         request_json.put("myId", request.data.get("myId"));
         request_json.put("message", request.data.get("message"));
 
-        String send_chat = String.format("insert into chat values('%s', '%s', '%s', '%s');", request.data.get("roomId"), request.data.get("myId"), request.data.get("message"), formatedNow);
+        String send_chat = String.format("insert into chat values('%s', '%s', '%s', '%s');", request.data.get("roomId"),
+                request.data.get("myId"), request.data.get("message"), formatedNow);
         updatestmt.executeUpdate(send_chat);
         socket.response(new Response(200, "OK", null), request.ip, request.port);
     }
