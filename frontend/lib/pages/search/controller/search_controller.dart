@@ -1,7 +1,7 @@
 import 'package:KakaoTalk/common/api_service.dart';
 import 'package:KakaoTalk/common/service_response.dart';
 import 'package:KakaoTalk/models/post_user_login_response.dart';
-import 'package:KakaoTalk/pages/friend/view/friend_view_page.dart';
+import 'package:KakaoTalk/pages/friend/view/friend_widgets.dart';
 import 'package:KakaoTalk/pages/profile/view/profile_view_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -37,7 +37,7 @@ class SearchController extends GetxController {
     ApiResponse<PostUserLoginResponse> response = await ApiService.instance.getUserInfo(userId: targetName);
     searchUserList.clear();
     if (response.result) {
-      searchUserList.add(FriendViewPage.FriendTuple(
+      searchUserList.add(FriendWidgets.FriendTuple(
           user: response.value!.user!,
           onTap: () {
             Get.toNamed(ProfileViewPage.url, arguments: {"user": response.value!.user!});

@@ -2,7 +2,7 @@ import 'package:KakaoTalk/common/api_service.dart';
 import 'package:KakaoTalk/common/service_response.dart';
 import 'package:KakaoTalk/models/get_friend_list_respone.dart';
 import 'package:KakaoTalk/models/post_user_login_response.dart';
-import 'package:KakaoTalk/pages/friend/view/friend_view_page.dart';
+import 'package:KakaoTalk/pages/friend/view/friend_widgets.dart';
 import 'package:KakaoTalk/pages/friend/view/setting_dialog.dart';
 import 'package:KakaoTalk/pages/profile/view/profile_view_page.dart';
 import 'package:KakaoTalk/services/auth_service.dart';
@@ -30,7 +30,7 @@ class FriendViewController extends GetxController {
       friendWidgetList.clear();
       AuthService.instance.FriendIdList.clear();
       for (var element in asd.value!.datas!) {
-        friendWidgetList.add(FriendViewPage.FriendTuple(
+        friendWidgetList.add(FriendWidgets.FriendTuple(
             user: User.fromJson(element),
             onTap: () {
               Get.toNamed(ProfileViewPage.url, arguments: {"user": User.fromJson(element)});
