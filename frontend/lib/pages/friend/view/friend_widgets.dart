@@ -75,30 +75,51 @@ class FriendWidgets {
         padding: const EdgeInsets.symmetric(vertical: 10),
         child: Row(
           children: [
-            user.profileimagepath != null
-                ? ClipRRect(
-                    borderRadius: BorderRadius.circular(23),
-                    child: SizedBox(
-                      width: 40,
-                      height: 40,
-                      child: ImageLoader(
-                        url: user.profileimagepath!,
-                        boxfit: BoxFit.cover,
+            Stack(children: [
+              user.profileimagepath != null
+                  ? ClipRRect(
+                      borderRadius: BorderRadius.circular(23),
+                      child: SizedBox(
                         width: 40,
                         height: 40,
-                      ),
-                    ))
-                : ClipRRect(
-                    borderRadius: BorderRadius.circular(23),
-                    child: SizedBox(
-                      height: 40,
-                      width: 40,
-                      child: Image.asset(
-                        "./assets/images/profile.jpg",
-                        fit: BoxFit.fill,
+                        child: ImageLoader(
+                          url: user.profileimagepath!,
+                          boxfit: BoxFit.cover,
+                          width: 40,
+                          height: 40,
+                        ),
+                      ))
+                  : ClipRRect(
+                      borderRadius: BorderRadius.circular(23),
+                      child: SizedBox(
+                        height: 40,
+                        width: 40,
+                        child: Image.asset(
+                          "./assets/images/profile.jpg",
+                          fit: BoxFit.fill,
+                        ),
                       ),
                     ),
-                  ),
+              Positioned(
+                  bottom: 0,
+                  right: 0,
+                  child: Stack(
+                    children: [
+                      Container(
+                        width: 15,
+                        height: 15,
+                        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(30)),
+                      ),
+                      Positioned(
+                          top: 3,
+                          left: 3,
+                          child: Container(
+                              width: 9,
+                              height: 9,
+                              decoration: BoxDecoration(color: user.isonline! ? Colors.green : Colors.grey, borderRadius: BorderRadius.circular(30))))
+                    ],
+                  ))
+            ]),
             const SizedBox(
               width: 12,
             ),
