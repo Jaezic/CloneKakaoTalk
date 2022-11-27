@@ -1,8 +1,13 @@
 package com.example;
 
 import java.sql.*;
+<<<<<<< HEAD
+import java.util.HashMap;
+
+=======
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+>>>>>>> 35ed147dbd6acfb92593af747dd7d54e9f136abf
 import org.json.JSONObject;
 import java.util.Random;
 
@@ -56,6 +61,12 @@ public class POST {
             // == 안됨!! 명심..
             if (request.data.get("password").equals(result.getString("PassWord"))) {
                 socket.response(
+<<<<<<< HEAD
+                        new Response(200, "OK", new User(result, true).getJson()),
+                        request.ip,
+                        request.port);
+                CONNECT.broadcastFetchFriend(result.getString("ID"));
+=======
                         // 로그인 성공시 해당 유저 아이디 UserStatus 갱신
                         // querystmt
                         new Response(200, "OK", new User(result).getJson()),
@@ -67,6 +78,7 @@ public class POST {
                         "update UserStatus set ResentlyLogOutTime = now(), ResentlyConnectionTime = now() , NumberOfLogins = NumberOfLogins + 1");
                 int ret = querystmt.executeUpdate(statusUpdate);
 
+>>>>>>> 35ed147dbd6acfb92593af747dd7d54e9f136abf
             } else {
                 socket.response(new Response(3, "The password is different.", null), request.ip,
                         request.port);
@@ -80,7 +92,11 @@ public class POST {
         addFriend_json.put("myId", request.data.get("myId"));
         addFriend_json.put("friendId", request.data.get("friendId"));
         // 친구 id가 이 메신저에 등록되어있는지 우선 확인.
+<<<<<<< HEAD
+        String exist_friend = String.format("select * from User where ID = \"%s\"",
+=======
         String exist_friend = String.format("select * from User where ID like \"%s%\"", // %추가
+>>>>>>> 35ed147dbd6acfb92593af747dd7d54e9f136abf
                 addFriend_json.get("friendId"));
         querystmt = con.createStatement();
         ResultSet exist_result = querystmt.executeQuery(exist_friend);
@@ -161,7 +177,9 @@ public class POST {
         update_profile_sql = String.format("update UserStatus set NickName = \"%s\" where id = \"%s\"",
                 request.data.get("nickName"), request.data.get("id"));
         updatestmt.executeUpdate(update_profile_sql);
+
         socket.response(new Response(200, "OK", null), request.ip, request.port);
+        CONNECT.broadcastFetchFriend(request.data.getString("id"));
     }
 
     static void changeProfileImage(Network socket, Request request, Connection con, Statement updatestmt)

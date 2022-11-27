@@ -24,22 +24,20 @@ public class GET {
                     request.ip, request.port);
         } else {
             socket.response(
-                    new Response(200, "OK", new User(user_result).getJson()),
+                    new Response(200, "OK", new User(user_result, true).getJson()),
                     request.ip,
                     request.port);
         }
     }
 
-    static void myfriend(Network socket, Request request, Connection con, Statement updatestmt) throws Exception {
+    static void friendList(Network socket, Request request, Connection con, Statement updatestmt) throws Exception {
         Statement querystmt; // 친구 데이터 userid를 기준으로 friend_list에 담겨 있는거 받아서 friend_id 전송
 
         JSONObject myfriend_json = new JSONObject();
 
         myfriend_json.put("id", request.data.get("id"));
-        myfriend_json.put("Friend_ID", request.data.get("Friend_ID"));
-
         String UpdateMyData_sql = String.format("select Friend_ID from Friend_List where ID = \"%s\"",
-                myfriend_json.get("Friend_ID"));
+                myfriend_json.get("id"));
         querystmt = con.createStatement();
 
         ResultSet friend_result = querystmt.executeQuery(UpdateMyData_sql);
@@ -52,7 +50,7 @@ public class GET {
 
         JSONObject data = new JSONObject();
         JSONArray array = new JSONArray();
-        while (friend_result.next()) {
+        do {
             String sql = String.format(
                     "SELECT User.ID,Name,EMail,Birthday,NickName,StatusMessage,UF.path as profile_image_path,UF2.path as profile_background_path FROM User LEFT JOIN UserStatus ON User.ID = UserStatus.ID LEFT JOIN User_file UF ON UserStatus.profile_image_id = UF.id LEFT JOIN User_file UF2 ON UserStatus.profile_background_id = UF2.id WHERE User.ID = \"%s\"", // 친구
                     // id를
@@ -64,9 +62,20 @@ public class GET {
             querystmt = con.createStatement();
             ResultSet FriendStatus_result = querystmt.executeQuery(sql);
             FriendStatus_result.next();
-            array.put(new User(FriendStatus_result).getJson());
+            String key = FriendStatus_result.getString("ID");
+            boolean isonline = App.connected_sockets.containsKey(key);
+            if (isonline) {
+                Network value = App.connected_sockets.get(key);
+                if (!value.tcpSocket.isConnected()) {
+                    System.out.println("This Socket is disconnected");
+                    value.tcpSocket.close();
+                    App.connected_sockets.remove(key);
+                    isonline = false;
+                }
+            }
+            array.put(new User(FriendStatus_result, isonline).getJson());
+        } while (friend_result.next());
 
-        }
         data.put("datas", array);
         socket.response(
                 new Response(200, "OK", data),

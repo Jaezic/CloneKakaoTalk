@@ -19,7 +19,7 @@ public class TCP {
         System.out.println("-------------------------------------------------");
         System.out.println("[TCP Receive]");
         JSONObject jsonObject = new JSONObject(
-                inputMessage);
+                inputMessage.substring(0, inputMessage.length()));
 
         Request request = new Request(jsonObject, socket.getInetAddress(), socket.getPort());
         System.out.println("IP:" + socket.getInetAddress() + " Port#:" + socket.getPort());
