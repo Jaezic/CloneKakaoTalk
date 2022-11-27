@@ -4,7 +4,6 @@ class GetFriendListResponse {
   GetFriendListResponse({this.datas});
 
   GetFriendListResponse.fromJson(Map<String, dynamic> json) {
-    print(json);
     if (json['datas'] != null) {
       datas = json['datas'];
     }

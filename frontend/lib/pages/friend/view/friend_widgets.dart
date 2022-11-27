@@ -68,6 +68,7 @@ class FriendWidgets {
   }
 
   static CommonButton FriendTuple({required User user, required Function() onTap}) {
+    print(user.isonline);
     return CommonButton(
       padding: EdgeInsets.zero,
       onTap: onTap,

@@ -53,7 +53,7 @@ class User {
     birthday = json['birthday'];
     //gender = json['gender'];
     bio = json['bio'];
-    isonline = json['isonline'] == "true";
+    isonline = json['isonline'];
 
     profileimagepath = json.containsKey('profile_image_path') ? Common.baseUrl + json['profile_image_path'] : null;
     profilebackgroundpath = json.containsKey('profile_background_path') ? Common.baseUrl + json['profile_background_path'] : null;
