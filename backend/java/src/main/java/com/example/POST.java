@@ -1,6 +1,7 @@
 package com.example;
 
 import java.sql.*;
+import java.util.HashMap;
 
 import org.json.JSONObject;
 
@@ -54,9 +55,10 @@ public class POST {
             // == 안됨!! 명심..
             if (request.data.get("password").equals(result.getString("PassWord"))) {
                 socket.response(
-                        new Response(200, "OK", new User(result).getJson()),
+                        new Response(200, "OK", new User(result, true).getJson()),
                         request.ip,
                         request.port);
+                CONNECT.broadcastFetchFriend(result.getString("ID"));
             } else {
                 socket.response(new Response(3, "The password is different.", null), request.ip,
                         request.port);
@@ -71,7 +73,7 @@ public class POST {
         addFriend_json.put("friendId", request.data.get("friendId"));
         // 친구 id가 이 메신저에 등록되어있는지 우선 확인.
         String exist_friend = String.format("select * from User where ID = \"%s\"",
-        addFriend_json.get("friendId"));
+                addFriend_json.get("friendId"));
         querystmt = con.createStatement();
         ResultSet exist_result = querystmt.executeQuery(exist_friend);
         if (!exist_result.next()) { // 메신저에 등록되어있지 않다면
@@ -92,7 +94,7 @@ public class POST {
             } else {
                 // 존재하면 추가.
                 String add_sql = String.format("insert into Friend_List values(\"%s\", \"%s\")",
-                addFriend_json.get("myId"), addFriend_json.get("friendId"));
+                        addFriend_json.get("myId"), addFriend_json.get("friendId"));
                 updatestmt.executeUpdate(add_sql);
                 socket.response(new Response(200, "OK", null), request.ip, request.port);
             }
@@ -151,7 +153,9 @@ public class POST {
         update_profile_sql = String.format("update UserStatus set NickName = \"%s\" where id = \"%s\"",
                 request.data.get("nickName"), request.data.get("id"));
         updatestmt.executeUpdate(update_profile_sql);
+
         socket.response(new Response(200, "OK", null), request.ip, request.port);
+        CONNECT.broadcastFetchFriend(request.data.getString("id"));
     }
 
     static void changeProfileImage(Network socket, Request request, Connection con, Statement updatestmt)

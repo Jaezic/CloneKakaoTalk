@@ -6,17 +6,20 @@ import java.net.InetAddress;
 import java.net.Socket;
 
 public class Network {
+    String method;
     DatagramSocket udpSocket;
     Socket tcpSocket;
 
-    Network(DatagramSocket udpSocket) {
+    Network(DatagramSocket udpSocket, String method) {
         this.udpSocket = udpSocket;
         this.tcpSocket = null;
+        this.method = method;
     }
 
-    Network(Socket tcpSocket) {
+    Network(Socket tcpSocket, String method) {
         this.udpSocket = null;
         this.tcpSocket = tcpSocket;
+        this.method = method;
     }
 
     void close() {
