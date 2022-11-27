@@ -79,6 +79,8 @@ class Tcp {
   void socketClose() async {
     if (connectSocket != null) {
       await connectSocket!.close();
+      connectSocket!.destroy();
+
       connectSocket = null;
       print('Tcp Connection Close!');
     }

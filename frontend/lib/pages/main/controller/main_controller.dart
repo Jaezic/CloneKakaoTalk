@@ -41,8 +41,8 @@ class MainController extends GetxController {
   @override
   void onClose() {
     // TODO: implement onClose
-    super.onClose();
     tcp?.socketClose();
+    super.onClose();
   }
 
   void selectTab(int index) {
