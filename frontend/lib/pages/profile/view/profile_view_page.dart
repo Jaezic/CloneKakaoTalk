@@ -2,6 +2,7 @@ import 'package:KakaoTalk/common/api_service.dart';
 import 'package:KakaoTalk/common/common.dart';
 import 'package:KakaoTalk/common/service_response.dart';
 import 'package:KakaoTalk/common/widget/image_loader.dart';
+import 'package:KakaoTalk/pages/friend/controller/friend_view_controller.dart';
 import 'package:KakaoTalk/pages/imageview/image_view_page.dart';
 import 'package:KakaoTalk/pages/profile/controller/profile_view_controller.dart';
 import 'package:KakaoTalk/pages/profile_change/view/profile_change_view_page.dart';
@@ -73,19 +74,21 @@ class ProfileViewPage extends StatelessWidget {
                 Obx(
                   () => Column(
                     children: [
-                      ClipRRect(
-                          borderRadius: BorderRadius.circular(200),
-                          child: Obx(() => controller.user.value!.profileimagepath == null
-                              ? Container(
-                                  decoration: const BoxDecoration(image: DecorationImage(image: AssetImage("./assets/images/profile.jpg"))),
-                                  height: 100,
-                                  width: 100)
-                              : GestureDetector(
-                                  onTap: () => Get.toNamed(ImageViewPage.url, arguments: [
-                                    controller.user.value!.profileimagepath == null,
-                                    controller.user.value!.profileimagepath ?? "./assets/images/profile.jpg"
-                                  ]),
-                                  child: SizedBox(
+                      GestureDetector(
+                        onTap: () {
+                          Get.toNamed(ImageViewPage.url, arguments: [
+                            controller.user.value!.profileimagepath == null,
+                            controller.user.value!.profileimagepath ?? "./assets/images/profile.jpg"
+                          ]);
+                        },
+                        child: ClipRRect(
+                            borderRadius: BorderRadius.circular(200),
+                            child: Obx(() => controller.user.value!.profileimagepath == null
+                                ? Container(
+                                    decoration: const BoxDecoration(image: DecorationImage(image: AssetImage("./assets/images/profile.jpg"))),
+                                    height: 100,
+                                    width: 100)
+                                : SizedBox(
                                     width: 100,
                                     height: 100,
                                     child: ImageLoader(
@@ -94,8 +97,8 @@ class ProfileViewPage extends StatelessWidget {
                                       width: 100,
                                       height: 100,
                                     ),
-                                  ),
-                                ))),
+                                  ))),
+                      ),
                       const SizedBox(
                         height: 5,
                       ),
@@ -156,7 +159,7 @@ class ProfileViewPage extends StatelessWidget {
                             ApiResponse response = await ApiService.instance.addFriend(frinedId: controller.user.value!.id!);
                             if (response.result) {
                               Common.showSnackBar(messageText: "${controller.user.value!.nickname}와 친구가 되었습니다!");
-                              ApiService.instance.fetchFriends();
+                              await FriendViewController.instance.fetchFriendList();
                             } else {
                               Common.showSnackBar(messageText: response.errorMsg);
                             }

@@ -69,7 +69,7 @@ class UserLoginViewPage extends StatelessWidget {
                         ),
                       )
                     ],
-                  )
+                  ),
                 ],
               ),
             ),

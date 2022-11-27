@@ -2,8 +2,8 @@ import 'package:KakaoTalk/common/common.dart';
 import 'package:KakaoTalk/common/widget/common_appbar.dart';
 import 'package:KakaoTalk/common/widget/common_button.dart';
 import 'package:KakaoTalk/common/widget/image_loader.dart';
-import 'package:KakaoTalk/models/post_user_login_response.dart';
 import 'package:KakaoTalk/pages/friend/controller/friend_view_controller.dart';
+import 'package:KakaoTalk/pages/friend/view/friend_widgets.dart';
 import 'package:KakaoTalk/pages/profile/view/profile_view_page.dart';
 import 'package:KakaoTalk/pages/search/view/search_view_page.dart';
 import 'package:KakaoTalk/services/auth_service.dart';
@@ -20,7 +20,7 @@ class FriendViewPage extends StatelessWidget {
     fontSize: 20,
     fontWeight: FontWeight.bold,
     centerTitle: false,
-    // elevation: 1.0,
+    elevation: 0.0,
     actions: [
       GestureDetector(
           onTap: () {
@@ -52,11 +52,12 @@ class FriendViewPage extends StatelessWidget {
         child: SizedBox(
           width: GetPlatform.isMobile ? null : 500,
           child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 12),
+            padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
+                FriendWidgets.friendBanner(controller),
                 CommonButton(
                   padding: EdgeInsets.zero,
                   onTap: () {
@@ -111,56 +112,6 @@ class FriendViewPage extends StatelessWidget {
               ],
             ),
           ),
-        ),
-      ),
-    );
-  }
-
-  static CommonButton FriendTuple({required User user, required Function() onTap}) {
-    return CommonButton(
-      padding: EdgeInsets.zero,
-      onTap: onTap,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 10),
-        child: Row(
-          children: [
-            user.profileimagepath != null
-                ? ClipRRect(
-                    borderRadius: BorderRadius.circular(23),
-                    child: SizedBox(
-                      width: 40,
-                      height: 40,
-                      child: ImageLoader(
-                        url: user.profileimagepath!,
-                        boxfit: BoxFit.cover,
-                        width: 40,
-                        height: 40,
-                      ),
-                    ))
-                : ClipRRect(
-                    borderRadius: BorderRadius.circular(23),
-                    child: SizedBox(
-                      height: 40,
-                      width: 40,
-                      child: Image.asset(
-                        "./assets/images/profile.jpg",
-                        fit: BoxFit.fill,
-                      ),
-                    ),
-                  ),
-            const SizedBox(
-              width: 12,
-            ),
-            Text(
-              user.nickname!,
-              style: const TextStyle(fontSize: 15),
-            ),
-            const Spacer(),
-            Text(user.bio!, style: const TextStyle(fontSize: 12, color: Colors.black54)),
-            const SizedBox(
-              width: 10,
-            )
-          ],
         ),
       ),
     );

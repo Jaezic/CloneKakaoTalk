@@ -29,6 +29,7 @@ class User {
   String? bio;
   String? profileimagepath;
   String? profilebackgroundpath;
+  bool? isonline;
 
   User({this.id, this.email, this.name, this.birthday, this.bio, this.profileimagepath});
 
@@ -41,6 +42,7 @@ class User {
     bio = null;
     profileimagepath = null;
     profilebackgroundpath = null;
+    isonline = false;
   }
 
   User.fromJson(Map<String, dynamic> json) {
@@ -51,6 +53,7 @@ class User {
     birthday = json['birthday'];
     //gender = json['gender'];
     bio = json['bio'];
+    isonline = json['isonline'];
 
     profileimagepath = json.containsKey('profile_image_path') ? Common.baseUrl + json['profile_image_path'] : null;
     profilebackgroundpath = json.containsKey('profile_background_path') ? Common.baseUrl + json['profile_background_path'] : null;
@@ -67,6 +70,7 @@ class User {
     data['bio'] = bio;
     data['profile_image_path'] = profileimagepath;
     data['profile_background_path'] = profilebackgroundpath;
+    data['isonline'] = isonline;
     //data['profile_image_path'] = profileImagePath;
     return data;
   }
