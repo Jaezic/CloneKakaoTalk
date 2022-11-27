@@ -10,21 +10,29 @@ import java.net.Socket;
 
 import org.json.JSONObject;
 
-
 public class App {
     static String serverip = "43.200.206.18";
 
     // static String serverip = "localhost";
     public static void main(String[] args) throws Exception {
         try {
+            // JSONObject message = new JSONObject();
+            // JSONObject data = new JSONObject();
+            // data.put("id", "1234");
+            // data.put("password", "1234");
+
+            // message.put("method", "POST");
+            // message.put("route", "login");
+            // message.put("data", data);
+            // udpRequest(message);
             JSONObject message = new JSONObject();
             JSONObject data = new JSONObject();
-            data.put("id", "test");
+            data.put("userID", "1234");
 
-            message.put("method", "GET");
-            message.put("route", "friendList");
+            message.put("method", "CONNECT");
+            message.put("route", "userConnect");
             message.put("data", data);
-            udpRequest(message);
+            tcpRequest(message);
         } catch (Exception e) {
         }
     }
@@ -38,6 +46,7 @@ public class App {
         out.write(msg);
         out.flush();
         socket.close();
+        // socket.close();
     }
 
     static void udpRequest(JSONObject message) throws Exception {
