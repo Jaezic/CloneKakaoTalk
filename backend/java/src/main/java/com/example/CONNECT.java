@@ -40,7 +40,6 @@ public class CONNECT {
                         CONNECT.broadcastFetchFriend("null");
                         break;
                     }
-
                 }
             } catch (Exception e) {
                 // TODO Auto-generated catch block

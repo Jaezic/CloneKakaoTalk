@@ -23,8 +23,10 @@ public class GET {
             socket.response(new Response(2, "Not Founded User Data", null),
                     request.ip, request.port);
         } else {
+            String key = request.data.getString("id");
+            boolean isonline = App.connected_sockets.containsKey(key);
             socket.response(
-                    new Response(200, "OK", new User(user_result, true).getJson()),
+                    new Response(200, "OK", new User(user_result, isonline).getJson()),
                     request.ip,
                     request.port);
         }
@@ -64,15 +66,6 @@ public class GET {
             FriendStatus_result.next();
             String key = FriendStatus_result.getString("ID");
             boolean isonline = App.connected_sockets.containsKey(key);
-            if (isonline) {
-                Network value = App.connected_sockets.get(key);
-                if (!value.tcpSocket.isConnected()) {
-                    System.out.println("This Socket is disconnected");
-                    value.tcpSocket.close();
-                    App.connected_sockets.remove(key);
-                    isonline = false;
-                }
-            }
             array.put(new User(FriendStatus_result, isonline).getJson());
         } while (friend_result.next());
 
