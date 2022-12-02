@@ -7,6 +7,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import org.json.JSONObject;
 import java.util.Random;
+import java.lang.StringBuilder;
+
 
 public class POST {
     static void register(Network socket, Request request, Connection con, Statement updatestmt) throws Exception {
@@ -198,25 +200,30 @@ public class POST {
     }
 
     static void createRoom(Network socket, Request request, Connection con, Statement updatestmt) throws Exception {
-        Statement querystmt;
-        JSONObject request_json = new JSONObject();
-        request_json.put("myId", request.data.get("myId"));
-        request_json.put("title", request.data.get("title"));
+        // 10자리 랜덤 문자열(영어+숫자) 생성
+        char[] tmp = new char[10];
+			for(int i=0; i<tmp.length; i++) {
+				int div = (int) Math.floor( Math.random() * 2 );
+				if(div == 0) { // 0이면 숫자로
+					tmp[i] = (char) (Math.random() * 10 + '0') ;
+				}else { // 1이면 알파벳
+					tmp[i] = (char) (Math.random() * 26 + 'A') ;
+				}
+			}
+		String roomId = new String(tmp);
 
-        String create_room = String.format("insert into room(title, onetoone) values('%s', %d);",
-                request.data.get("title"), 0);
-        updatestmt.executeUpdate(create_room);
-
-        // 가장 최근에 수행된 INSERT 문에서 처음으로 자동생성된 값 반환 connection기준으로
-        String get_room_id = String.format("select last_insert_id() as id;");
+        // 자동 commit false
+        // 둘 중 하나 오류나면 안 올라감.
+        con.setAutoCommit(false);
+        Statement querystmt; //myId와 title request. request.data.get("myId")
         querystmt = con.createStatement();
-        ResultSet result = querystmt.executeQuery(get_room_id);
-        result.next();
-
-        int roomId = result.getInt("id");
-        String create_room_user = String.format("insert into room_user values(%d, '%s');", roomId,
-                request.data.get("myId"));
+        String create_room = String.format("insert into room values('%s', '%s', '%s', 0);", roomId, request.data.get("title"), request.data.get("myId"), 0);
+        querystmt.executeUpdate(create_room);
+        String create_room_user = String.format("insert into room_user values('%s', '%s');", roomId, request.data.get("myId"));
         updatestmt.executeUpdate(create_room_user);
+        con.commit();
+        con.setAutoCommit(true);
+
         socket.response(new Response(200, "OK", null), request.ip, request.port);
     }
 
@@ -253,10 +260,6 @@ public class POST {
 
     static void findOneToOne(Network socket, Request request, Connection con, Statement updatestmt) throws Exception {
         Statement querystmt;
-        JSONObject request_json = new JSONObject();
-        request_json.put("myId", request.data.get("myId"));
-        request_json.put("friendId", request.data.get("friendId"));
-
         // 나와 상대방이 들어있는 방 중에 1 : 1 방 검색
         String find_one_to_one = String.format(
                 "select id, onetoone from room where id in (select a.id from room_user as a, room_user as b where a.id = b.id and a.userid = '%s' and b.userid = '%s');",
@@ -284,11 +287,6 @@ public class POST {
         LocalDateTime now = LocalDateTime.now();
         String formatedNow = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")); // 년, 월, 일, 시, 분, 초로 string
                                                                                              // formatting
-
-        JSONObject request_json = new JSONObject();
-        request_json.put("roomId", request.data.get("roomId"));
-        request_json.put("myId", request.data.get("myId"));
-        request_json.put("message", request.data.get("message"));
 
         String send_chat = String.format("insert into chat values('%s', '%s', '%s', '%s');", request.data.get("roomId"),
                 request.data.get("myId"), request.data.get("message"), formatedNow);
