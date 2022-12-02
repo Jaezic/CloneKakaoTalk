@@ -212,15 +212,27 @@ public class POST {
 			}
 		String roomId = new String(tmp);
 
+        // 랜덤 문자열이 다른 roomid와 겹치는지 check
+        String same_room_id = "select id from room;";
+        Statement querystmt;
+        querystmt = con.createStatement();
+        ResultSet result = querystmt.executeQuery(same_room_id);
+        while(result.next()){
+            if (result.getString("id") == roomId){
+                createRoom(socket, request, con, updatestmt);
+                return ;
+            }
+        }
+        
         // 자동 commit false
         // 둘 중 하나 오류나면 안 올라감.
         con.setAutoCommit(false);
-        Statement querystmt; //myId와 title request. request.data.get("myId")
-        querystmt = con.createStatement();
+        
         String create_room = String.format("insert into room values('%s', '%s', '%s', 0);", roomId, request.data.get("title"), request.data.get("myId"), 0);
         querystmt.executeUpdate(create_room);
         String create_room_user = String.format("insert into room_user values('%s', '%s');", roomId, request.data.get("myId"));
         updatestmt.executeUpdate(create_room_user);
+
         con.commit();
         con.setAutoCommit(true);
 
