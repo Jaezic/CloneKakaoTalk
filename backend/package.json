@@ -3,14 +3,17 @@
   "version": "0.0.0",
   "description": "KakaoTalk Clone Coding - Gachon university, 2022-2 Computer Network Team Project",
   "scripts": {
-    "serve": "pm2 start ./bin/www --name kakaotalk-v1"
+    "serve": "sudo pm2 start ./bin/www --name kakaotalk-v1 --prod"
   },
   "dependencies": {
     "crypto": "^1.0.1",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
+    "http-proxy-middleware": "^2.0.6",
+    "jade": "^1.11.0",
     "multer": "^1.4.5-lts.1",
     "mysql2": "^2.3.3",
+    "path": "^0.12.7",
     "uuid": "^9.0.0"
   }
 }

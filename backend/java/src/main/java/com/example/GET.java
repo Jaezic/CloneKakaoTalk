@@ -75,4 +75,53 @@ public class GET {
                 request.ip,
                 request.port);
     }
+
+    static void fetchRoom(Network socket, Request request, Connection con, Statement updatestmt) throws Exception {
+        Statement querystmt;
+        JSONObject request_json = new JSONObject();
+        request_json.put("roomId", request.data.get("roomId"));
+
+        String fetch_Room = String.format("select * from Room where id = \"%s\"",
+                request_json.get("roomId"));
+        querystmt = con.createStatement();
+        ResultSet fetch_Room_result = querystmt.executeQuery(fetch_Room);
+        if (!fetch_Room_result.next()) {
+            socket.response(new Response(7, "Not Founded Chat Room", null), request.ip, request.port);
+            return;
+        }
+        JSONObject data = new JSONObject();
+        data.put("roomId", fetch_Room_result.getString("id"));
+        data.put("Title", fetch_Room_result.getString("Title"));
+        JSONArray array = new JSONArray();
+
+        String room_User = String.format("select * from Room_User where id = \"%s\"",
+                request_json.get("id"));
+        querystmt = con.createStatement();
+
+        ResultSet room_User_result = querystmt.executeQuery(room_User);
+
+        if (!room_User_result.next()) {
+            socket.response(new Response(10, "Not Founded a User in the Room", null),
+                    request.ip, request.port);
+            return;
+        }
+        do {
+            String sql = String.format(
+                    "SELECT User.ID,Name,EMail,Birthday,NickName,StatusMessage,UF.path as profile_image_path,UF2.path as profile_background_path FROM User LEFT JOIN UserStatus ON User.ID = UserStatus.ID LEFT JOIN User_file UF ON UserStatus.profile_image_id = UF.id LEFT JOIN User_file UF2 ON UserStatus.profile_background_id = UF2.id WHERE User.ID = \"%s\"", // 친구
+                    // id를
+                    // 기반으로
+                    // UserStatus에
+                    // 저장된
+                    // statusMessage 가져옴.
+                    room_User_result.getString("UserId"));
+            querystmt = con.createStatement();
+            ResultSet roomUserResult = querystmt.executeQuery(sql);
+            roomUserResult.next();
+            String key = roomUserResult.getString("ID");
+            boolean isonline = App.connected_sockets.containsKey(key);
+            array.put(new User(roomUserResult, isonline).getJson());
+        } while (room_User_result.next());
+        data.put("Users", array);
+        socket.response(new Response(200, "OK", data), request.ip, request.port);
+    }
 }
