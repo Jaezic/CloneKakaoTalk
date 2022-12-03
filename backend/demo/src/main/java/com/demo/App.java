@@ -16,23 +16,23 @@ public class App {
     // static String serverip = "localhost";
     public static void main(String[] args) throws Exception {
         try {
-            // JSONObject message = new JSONObject();
-            // JSONObject data = new JSONObject();
-            // data.put("id", "1234");
-            // data.put("password", "1234");
-
-            // message.put("method", "POST");
-            // message.put("route", "login");
-            // message.put("data", data);
-            // udpRequest(message);
             JSONObject message = new JSONObject();
             JSONObject data = new JSONObject();
-            data.put("userID", "1234");
+            data.put("roomId", "test");
+            // data.put("title", "Hello");
 
-            message.put("method", "CONNECT");
-            message.put("route", "userConnect");
+            message.put("method", "GET");
+            message.put("route", "fetchRoom");
             message.put("data", data);
-            tcpRequest(message);
+            udpRequest(message);
+            // JSONObject message = new JSONObject();
+            // JSONObject data = new JSONObject();
+            // data.put("userID", "1234");
+
+            // message.put("method", "CONNECT");
+            // message.put("route", "userConnect");
+            // message.put("data", data);
+            // tcpRequest(message);
         } catch (Exception e) {
         }
     }
