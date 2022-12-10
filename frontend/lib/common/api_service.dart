@@ -3,12 +3,13 @@ import 'dart:convert';
 import 'package:KakaoTalk/common/common.dart';
 import 'package:KakaoTalk/common/dio_extension.dart';
 import 'package:KakaoTalk/common/service_response.dart';
-import 'package:KakaoTalk/common/udp.dart';
+import 'package:KakaoTalk/common/tcp.dart';
 import 'package:KakaoTalk/models/get_friend_list_respone.dart';
+import 'package:KakaoTalk/models/get_room_response.dart';
 import 'package:KakaoTalk/models/post_upload_response.dart';
 import 'package:KakaoTalk/models/post_user_login_response.dart';
 import 'package:KakaoTalk/services/auth_service.dart';
-import 'package:dio/dio.dart';
+import 'package:dio/dio.dart' hide Response;
 import 'package:get/get_instance/get_instance.dart';
 import 'package:get/state_manager.dart';
 import 'package:get/utils.dart';
@@ -52,7 +53,7 @@ class ApiService extends GetxService {
 
   Future<ApiResponse<String>> changeProfileImage({required int imageId}) async {
     try {
-      var response = await Udp.post(
+      var response = await Tcp.post(
         'changeProfileImage',
         data: jsonEncode({
           "myId": AuthService.instance.user.value!.id,
@@ -69,7 +70,7 @@ class ApiService extends GetxService {
 
   Future<ApiResponse<String>> changeProfileBackground({required int imageId}) async {
     try {
-      var response = await Udp.post(
+      var response = await Tcp.post(
         'changeProfileBackground',
         data: jsonEncode({
           "myId": AuthService.instance.user.value!.id,
@@ -96,7 +97,7 @@ class ApiService extends GetxService {
     try {
       String birthdayString = "${birthday.year}-${birthday.month}-${birthday.day}";
 
-      var response = await Udp.post(
+      var response = await Tcp.post(
         'register',
         data: jsonEncode({
           "id": id,
@@ -120,7 +121,7 @@ class ApiService extends GetxService {
     required String password,
   }) async {
     try {
-      var response = await Udp.post(
+      var response = await Tcp.post(
         'login',
         data: jsonEncode({
           "id": id,
@@ -145,7 +146,7 @@ class ApiService extends GetxService {
     required String frinedId,
   }) async {
     try {
-      var response = await Udp.post(
+      var response = await Tcp.post(
         'addFriend',
         data: jsonEncode({
           "myId": AuthService.instance.user.value!.id,
@@ -162,7 +163,7 @@ class ApiService extends GetxService {
 
   Future<ApiResponse<PostUserLoginResponse>> userMe() async {
     try {
-      var response = await Udp.get(
+      var response = await Tcp.get(
         'UpdateMyData',
         data: jsonEncode({
           "id": AuthService.instance.user.value!.id,
@@ -184,7 +185,7 @@ class ApiService extends GetxService {
 
   Future<ApiResponse<PostUserLoginResponse>> getUserInfo({required String userId}) async {
     try {
-      var response = await Udp.get(
+      var response = await Tcp.get(
         'UpdateMyData',
         data: jsonEncode({
           "id": userId,
@@ -205,7 +206,7 @@ class ApiService extends GetxService {
 
   Future<ApiResponse<String>> updateProfile({required String name, required String bio}) async {
     try {
-      var response = await Udp.post(
+      var response = await Tcp.post(
         'myProfile',
         data: jsonEncode({
           "id": AuthService.instance.user.value!.id,
@@ -223,7 +224,7 @@ class ApiService extends GetxService {
 
   Future<ApiResponse<GetFriendListResponse>> fetchFriends() async {
     try {
-      var response = await Udp.get(
+      var response = await Tcp.get(
         'friendList',
         data: jsonEncode({
           "id": AuthService.instance.user.value!.id,
@@ -235,6 +236,66 @@ class ApiService extends GetxService {
       e.printError();
 
       return ApiResponse<GetFriendListResponse>(result: false, errorMsg: e.toString());
+    }
+  }
+
+  Future<ApiResponse<String>> fetchOneToOneRoom({required String targetid}) async {
+    try {
+      var response = await Tcp.get(
+        'findOneToOne',
+        data: jsonEncode({
+          "myId": AuthService.instance.user.value!.id,
+          "friendId": targetid,
+        }),
+      );
+      String roomid = "";
+      if (!response.isSuccessful) {
+        ApiResponse<String> response2 = await createRoom(onetoone: 1, ids: [AuthService.instance.user.value!.id, targetid]);
+        roomid = response2.value!;
+      } else {
+        roomid = response.data['roomId'];
+      }
+      return ApiResponse<String>(result: response.isSuccessful, value: roomid);
+    } catch (e) {
+      e.printError();
+
+      return ApiResponse<String>(result: false, errorMsg: e.toString());
+    }
+  }
+
+  Future<ApiResponse<String>> createRoom({required int onetoone, required List ids}) async {
+    try {
+      var response = await Tcp.post(
+        'createRoom',
+        data: jsonEncode({
+          "myId": AuthService.instance.user.value!.id,
+          "onetoone": onetoone,
+          "ids": ids,
+        }),
+      );
+      return ApiResponse<String>(result: response.isSuccessful, value: response.data['roomId']);
+    } catch (e) {
+      e.printError();
+
+      return ApiResponse<String>(result: false, errorMsg: e.toString());
+    }
+  }
+
+  Future<ApiResponse<GetRoomResponse>> fetchRoom({required String roomId}) async {
+    try {
+      var response = await Tcp.get(
+        'fetchRoom',
+        data: jsonEncode({
+          "myId": AuthService.instance.user.value!.id,
+          "roomId": roomId,
+        }),
+      );
+      GetRoomResponse getFriendListResponse = GetRoomResponse.fromJson(response.data);
+      return ApiResponse<GetRoomResponse>(result: response.isSuccessful, value: getFriendListResponse);
+    } catch (e) {
+      e.printError();
+
+      return ApiResponse<GetRoomResponse>(result: false, errorMsg: e.toString());
     }
   }
 }

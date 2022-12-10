@@ -22,6 +22,7 @@ class ChatWidgets {
 
   static Widget textField({required ChatViewController getxcontroller, required String hintText}) {
     return Container(
+      height: 30,
       decoration: BoxDecoration(
         color: const Color.fromARGB(200, 248, 248, 248),
         border: Border.all(width: 1.0, color: Colors.black.withOpacity(0.05)),

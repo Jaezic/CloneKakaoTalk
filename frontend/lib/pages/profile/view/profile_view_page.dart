@@ -2,6 +2,7 @@ import 'package:KakaoTalk/common/api_service.dart';
 import 'package:KakaoTalk/common/common.dart';
 import 'package:KakaoTalk/common/service_response.dart';
 import 'package:KakaoTalk/common/widget/image_loader.dart';
+import 'package:KakaoTalk/pages/chat/view/chat_view_page.dart';
 import 'package:KakaoTalk/pages/friend/controller/friend_view_controller.dart';
 import 'package:KakaoTalk/pages/imageview/image_view_page.dart';
 import 'package:KakaoTalk/pages/profile/controller/profile_view_controller.dart';
@@ -37,7 +38,6 @@ class ProfileViewPage extends StatelessWidget {
                     image: CachedNetworkImageProvider(controller.user.value!.profilebackgroundpath!), // 배경 이미지
                   ),
                 ),
-          width: GetPlatform.isMobile ? null : 500,
           child: SafeArea(
             child: Column(
               children: [
@@ -86,32 +86,32 @@ class ProfileViewPage extends StatelessWidget {
                             child: Obx(() => controller.user.value!.profileimagepath == null
                                 ? Container(
                                     decoration: const BoxDecoration(image: DecorationImage(image: AssetImage("./assets/images/profile.jpg"))),
-                                    height: 100,
-                                    width: 100)
+                                    height: 80,
+                                    width: 80)
                                 : SizedBox(
-                                    width: 100,
-                                    height: 100,
+                                    width: 80,
+                                    height: 80,
                                     child: ImageLoader(
                                       url: controller.user.value!.profileimagepath!,
                                       boxfit: BoxFit.cover,
-                                      width: 100,
-                                      height: 100,
+                                      width: 80,
+                                      height: 80,
                                     ),
                                   ))),
                       ),
                       const SizedBox(
-                        height: 5,
+                        height: 10,
                       ),
                       Text(
                         controller.user.value!.nickname!,
-                        style: const TextStyle(color: Colors.white),
+                        style: const TextStyle(color: Colors.white, fontSize: 15),
                       ),
                       const SizedBox(
                         height: 10,
                       ),
                       Text(
                         controller.user.value!.bio!,
-                        style: const TextStyle(color: Colors.white54),
+                        style: const TextStyle(color: Colors.white54, fontSize: 12),
                       ),
                     ],
                   ),
@@ -139,19 +139,27 @@ class ProfileViewPage extends StatelessWidget {
                                 style: TextStyle(color: Colors.white, fontSize: 12),
                               )
                             ])
-                          : Column(children: const [
-                              Icon(
-                                Icons.chat_bubble,
-                                color: Colors.white,
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Text(
-                                "1:1 채팅",
-                                style: TextStyle(color: Colors.white, fontSize: 12),
-                              )
-                            ]),
+                          : GestureDetector(
+                              onTap: () async {
+                                ApiResponse response = (await ApiService.instance.fetchOneToOneRoom(targetid: controller.user.value!.id!));
+                                if (response.result) {
+                                  Get.toNamed(ChatViewPage.url, arguments: {"roomid": response.value});
+                                }
+                              },
+                              child: Column(children: const [
+                                Icon(
+                                  Icons.chat_bubble,
+                                  color: Colors.white,
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Text(
+                                  "1:1 채팅",
+                                  style: TextStyle(color: Colors.white, fontSize: 12),
+                                )
+                              ]),
+                            ),
                       if (controller.user.value!.id! != AuthService.instance.user.value!.id &&
                           !AuthService.instance.FriendIdList.contains(controller.user.value!.id!))
                         GestureDetector(

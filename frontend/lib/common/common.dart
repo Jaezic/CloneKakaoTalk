@@ -16,6 +16,14 @@ class Common extends GetxService {
 
   static Logger logger = Logger(filter: MyFilter());
 
+  static int countnewline(String text) {
+    if (text.split('\n').length - 1 < 0) {
+      return 0;
+    } else {
+      return text.split('\n').length - 1;
+    }
+  }
+
   Future<Common> init() async {
     Common.logger.d('$runtimeType init!');
     return this;
