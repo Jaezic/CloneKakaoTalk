@@ -11,7 +11,6 @@ import org.json.JSONObject;
 import java.util.Random;
 import java.lang.StringBuilder;
 
-
 public class POST {
     static void register(Network socket, Request request, Connection con, Statement updatestmt) throws Exception {
         AES256 aes256 = new AES256();
@@ -51,7 +50,7 @@ public class POST {
                 request.data.get("id"));
         querystmt = con.createStatement();
         ResultSet result = querystmt.executeQuery(login_sql);
-        
+
         // user id가 table에 없다면
         if (!result.next()) {
             // 회원가입 해달라 메세지 출력
@@ -105,8 +104,8 @@ public class POST {
                         request.port);
             } else {
                 // 존재안하면 추가.
-                String add_sql = String.format("insert into Friend_List values(\"%s\", \"%s\")", 
-                request.data.get("myId"), request.data.get("friendId"));
+                String add_sql = String.format("insert into Friend_List values(\"%s\", \"%s\")",
+                        request.data.get("myId"), request.data.get("friendId"));
                 updatestmt.executeUpdate(add_sql);
                 socket.response(new Response(200, "OK", null), request.ip, request.port);
             }
@@ -166,7 +165,7 @@ public class POST {
     static void changeProfileImage(Network socket, Request request, Connection con, Statement updatestmt)
             throws Exception {
         Statement querystmt;
-        
+
         String update_profile_sql = String.format(
                 "update UserStatus set profile_image_id = \"%s\" where id = \"%s\"",
                 request.data.get("imageId"), request.data.get("myId"));
@@ -178,7 +177,7 @@ public class POST {
     static void changeProfileBackground(Network socket, Request request, Connection con, Statement updatestmt)
             throws Exception {
         Statement querystmt;
-        
+
         String update_profile_sql = String.format(
                 "update UserStatus set profile_background_id = \"%s\" where id = \"%s\"",
                 request.data.get("imageId"), request.data.get("myId"));
@@ -190,35 +189,37 @@ public class POST {
     static void createRoom(Network socket, Request request, Connection con, Statement updatestmt) throws Exception {
         // 10자리 랜덤 문자열(영어+숫자) 생성
         char[] tmp = new char[10];
-			for(int i=0; i<tmp.length; i++) {
-				int div = (int) Math.floor( Math.random() * 2 );
-				if(div == 0) { // 0이면 숫자로
-					tmp[i] = (char) (Math.random() * 10 + '0') ;
-				}else { // 1이면 알파벳
-					tmp[i] = (char) (Math.random() * 26 + 'A') ;
-				}
-			}
-		String roomId = new String(tmp);
+        for (int i = 0; i < tmp.length; i++) {
+            int div = (int) Math.floor(Math.random() * 2);
+            if (div == 0) { // 0이면 숫자로
+                tmp[i] = (char) (Math.random() * 10 + '0');
+            } else { // 1이면 알파벳
+                tmp[i] = (char) (Math.random() * 26 + 'A');
+            }
+        }
+        String roomId = new String(tmp);
 
         // 랜덤 문자열이 다른 roomid와 겹치는지 check
         String same_room_id = "select id from room;";
         Statement querystmt;
         querystmt = con.createStatement();
         ResultSet result = querystmt.executeQuery(same_room_id);
-        while(result.next()){
-            if (result.getString("id") == roomId){
+        while (result.next()) {
+            if (result.getString("id") == roomId) {
                 createRoom(socket, request, con, updatestmt);
-                return ;
+                return;
             }
         }
-        
+
         // 자동 commit false
         // 둘 중 하나 오류나면 안 올라감.
         con.setAutoCommit(false);
-        
-        String create_room = String.format("insert into room values('%s', '%s', '%s', 0);", roomId, request.data.get("title"), request.data.get("myId"), 0);
+
+        String create_room = String.format("insert into room values('%s', '%s', '%s', 0);", roomId,
+                request.data.get("title"), request.data.get("myId"), 0);
         querystmt.executeUpdate(create_room);
-        String create_room_user = String.format("insert into room_user values('%s', '%s');", roomId, request.data.get("myId"));
+        String create_room_user = String.format("insert into room_user values('%s', '%s');", roomId,
+                request.data.get("myId"));
         updatestmt.executeUpdate(create_room_user);
 
         con.commit();
@@ -230,14 +231,28 @@ public class POST {
     // 사람 초대
     static void InvitePeople(Network socket, Request request, Connection con, Statement updatestmt) throws Exception {
 
-        String send_invite = String.format("insert into Room_User valuse('%s', '%s');", request.data.get("roomId"), // room
-                                                                                                                    // table
-                                                                                                                    // ID
-                request.data.get("Id")); // user table ID (초대한 친구)
-        Statement querystmt;
-        querystmt = con.createStatement();
-        querystmt.executeQuery(send_invite);
-        socket.response(new Response(200, "OK", null), request.ip, request.port);
+        String checkAlreadyInvite = String.format("select * from Room_User where id = '%s' and UserId = '%s';",
+                request.data.get("roomId"), request.data.get("Id"));
+
+        Statement CheckInvite = null;
+        ResultSet rs = null;
+
+        CheckInvite = con.createStatement();
+        rs = CheckInvite.executeQuery(checkAlreadyInvite);
+
+        if (rs.next()) {
+            socket.response(new Response(2, "Already invited People", null), request.ip, request.port);
+        } else {
+
+            String send_invite = String.format("insert into Room_User valuse('%s', '%s');", request.data.get("roomId"), // room
+                                                                                                                        // table
+                                                                                                                        // ID
+                    request.data.get("Id")); // user table ID (초대한 친구)
+            Statement querystmt;
+            querystmt = con.createStatement();
+            querystmt.executeQuery(send_invite);
+            socket.response(new Response(200, "OK", null), request.ip, request.port);
+        }
     }
 
     // room 퇴장
