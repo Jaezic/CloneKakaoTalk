@@ -15,7 +15,7 @@ public class GET {
         UpdateMyData_json.put("id", request.data.get("id")); // json file에서 load하여 login_json에 저장.
 
         String UpdateMyData_sql = String.format(
-                "SELECT User.ID,Name,EMail,Birthday,NickName,StatusMessage,UF.path as profile_image_path,UF2.path as profile_background_path FROM User LEFT JOIN UserStatus ON User.ID = UserStatus.ID LEFT JOIN User_file UF ON UserStatus.profile_image_id = UF.id LEFT JOIN User_file UF2 ON UserStatus.profile_background_id = UF2.id WHERE User.ID = \"%s\"",
+                "SELECT User.ID,Name,EMail,Birthday,NickName,StatusMessage,UF.path as profile_image_path,UF2.path as profile_background_path FROM User LEFT JOIN UserStatus ON User.ID = UserStatus.ID LEFT JOIN User_file UF ON UserStatus.profile_image_id = UF.id LEFT JOIN User_file UF2 ON UserStatus.profile_background_id = UF2.id WHERE User.ID like '%%%s%%'",
                 request.data.get("id"));
         querystmt = con.createStatement();
         ResultSet user_result = querystmt.executeQuery(UpdateMyData_sql);
