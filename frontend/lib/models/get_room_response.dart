@@ -18,6 +18,7 @@ class Room {
   int? onetoone;
   List<User>? users;
   String? updateAt;
+  String? latest_message;
   Room({required this.title, required this.roomId, required this.createUserId, required this.onetoone, required this.users});
   Room.fromJson(Map<String, dynamic> json) {
     title = json['title'];
@@ -25,6 +26,7 @@ class Room {
     createUserId = json['createUserId'];
     onetoone = json['onetoone'];
     updateAt = json['update_at'];
+    latest_message = json['latest_message'];
 
     List<User> userlist = [];
     for (var element in (json['users'] as List)) {

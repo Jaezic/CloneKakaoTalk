@@ -4,6 +4,8 @@ import 'package:KakaoTalk/common/common.dart';
 import 'package:KakaoTalk/common/dio_extension.dart';
 import 'package:KakaoTalk/common/service_response.dart';
 import 'package:KakaoTalk/common/tcp.dart';
+import 'package:KakaoTalk/models/get_chat_response.dart';
+import 'package:KakaoTalk/models/get_chats_response.dart';
 import 'package:KakaoTalk/models/get_friend_list_respone.dart';
 import 'package:KakaoTalk/models/get_room_response.dart';
 import 'package:KakaoTalk/models/get_rooms_response.dart';
@@ -308,11 +310,39 @@ class ApiService extends GetxService {
           "myId": AuthService.instance.user.value!.id,
         }),
       );
-      return ApiResponse<GetRoomsResponse>(result: true, value: GetRoomsResponse.fromJson(response.data));
+      return ApiResponse<GetRoomsResponse>(result: response.isSuccessful, value: GetRoomsResponse.fromJson(response.data));
     } catch (e) {
       e.printError();
 
       return ApiResponse<GetRoomsResponse>(result: false, errorMsg: e.toString());
+    }
+  }
+
+  Future<ApiResponse<GetChatResponse>> sendChat({required String roomId, required String message}) async {
+    try {
+      var response = await Tcp.post(
+        'sendChat',
+        data: jsonEncode({"myId": AuthService.instance.user.value!.id, "roomId": roomId, "message": message}),
+      );
+      return ApiResponse<GetChatResponse>(result: response.isSuccessful, value: GetChatResponse.fromJson(response.data));
+    } catch (e) {
+      e.printError();
+
+      return ApiResponse<GetChatResponse>(result: false, errorMsg: e.toString());
+    }
+  }
+
+  Future<ApiResponse<GetChatsResponse>> receivePostChat({required String roomId}) async {
+    try {
+      var response = await Tcp.get(
+        'receivePostChat',
+        data: jsonEncode({"roomId": roomId, "myId": AuthService.instance.user.value!.id}),
+      );
+      return ApiResponse<GetChatsResponse>(result: response.isSuccessful, value: GetChatsResponse.fromJson(response.data));
+    } catch (e) {
+      e.printError();
+
+      return ApiResponse<GetChatsResponse>(result: false, errorMsg: e.toString());
     }
   }
 }

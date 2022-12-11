@@ -1,5 +1,6 @@
 import 'package:KakaoTalk/pages/chat/controller/chat_view_controller.dart';
 import 'package:KakaoTalk/pages/chat/view/chat_widgets.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:line_icons/line_icons.dart';
@@ -27,10 +28,12 @@ class ChatViewPage extends StatelessWidget {
         title: Padding(
           padding: const EdgeInsets.only(bottom: 3),
           child: Obx(
-            () => Text(
-              controller.room.value == null ? '' : controller.room.value!.title!,
-              style: const TextStyle(fontSize: 17, color: Colors.black, fontWeight: FontWeight.bold),
-            ),
+            () => controller.room.value == null
+                ? const CupertinoActivityIndicator()
+                : Text(
+                    controller.room.value!.title!,
+                    style: const TextStyle(fontSize: 17, color: Colors.black, fontWeight: FontWeight.bold),
+                  ),
           ),
         ),
         actions: [IconButton(onPressed: () {}, icon: const Icon(LineIcons.bars))],
@@ -44,7 +47,7 @@ class ChatViewPage extends StatelessWidget {
             controller: controller.scrollController,
             child: Obx(() => Column(children: controller.chatWidgets.value)),
           )),
-          ChatWidgets.bottomTextField(controller),
+          ChatWidgets.bottomTextField(controller)
         ],
       ),
     );

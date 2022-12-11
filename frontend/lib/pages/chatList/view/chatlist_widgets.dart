@@ -53,9 +53,9 @@ class ChatListWidgets {
                 const SizedBox(
                   height: 2,
                 ),
-                const Text(
-                  '채팅 내용입니다. 안녕하십니까?',
-                  style: TextStyle(color: Colors.black54, fontSize: 12),
+                Text(
+                  room.latest_message!,
+                  style: const TextStyle(color: Colors.black54, fontSize: 12),
                 )
               ],
             ),

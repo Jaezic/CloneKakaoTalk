@@ -1,4 +1,5 @@
-import 'package:KakaoTalk/pages/chat/controller/Chat.dart';
+import 'package:KakaoTalk/common/common.dart';
+import 'package:KakaoTalk/models/Chat.dart';
 import 'package:KakaoTalk/pages/chat/controller/chat_view_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -81,9 +82,9 @@ class ChatWidgets {
         mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          const Text(
-            '오후 3:54',
-            style: TextStyle(color: Colors.black54, fontSize: 10),
+          Text(
+            Common.timeDiffFromNow(DateTime.tryParse(chat.createAt ?? '')),
+            style: const TextStyle(color: Colors.black54, fontSize: 10),
           ),
           Container(
             margin: const EdgeInsets.only(left: 5),
@@ -151,9 +152,9 @@ class ChatWidgets {
             style: const TextStyle(fontSize: 13),
           ),
         ),
-        const Text(
-          '오후 3:54',
-          style: TextStyle(color: Colors.black54, fontSize: 10),
+        Text(
+          Common.timeDiffFromNow(DateTime.tryParse(chat.createAt ?? '')),
+          style: const TextStyle(color: Colors.black54, fontSize: 10),
         ),
       ],
     );

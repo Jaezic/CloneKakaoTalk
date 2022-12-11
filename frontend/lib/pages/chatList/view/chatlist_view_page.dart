@@ -17,10 +17,9 @@ class ChatListViewPage extends StatelessWidget {
   );
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(ChatListViewController());
     return SingleChildScrollView(
         child: Obx(
-      () => controller.chatWidgetList.value.isEmpty
+      () => ChatListViewController.instance.chatWidgetList.value.isEmpty
           ? Center(
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 30),
@@ -42,7 +41,7 @@ class ChatListViewPage extends StatelessWidget {
               ),
             )
           : Column(
-              children: controller.chatWidgetList.value,
+              children: ChatListViewController.instance.chatWidgetList.value,
             ),
     ));
   }

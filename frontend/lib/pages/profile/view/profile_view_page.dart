@@ -140,11 +140,14 @@ class ProfileViewPage extends StatelessWidget {
                               )
                             ])
                           : GestureDetector(
+                              behavior: HitTestBehavior.opaque,
                               onTap: () async {
                                 ApiResponse response = (await ApiService.instance.fetchOneToOneRoom(targetid: controller.user.value!.id!));
-                                if (response.result) {
-                                  Get.toNamed(ChatViewPage.url, arguments: {"roomid": response.value});
+                                if (!response.result) {
+                                  Common.showSnackBar(messageText: response.errorMsg);
+                                  return;
                                 }
+                                Get.toNamed(ChatViewPage.url, arguments: {"roomid": response.value});
                               },
                               child: Column(children: const [
                                 Icon(
