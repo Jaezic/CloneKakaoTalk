@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:KakaoTalk/common/response.dart';
 import 'package:KakaoTalk/common/tcp.dart';
 import 'package:KakaoTalk/common/widget/common_appbar.dart';
+import 'package:KakaoTalk/pages/chatList/controller/chatlist_view_controller.dart';
 import 'package:KakaoTalk/pages/chatList/view/chatlist_view_page.dart';
 import 'package:KakaoTalk/pages/friend/controller/friend_view_controller.dart';
 import 'package:KakaoTalk/pages/friend/view/friend_view_page.dart';
@@ -47,6 +48,9 @@ class MainController extends GetxController {
 
   void selectTab(int index) {
     pageIndex.value = index;
+    if (index == 1) {
+      ChatListViewController.instance.updateChatList();
+    }
     update();
   }
 

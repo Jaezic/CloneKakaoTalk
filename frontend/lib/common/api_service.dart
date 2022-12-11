@@ -6,6 +6,7 @@ import 'package:KakaoTalk/common/service_response.dart';
 import 'package:KakaoTalk/common/tcp.dart';
 import 'package:KakaoTalk/models/get_friend_list_respone.dart';
 import 'package:KakaoTalk/models/get_room_response.dart';
+import 'package:KakaoTalk/models/get_rooms_response.dart';
 import 'package:KakaoTalk/models/post_upload_response.dart';
 import 'package:KakaoTalk/models/post_user_login_response.dart';
 import 'package:KakaoTalk/services/auth_service.dart';
@@ -255,7 +256,7 @@ class ApiService extends GetxService {
       } else {
         roomid = response.data['roomId'];
       }
-      return ApiResponse<String>(result: response.isSuccessful, value: roomid);
+      return ApiResponse<String>(result: true, value: roomid);
     } catch (e) {
       e.printError();
 
@@ -296,6 +297,22 @@ class ApiService extends GetxService {
       e.printError();
 
       return ApiResponse<GetRoomResponse>(result: false, errorMsg: e.toString());
+    }
+  }
+
+  Future<ApiResponse<GetRoomsResponse>> fetchRooms() async {
+    try {
+      var response = await Tcp.get(
+        'fetchRooms',
+        data: jsonEncode({
+          "myId": AuthService.instance.user.value!.id,
+        }),
+      );
+      return ApiResponse<GetRoomsResponse>(result: true, value: GetRoomsResponse.fromJson(response.data));
+    } catch (e) {
+      e.printError();
+
+      return ApiResponse<GetRoomsResponse>(result: false, errorMsg: e.toString());
     }
   }
 }

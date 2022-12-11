@@ -29,6 +29,25 @@ class Common extends GetxService {
     return this;
   }
 
+  static String timeDiffFromNow(DateTime? dateTime) {
+    if (dateTime == null) {
+      return "";
+    }
+    int time = (dateTime.difference(DateTime.now()).inMinutes * -1);
+    String displayTime = "";
+    if (time >= 1440) {
+      displayTime = "${(time / 1440).round().toString()}일 전";
+    } else if (time >= 60) {
+      displayTime = "${(time / 60).round().toString()}시간 전";
+    } else if (time <= 3) {
+      displayTime = "방금 전";
+    } else {
+      displayTime = "${time.toString()}분 전";
+    }
+
+    return displayTime;
+  }
+
   static SnackbarController showSnackBar(
       {required String messageText, Color textColor = Colors.white, Color backgroundColor = Colors.black87, dynamic position = SnackPosition.TOP}) {
     return Get.rawSnackbar(
@@ -42,23 +61,6 @@ class Common extends GetxService {
       ),
       backgroundColor: backgroundColor,
     );
-  }
-
-  static String timeDiffFromNow(DateTime? dateTime) {
-    if (dateTime == null) {
-      return "";
-    }
-    int time = (dateTime.difference(DateTime.now()).inMinutes * -1);
-    String displayTime = "";
-    if (time >= 1440) {
-      displayTime = "${(time / 1440).round().toString()}일 전";
-    } else if (time >= 60) {
-      displayTime = "${(time / 60).round().toString()}시간 전";
-    } else {
-      displayTime = "${time.toString()}분 전";
-    }
-
-    return displayTime;
   }
 
   static Container divider({EdgeInsetsGeometry? margin = EdgeInsets.zero, Color? color, double size = 0.6}) {

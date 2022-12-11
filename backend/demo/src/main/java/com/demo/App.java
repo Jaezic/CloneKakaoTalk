@@ -22,20 +22,9 @@ public class App {
             JSONObject message = new JSONObject();
             JSONObject data = new JSONObject();
             data.put("myId", "test");
-            data.put("onetoone", "1");
-            data.put("title", "Hello");
 
-            JSONArray ids = new JSONArray();
-            ids.put("test");
-            ids.put("asd");
-            data.put("ids", ids);
-
-            // data.put("roomId", "I5Y000RRR8");
-            // message.put("method", "GET");
-            // message.put("route", "fetchRoom");
-
-            message.put("method", "POST");
-            message.put("route", "createRoom");
+            message.put("method", "GET");
+            message.put("route", "fetchRooms");
             message.put("data", data);
             udpRequest(message);
             // JSONObject message = new JSONObject();

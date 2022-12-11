@@ -13,7 +13,7 @@ import 'package:get/get.dart';
 
 class FriendViewController extends GetxController {
   RxInt friendCnt = 0.obs;
-  FriendViewController();
+
   static FriendViewController get instance => Get.find<FriendViewController>();
   RxList<Widget> friendWidgetList = RxList();
   Rxn<Weather> weather = Rxn();
