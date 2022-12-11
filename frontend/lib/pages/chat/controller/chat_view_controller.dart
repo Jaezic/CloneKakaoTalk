@@ -34,8 +34,8 @@ class ChatViewController extends GetxController {
   void receiveAllChats(String roomid) async {
     ApiResponse<GetChatsResponse> response2 = await ApiService.instance.receivePostChat(roomId: roomid);
     if (!response2.result) {
-      Get.back();
-      Common.showSnackBar(messageText: response2.errorMsg);
+      // Get.back();
+      // Common.showSnackBar(messageText: response2.errorMsg);
       return;
     }
     chatWidgets.clear();

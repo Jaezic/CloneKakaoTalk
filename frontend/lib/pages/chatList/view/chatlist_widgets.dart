@@ -54,7 +54,7 @@ class ChatListWidgets {
                   height: 2,
                 ),
                 Text(
-                  room.latest_message!,
+                  room.latest_message ?? "",
                   style: const TextStyle(color: Colors.black54, fontSize: 12),
                 )
               ],

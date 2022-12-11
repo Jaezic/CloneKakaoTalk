@@ -338,7 +338,8 @@ class ApiService extends GetxService {
         'receivePostChat',
         data: jsonEncode({"roomId": roomId, "myId": AuthService.instance.user.value!.id}),
       );
-      return ApiResponse<GetChatsResponse>(result: response.isSuccessful, value: GetChatsResponse.fromJson(response.data));
+
+      return ApiResponse<GetChatsResponse>(result: response.isSuccessful, value: response.isSuccessful ? GetChatsResponse.fromJson(response.data) : null);
     } catch (e) {
       e.printError();
 
