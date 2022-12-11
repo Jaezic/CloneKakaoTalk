@@ -43,22 +43,23 @@ public class POST {
         // 보내기
     }
 
-    static void unregister(Network socket, Request request, Connection con, Statement updatestmt) throws Exception{
+    static void unregister(Network socket, Request request, Connection con, Statement updatestmt) throws Exception {
         Statement querystmt;
         String sql = String.format("select * from User where ID = '%s';", request.data.get("myId"));
         querystmt = con.createStatement();
         ResultSet result = querystmt.executeQuery(sql);
 
-        if(!result.next()){
+        if (!result.next()) {
             // 등록 되어있는 사람이 없다면
             socket.response(new Response(5, "not registered!", null), request.ip, request.port); // 데이터
-        }else{
-            sql = String.format("delete from User where ID = '%s';",  request.data.get("myId"));
+        } else {
+            sql = String.format("delete from User where ID = '%s';", request.data.get("myId"));
             updatestmt.executeUpdate(sql);
             socket.response(new Response(200, "OK", null), request.ip, request.port); // 데이터
             CONNECT.broadcastFetchFriend(result.getString("ID"));
         }
     }
+
     static void login(Network socket, Request request, Connection con, Statement updatestmt) throws Exception {
         AES256 aes256 = new AES256();
 
@@ -103,7 +104,7 @@ public class POST {
     static void addFriend(Network socket, Request request, Connection con, Statement updatestmt) throws Exception {
         Statement querystmt;
         // 친구 id가 이 메신저에 등록되어있는지 우선 확인.
-        String exist_friend = String.format("select * from User where ID like \"%s%\"", request.data.get("friendId"));
+        String exist_friend = String.format("select * from User where ID = \"%s\"", request.data.get("friendId"));
         querystmt = con.createStatement();
         ResultSet exist_result = querystmt.executeQuery(exist_friend);
         if (!exist_result.next()) { // 메신저에 등록되어있지 않다면
