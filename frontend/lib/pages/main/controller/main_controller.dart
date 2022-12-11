@@ -37,7 +37,7 @@ class MainController extends GetxController {
       if (response.statusMessage == "updateFriend") {
         await FriendViewController.instance.fetchFriendList();
       }
-      if (response.statusMessage == "receivePostAll") {
+      if (response.statusMessage == "receivePostChat") {
         if (Get.currentRoute == "/chat_view") ChatViewController.instance.receiveAllChats(AuthService.instance.currentChatRoomid);
         ChatListViewController.instance.updateChatList();
       }
