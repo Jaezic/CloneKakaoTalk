@@ -82,20 +82,28 @@ class ChatWidgets {
         mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
+          const SizedBox(
+            width: 50,
+          ),
           Text(
             Common.timeDiffFromNow(DateTime.tryParse(chat.createAt ?? '')),
             style: const TextStyle(color: Colors.black54, fontSize: 10),
           ),
-          Container(
-            margin: const EdgeInsets.only(left: 5),
-            padding: const EdgeInsets.symmetric(horizontal: 7.5, vertical: 7.5),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              color: const Color.fromARGB(255, 249, 229, 78),
-            ),
-            child: Text(
-              chat.message!,
-              style: const TextStyle(fontSize: 13),
+          Flexible(
+            child: Container(
+              constraints: const BoxConstraints(
+                maxWidth: 500,
+              ),
+              margin: const EdgeInsets.only(left: 5),
+              padding: const EdgeInsets.symmetric(horizontal: 7.5, vertical: 7.5),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: const Color.fromARGB(255, 249, 229, 78),
+              ),
+              child: Text(
+                chat.message!,
+                style: const TextStyle(fontSize: 13),
+              ),
             ),
           ),
         ],
@@ -121,15 +129,17 @@ class ChatWidgets {
         const SizedBox(
           width: 6,
         ),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              chat.username!,
-              style: const TextStyle(color: Colors.black54, fontSize: 10),
-            ),
-            otherChat(chat),
-          ],
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                chat.username!,
+                style: const TextStyle(color: Colors.black54, fontSize: 10),
+              ),
+              otherChat(chat),
+            ],
+          ),
         )
       ]),
     );
@@ -140,21 +150,30 @@ class ChatWidgets {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
-        Container(
-          margin: const EdgeInsets.only(right: 5, top: 3),
-          padding: const EdgeInsets.symmetric(horizontal: 7.5, vertical: 7.5),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            color: Colors.white,
-          ),
-          child: Text(
-            chat.message!,
-            style: const TextStyle(fontSize: 13),
+        Flexible(
+          child: Container(
+            margin: const EdgeInsets.only(right: 5, top: 3),
+            padding: const EdgeInsets.symmetric(horizontal: 7.5, vertical: 7.5),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: Colors.white,
+            ),
+            constraints: const BoxConstraints(
+              maxWidth: 500,
+            ),
+            child: Text(
+              chat.message!,
+              softWrap: true,
+              style: const TextStyle(fontSize: 13),
+            ),
           ),
         ),
         Text(
           Common.timeDiffFromNow(DateTime.tryParse(chat.createAt ?? '')),
           style: const TextStyle(color: Colors.black54, fontSize: 10),
+        ),
+        const SizedBox(
+          width: 50,
         ),
       ],
     );
