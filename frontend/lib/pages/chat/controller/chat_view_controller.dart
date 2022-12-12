@@ -54,9 +54,10 @@ class ChatViewController extends GetxController {
     scrollController.jumpTo(scrollController.position.maxScrollExtent);
   }
 
-  void submit() async {
+  void submit({String? text}) async {
     if (room.value == null) return;
     String message = textEditController.text;
+    if (text != null) message = text.substring(0, text.length - 1);
     textEditController.clear();
     ApiResponse<GetChatResponse> response = await ApiService.instance.sendChat(roomId: room.value!.roomId!, message: message);
     if (!response.result) {

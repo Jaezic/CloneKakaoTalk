@@ -33,9 +33,11 @@ class ChatWidgets {
         children: [
           Expanded(
             child: TextField(
+              textInputAction: TextInputAction.go,
               controller: getxcontroller.textEditController,
               maxLines: null,
               keyboardType: TextInputType.multiline,
+              onSubmitted: (value) => getxcontroller.submit(text: value),
               decoration: InputDecoration(
                 isDense: true,
                 hintText: hintText,
