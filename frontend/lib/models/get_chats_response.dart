@@ -7,7 +7,9 @@ class GetChatsResponse {
   GetChatsResponse.fromJson(Map<String, dynamic> json) {
     message = json.toString();
     chats = [];
-    for (var element in (json['datas'] as List)) {
+    for (Map<String, dynamic> element in (json['datas'] as List)) {
+      element["nickname"] = json['users'][element['nickname']];
+      element["profile_image_path"] = json['users'][element['profile_image_path']];
       chats!.add(Chat.fromJson(element));
     }
   }

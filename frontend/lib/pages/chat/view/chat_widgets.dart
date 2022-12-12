@@ -105,7 +105,7 @@ class ChatWidgets {
                 color: const Color.fromARGB(255, 249, 229, 78),
               ),
               child: Text(
-                chat.message!,
+                chat.message ?? "",
                 style: const TextStyle(fontSize: 13),
               ),
             ),
@@ -138,7 +138,7 @@ class ChatWidgets {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                chat.username!,
+                chat.username ?? "",
                 style: const TextStyle(color: Colors.black54, fontSize: 10),
               ),
               otherChat(chat),
@@ -166,7 +166,7 @@ class ChatWidgets {
               maxWidth: 500,
             ),
             child: Text(
-              chat.message!,
+              chat.message ?? "",
               softWrap: true,
               style: const TextStyle(fontSize: 13),
             ),
