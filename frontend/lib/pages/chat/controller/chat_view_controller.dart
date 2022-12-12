@@ -1,7 +1,6 @@
 import 'package:KakaoTalk/common/api_service.dart';
 import 'package:KakaoTalk/common/common.dart';
 import 'package:KakaoTalk/common/service_response.dart';
-import 'package:KakaoTalk/models/Chat.dart';
 import 'package:KakaoTalk/models/get_chat_response.dart';
 import 'package:KakaoTalk/models/get_chats_response.dart';
 import 'package:KakaoTalk/models/get_room_response.dart';
@@ -44,9 +43,9 @@ class ChatViewController extends GetxController {
     }));
     for (var element in response2.value!.chats!) {
       if (element.userID == AuthService.instance.user.value!.id) {
-        chatWidgets.add(ChatWidgets.myChat(Chat(message: element.message, createAt: element.createAt, userID: element.userID, username: element.username)));
+        chatWidgets.add(ChatWidgets.myChat(element));
       } else {
-        chatWidgets.add(ChatWidgets.otherChats(Chat(message: element.message, createAt: element.createAt, userID: element.userID, username: element.username)));
+        chatWidgets.add(ChatWidgets.otherChats(element));
       }
     }
     update();
