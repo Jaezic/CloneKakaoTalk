@@ -4,6 +4,8 @@ import 'dart:typed_data';
 
 import 'package:KakaoTalk/common/common.dart';
 import 'package:KakaoTalk/common/response.dart';
+import 'package:KakaoTalk/pages/userLogin/page/userlogin_view_page.dart';
+import 'package:get/get.dart' hide Response;
 
 class Tcp {
   Socket? connectSocket;
@@ -20,7 +22,10 @@ class Tcp {
       print('IP: ${socket!.remoteAddress} Port#: ${socket!.remotePort}');
       print('method: ${message['method']}');
       print('route: ${message['route']}');
-      print('data:\n' + message['data']);
+      print('data:\n');
+      JsonEncoder encoder = const JsonEncoder.withIndent('  ');
+      String prettyprint = encoder.convert(message['data']);
+      print(prettyprint);
       print('-------------------------------------------------');
       return socket!.first;
     }).then((data) {
@@ -48,7 +53,10 @@ class Tcp {
       print('IP: ${socket!.remoteAddress} Port#: ${socket!.remotePort}');
       print('method: ${message['method']}');
       print('route: ${message['route']}');
-      print('data:\n' + message['data']);
+      print('data:\n');
+      JsonEncoder encoder = const JsonEncoder.withIndent('  ');
+      String prettyprint = encoder.convert(message['data']);
+      print(prettyprint);
       print('-------------------------------------------------');
       return socket!.first;
     }).then((data) {
@@ -71,7 +79,10 @@ class Tcp {
     print('[TCP Receive]');
     print('IP: $address Port#: $port');
     print('statusCode: ${json['statusCode']} statusMessage: ${json['statusMessage']}');
-    print('data:\n${json['data']}');
+    print('data:\n');
+    JsonEncoder encoder = const JsonEncoder.withIndent('  ');
+    String prettyprint = encoder.convert(json['data']);
+    print(prettyprint);
     print('-------------------------------------------------');
     return Response(statusCode: json['statusCode'], statusMessage: json['statusMessage'], data: json['data']);
   }
@@ -89,7 +100,10 @@ class Tcp {
     print('IP: ${socket!.remoteAddress} Port#: ${socket!.remotePort}');
     print('method: ${message['method']}');
     print('route: ${message['route']}');
-    print('data:\n' + message['data']);
+    print('data:\n');
+    JsonEncoder encoder = const JsonEncoder.withIndent('  ');
+    String prettyprint = encoder.convert(message['data']);
+    print(prettyprint);
     print('-------------------------------------------------');
     tcp.connectSocket = socket;
     return tcp;
@@ -110,6 +124,8 @@ class Tcp {
 
       connectSocket = null;
       print('Tcp Connection Close!');
+      Common.showSnackBar(messageText: "서버와 연결이 종료되었습니다.");
+      Get.offAll(UserLoginViewPage.url);
     }
   }
 }
