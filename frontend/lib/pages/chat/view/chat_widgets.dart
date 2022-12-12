@@ -33,7 +33,9 @@ class ChatWidgets {
         children: [
           Expanded(
             child: TextField(
+              focusNode: getxcontroller.textFieldFocusNode,
               textInputAction: TextInputAction.go,
+              autofocus: true,
               controller: getxcontroller.textEditController,
               maxLines: null,
               keyboardType: TextInputType.multiline,

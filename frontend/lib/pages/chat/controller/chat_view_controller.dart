@@ -18,7 +18,7 @@ class ChatViewController extends GetxController {
   RxBool submitis = false.obs;
   Rxn<Room> room = Rxn();
   RxList<Widget> chatWidgets = RxList<Widget>();
-
+  FocusNode textFieldFocusNode = FocusNode();
   void updateRoom(String roomid) async {
     ApiResponse<GetRoomResponse> response = (await ApiService.instance.fetchRoom(roomId: roomid));
     if (!response.result) {
@@ -57,6 +57,7 @@ class ChatViewController extends GetxController {
   void submit({String? text}) async {
     if (room.value == null) return;
     String message = textEditController.text;
+    textFieldFocusNode.requestFocus();
     if (text != null) message = text.substring(0, text.length - 1);
     textEditController.clear();
     ApiResponse<GetChatResponse> response = await ApiService.instance.sendChat(roomId: room.value!.roomId!, message: message);
@@ -84,6 +85,7 @@ class ChatViewController extends GetxController {
   void onClose() {
     textEditController.dispose();
     scrollController.dispose();
+    textFieldFocusNode.dispose();
     ChatListViewController.instance.updateChatList();
     AuthService.instance.currentChatRoomid = "";
     super.onClose();
