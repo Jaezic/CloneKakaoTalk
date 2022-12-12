@@ -4,8 +4,6 @@ import 'dart:typed_data';
 
 import 'package:KakaoTalk/common/common.dart';
 import 'package:KakaoTalk/common/response.dart';
-import 'package:KakaoTalk/pages/userLogin/page/userlogin_view_page.dart';
-import 'package:get/get.dart' hide Response;
 
 class Tcp {
   Socket? connectSocket;
@@ -113,7 +111,7 @@ class Tcp {
     connectSocket!.listen(
       onData,
       onDone: () {
-        socketClose();
+        //socketClose();
       },
     );
   }
@@ -124,8 +122,8 @@ class Tcp {
 
       connectSocket = null;
       print('Tcp Connection Close!');
-      Common.showSnackBar(messageText: "서버와 연결이 종료되었습니다.");
-      Get.offAll(UserLoginViewPage.url);
+      //Common.showSnackBar(messageText: "서버와 연결이 종료되었습니다.");
+      //Get.offAll(UserLoginViewPage.url);
     }
   }
 }
