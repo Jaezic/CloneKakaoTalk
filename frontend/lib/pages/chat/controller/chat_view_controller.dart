@@ -1,7 +1,6 @@
 import 'package:KakaoTalk/common/api_service.dart';
 import 'package:KakaoTalk/common/common.dart';
 import 'package:KakaoTalk/common/service_response.dart';
-import 'package:KakaoTalk/models/get_chat_response.dart';
 import 'package:KakaoTalk/models/get_chats_response.dart';
 import 'package:KakaoTalk/models/get_room_response.dart';
 import 'package:KakaoTalk/pages/chat/view/chat_widgets.dart';
@@ -58,8 +57,9 @@ class ChatViewController extends GetxController {
     String message = textEditController.text;
     textFieldFocusNode.requestFocus();
     if (text != null) message = text.substring(0, text.length - 1);
+    if (message.isEmpty) return;
     textEditController.clear();
-    ApiResponse<GetChatResponse> response = await ApiService.instance.sendChat(roomId: room.value!.roomId!, message: message);
+    ApiResponse<String> response = await ApiService.instance.sendChat(roomId: room.value!.roomId!, message: message);
     if (!response.result) {
       Common.showSnackBar(messageText: response.errorMsg);
       return;

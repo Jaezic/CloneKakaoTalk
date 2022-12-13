@@ -8,8 +8,8 @@ class GetChatsResponse {
     message = json.toString();
     chats = [];
     for (Map<String, dynamic> element in (json['datas'] as List)) {
-      element["nickname"] = json['users'][element['userid']]['nickname'];
-      element["profile_image_path"] = json['users'][element['userid']]['profile_image_path'];
+      element["nickname"] = json['users'][element['userid']]['nickname'] ?? '';
+      element["profile_image_path"] = json['users'][element['userid']]['profile_image_path'] ?? '';
       chats!.add(Chat.fromJson(element));
     }
   }

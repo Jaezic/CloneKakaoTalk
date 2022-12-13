@@ -44,24 +44,42 @@ class Tcp {
     Response returnObject = Response();
     Map<String, dynamic> message = {"method": "GET", 'route': route, 'data': data};
     var json = jsonEncode(message);
-    await Socket.connect(Common.serverIP, Common.serverTCPport).then((Socket sock) => socket = sock).then((asd) {
-      socket!.write("$json\n");
-      print('-------------------------------------------------');
-      print('[TCP Send]');
-      print('IP: ${socket!.remoteAddress} Port#: ${socket!.remotePort}');
-      print('method: ${message['method']}');
-      print('route: ${message['route']}');
-      print('data:\n');
-      JsonEncoder encoder = const JsonEncoder.withIndent('  ');
-      String prettyprint = encoder.convert(message['data']);
-      print(prettyprint);
-      print('-------------------------------------------------');
-      return socket!.first;
-    }).then((data) {
-      returnObject = receive(data, socket!.address, socket!.port);
-    });
+    // await Socket.connect(Common.serverIP, Common.serverTCPport).then((Socket sock) => socket = sock).then((asd) {
+    //   socket!.write("$json\n");
+    //   print('-------------------------------------------------');
+    //   print('[TCP Send]');
+    //   print('IP: ${socket!.remoteAddress} Port#: ${socket!.remotePort}');
+    //   print('method: ${message['method']}');
+    //   print('route: ${message['route']}');
+    //   print('data:\n');
+    //   JsonEncoder encoder = const JsonEncoder.withIndent('  ');
+    //   String prettyprint = encoder.convert(message['data']);
+    //   print(prettyprint);
+    //   print('-------------------------------------------------');
+    //   return socket!.first;
+    // }).then((data) async {
+    //   print(data.length);
+    //   returnObject = receive(data, socket!.address, socket!.port);
+    // });
+    socket = await Socket.connect(Common.serverIP, Common.serverTCPport);
+    socket.write("$json\n");
+    print('-------------------------------------------------');
+    print('[TCP Send]');
+    print('IP: ${socket.remoteAddress} Port#: ${socket.remotePort}');
+    print('method: ${message['method']}');
+    print('route: ${message['route']}');
+    print('data:\n');
+    JsonEncoder encoder = const JsonEncoder.withIndent('  ');
+    String prettyprint = encoder.convert(message['data']);
+    print(prettyprint);
+    print('-------------------------------------------------');
 
-    await socket!.close();
+    await socket.listen((data) {
+      print(data.length);
+      returnObject = receive(data, socket!.address, socket.port);
+    }).asFuture();
+
+    await socket.close();
     if (returnObject.statusCode == null) {
       throw "API 타임 아웃이 발생하였습니다.";
     } else if (returnObject.statusCode != 200 && returnObject.statusCode != 300) {
