@@ -159,8 +159,6 @@ public class POST {
     }
 
     static void FindPassword(Network socket, Request request, Connection con, Statement updatestmt) throws Exception {
-        AES256 aes256 = new AES256();
-
         Statement querystmt;
         String FindPassword = String.format(
                 "select PassWord from User where ID = \"%s\" and Birthday = \"%s\" and Name = \"%s\"",
@@ -173,7 +171,7 @@ public class POST {
             socket.response(new Response(4, "No data matching that information exists.", null), request.ip,
                     request.port);
         } else {
-            String Finded_Password = aes256.decrypt(FindPassword_result.getString("PassWord"));
+            String Finded_Password = FindPassword_result.getString("PassWord");
 
             // 만일 데이터가 존재한다면?
             socket.response(new Response(201, Finded_Password, null), request.ip, request.port);
