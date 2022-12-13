@@ -137,6 +137,10 @@ public class App {
                         POST.changeProfileBackground(socket, request, con, updatestmt);
                     else if (request.route.equalsIgnoreCase("createRoom")) // 방 만들기
                         POST.createRoom(socket, request, con, updatestmt);
+                    else if (request.route.equalsIgnoreCase("ExitRoom")) // 방 나가기
+                        POST.ExitRoom(socket, request, con, updatestmt);
+                    else if (request.route.equalsIgnoreCase("InvitePeople")) // 친구 초대
+                        POST.InvitePeople(socket, request, con, updatestmt);
                     else if (request.route.equalsIgnoreCase("sendChat")) // 채팅 보내기
                         POST.sendChat(socket, request, con, updatestmt);
                     else

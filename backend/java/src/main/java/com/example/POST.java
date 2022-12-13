@@ -354,25 +354,36 @@ public class POST {
             socket.response(new Response(2, "Already invited People", null), request.ip, request.port);
         } else {
 
-            String send_invite = String.format("insert into Room_User valuse('%s', '%s');", request.data.get("roomId"), // room
+            String send_invite = String.format("insert into Room_User values('%s', '%s');", request.data.get("roomId"), // room
                                                                                                                         // table
                                                                                                                         // ID
                     request.data.get("Id")); // user table ID (초대한 친구)
             Statement querystmt;
             querystmt = con.createStatement();
-            querystmt.executeQuery(send_invite);
+            querystmt.executeUpdate(send_invite);
             socket.response(new Response(200, "OK", null), request.ip, request.port);
         }
     }
 
     // room 퇴장
     static void ExitRoom(Network socket, Request request, Connection con, Statement updatestmt) throws Exception {
+        Statement querystmt;
+        querystmt = con.createStatement();
 
         String send_ExitRoom = String.format("delete from Room_User where id = '%s' and UserId = '%s';",
                 request.data.get("roomId"), // room table ID
                 request.data.get("Id")); // user table ID
-
         updatestmt.executeUpdate(send_ExitRoom);
+        String count_room_user = String.format("select count(id) from room_user where id = '%s';", request.data.get("roomId"));
+        ResultSet result = querystmt.executeQuery(count_room_user);
+        result.next();
+
+        // user가 한명밖에 없으면
+        if(result.getInt(1) == 1){
+            String delete_room = String.format("delete from Room where id = '%s';", request.data.get("roomId"));
+            updatestmt.executeUpdate(delete_room);
+        }
+
         socket.response(new Response(200, "OK", null), request.ip, request.port);
     }
 
