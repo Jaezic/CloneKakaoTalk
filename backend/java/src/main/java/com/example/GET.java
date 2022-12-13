@@ -47,7 +47,7 @@ public class GET {
         ResultSet friend_result = querystmt.executeQuery(UpdateMyData_sql);
 
         if (!friend_result.next()) {
-            socket.response(new Response(10, "Not Founded User Friend Data", null),
+            socket.response(new Response(300, "Not Founded User Friend Data", null),
                     request.ip, request.port);
             return;
         }
@@ -168,7 +168,7 @@ public class GET {
         ResultSet rooms_result = querystmt.executeQuery(find_rooms);
 
         if (!rooms_result.next()) {
-            socket.response(new Response(10, "Not Founded Rooms", null),
+            socket.response(new Response(300, "Not Founded Rooms", null),
                     request.ip, request.port);
             return;
         }
@@ -228,7 +228,7 @@ public class GET {
         request_json.put("roomId", request.data.get("roomId"));
         request_json.put("myId", request.data.get("myId"));
 
-        String sql = String.format("Select * from Chat where Room_id = \"%s\" order by created_at asc;",
+        String sql = String.format("Select * from Chat where Room_id = \"%s\" order by created_at desc Limit 60;",
                 request_json.get("roomId"));
         querystmt = con.createStatement();
         ResultSet chatResult = querystmt.executeQuery(sql);
