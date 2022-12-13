@@ -11,6 +11,7 @@ import 'package:KakaoTalk/models/get_rooms_response.dart';
 import 'package:KakaoTalk/models/post_upload_response.dart';
 import 'package:KakaoTalk/models/post_user_login_response.dart';
 import 'package:KakaoTalk/services/auth_service.dart';
+import 'package:crypto/crypto.dart';
 import 'package:dio/dio.dart' hide Response;
 import 'package:get/get_instance/get_instance.dart';
 import 'package:get/state_manager.dart';
@@ -26,6 +27,22 @@ class ApiService extends GetxService {
   Future<ApiService> init() async {
     Common.logger.d('$runtimeType init!');
     return this;
+  }
+
+  Future<ApiResponse<String>> checkServer() async {
+    try {
+      var response = await Tcp.get(
+        'checkServer',
+        data: jsonEncode({
+          "joinServerTime": DateTime.now().toString(),
+        }),
+      );
+      return ApiResponse<String>(result: response.isSuccessful, value: response.data['ResponseServerTime']);
+    } catch (e) {
+      e.printError();
+
+      return ApiResponse<String>(result: false, errorMsg: e.toString());
+    }
   }
 
   Future<ApiResponse<PostUploadResponse>> upload({required XFile userFile}) async {
@@ -98,7 +115,9 @@ class ApiService extends GetxService {
   }) async {
     try {
       String birthdayString = "${birthday.year}-${birthday.month}-${birthday.day}";
-
+      String tmppass = pass;
+      var passbyte = utf8.encode(pass);
+      pass = sha256.convert(passbyte).toString();
       var response = await Tcp.post(
         'register',
         data: jsonEncode({
@@ -112,7 +131,7 @@ class ApiService extends GetxService {
         }),
       );
 
-      return userLogin(id: id, password: pass);
+      return userLogin(id: id, password: tmppass);
     } catch (e) {
       return ApiResponse<PostUserLoginResponse>(result: false, errorMsg: e.toString());
     }
@@ -123,6 +142,8 @@ class ApiService extends GetxService {
     required String password,
   }) async {
     try {
+      var passbyte = utf8.encode(password);
+      password = sha256.convert(passbyte).toString();
       var response = await Tcp.post(
         'login',
         data: jsonEncode({
@@ -312,6 +333,9 @@ class ApiService extends GetxService {
           "myId": AuthService.instance.user.value!.id,
         }),
       );
+      if (!response.isSuccessful) {
+        return ApiResponse<GetRoomsResponse>(result: response.isSuccessful, value: GetRoomsResponse());
+      }
       return ApiResponse<GetRoomsResponse>(result: response.isSuccessful, value: GetRoomsResponse.fromJson(response.data));
     } catch (e) {
       e.printError();
@@ -327,7 +351,7 @@ class ApiService extends GetxService {
         data: jsonEncode({"myId": AuthService.instance.user.value!.id, "roomId": roomId, "message": message}),
       );
       //return ApiResponse<String>(result: response.isSuccessful, value: GetChatResponse.fromJson(response.data));
-      return ApiResponse<String>(result: response.isSuccessful, value: null);
+      return ApiResponse<String>(result: response.isSuccessful, value: response.statusMessage);
     } catch (e) {
       e.printError();
 
@@ -347,6 +371,63 @@ class ApiService extends GetxService {
       e.printError();
 
       return ApiResponse<GetChatsResponse>(result: false, errorMsg: e.toString());
+    }
+  }
+
+  Future<ApiResponse<String>> checkPassword({required String password}) async {
+    try {
+      var passbyte = utf8.encode(password);
+      password = sha256.convert(passbyte).toString();
+      var response = await Tcp.post(
+        'checkPassword',
+        data: jsonEncode({
+          "id": AuthService.instance.user.value!.id,
+          "password": password,
+        }),
+      );
+      //return ApiResponse<String>(result: response.isSuccessful, value: GetChatResponse.fromJson(response.data));
+      return ApiResponse<String>(result: response.isSuccessful, value: response.statusMessage);
+    } catch (e) {
+      e.printError();
+
+      return ApiResponse<String>(result: false, errorMsg: e.toString());
+    }
+  }
+
+  Future<ApiResponse<String>> updatePassword({required String newpassword}) async {
+    try {
+      var passbyte = utf8.encode(newpassword);
+      newpassword = sha256.convert(passbyte).toString();
+      var response = await Tcp.post(
+        'updatePassword',
+        data: jsonEncode({
+          "id": AuthService.instance.user.value!.id,
+          "password": newpassword,
+        }),
+      );
+      //return ApiResponse<String>(result: response.isSuccessful, value: GetChatResponse.fromJson(response.data));
+      return ApiResponse<String>(result: response.isSuccessful, value: response.statusMessage);
+    } catch (e) {
+      e.printError();
+
+      return ApiResponse<String>(result: false, errorMsg: e.toString());
+    }
+  }
+
+  Future<ApiResponse<String>> unregister() async {
+    try {
+      var response = await Tcp.post(
+        'unregister',
+        data: jsonEncode({
+          "myId": AuthService.instance.user.value!.id,
+        }),
+      );
+      //return ApiResponse<String>(result: response.isSuccessful, value: GetChatResponse.fromJson(response.data));
+      return ApiResponse<String>(result: response.isSuccessful, value: response.statusMessage);
+    } catch (e) {
+      e.printError();
+
+      return ApiResponse<String>(result: false, errorMsg: e.toString());
     }
   }
 }

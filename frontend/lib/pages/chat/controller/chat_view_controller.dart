@@ -17,6 +17,17 @@ class ChatViewController extends GetxController {
   Rxn<Room> room = Rxn();
   RxList<Widget> chatWidgets = RxList<Widget>();
   FocusNode textFieldFocusNode = FocusNode();
+
+  var scaffoldKey = GlobalKey<ScaffoldState>();
+
+  void openDrawer() {
+    scaffoldKey.currentState!.openDrawer();
+  }
+
+  void closeDrawer() {
+    scaffoldKey.currentState!.openEndDrawer();
+  }
+
   void updateRoom(String roomid) async {
     ApiResponse<GetRoomResponse> response = (await ApiService.instance.fetchRoom(roomId: roomid));
     if (!response.result) {

@@ -1,4 +1,5 @@
 import 'package:KakaoTalk/common/api_service.dart';
+import 'package:KakaoTalk/common/common.dart';
 import 'package:KakaoTalk/common/service_response.dart';
 import 'package:KakaoTalk/models/get_friend_list_respone.dart';
 import 'package:KakaoTalk/models/post_user_login_response.dart';
@@ -56,5 +57,57 @@ class FriendViewController extends GetxController {
         builder: (context) {
           return const SettingDialog();
         });
+  }
+
+  Future<void> showUnRegisterDialog(BuildContext context) {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            actionsPadding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+            // RoundedRectangleBorder - Dialog 화면 모서리 둥글게 조절
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+            //Dialog Main Title
+            title: const Text(
+              "계정 탈퇴",
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            //
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: const <Widget>[
+                Text(
+                  "정말 당신의 계정을 탈퇴하시겠습니까?",
+                ),
+              ],
+            ),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {},
+                child: const Text('네', style: TextStyle(color: Colors.black)),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: const Text(
+                  '아니요',
+                  style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+                ),
+              ),
+            ],
+          );
+        });
+  }
+
+  Future<void> unregister() async {
+    ApiResponse<String> response = await ApiService.instance.unregister();
+    if (response.result) {
+      Common.showSnackBar(messageText: "계정이 탈퇴되었습니다.");
+      AuthService.instance.logout();
+    } else {
+      Common.showSnackBar(messageText: response.errorMsg);
+    }
   }
 }

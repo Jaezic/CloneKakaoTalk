@@ -1,3 +1,4 @@
+import 'package:KakaoTalk/common/common.dart';
 import 'package:KakaoTalk/pages/chat/controller/chat_view_controller.dart';
 import 'package:KakaoTalk/pages/chat/view/chat_widgets.dart';
 import 'package:flutter/cupertino.dart';
@@ -15,7 +16,62 @@ class ChatViewPage extends StatelessWidget {
     final controller = Get.put(ChatViewController());
     controller.updateRoom(arg['roomid']);
     return Scaffold(
+      key: controller.scaffoldKey,
       backgroundColor: const Color.fromARGB(255, 175, 193, 207),
+      endDrawer: Drawer(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
+                  child: Obx(
+                    () => controller.room.value == null
+                        ? const SizedBox()
+                        : Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                controller.room.value!.title ?? '',
+                                style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+                              ),
+                              Text(
+                                '${controller.room.value!.users!.length}명 참여중',
+                                style: const TextStyle(fontSize: 10),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 15),
+                                child: Common.divider(color: Colors.black, size: 0.08),
+                              ),
+                              const Text('대화상대', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold))
+                            ],
+                          ),
+                  ),
+                ),
+              ),
+            ),
+            Container(
+              height: 40,
+              padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 7),
+              decoration: const BoxDecoration(
+                color: Color.fromARGB(255, 250, 250, 250),
+                border: Border(
+                  top: BorderSide(width: 0.1, color: Colors.black),
+                ),
+              ),
+              child: Row(
+                children: const [
+                  Icon(
+                    LineIcons.arrowLeft,
+                    color: Colors.grey,
+                  )
+                ],
+              ),
+            )
+          ],
+        ),
+      ),
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 174, 191, 208),
         centerTitle: true,
@@ -36,7 +92,13 @@ class ChatViewPage extends StatelessWidget {
                   ),
           ),
         ),
-        actions: [IconButton(onPressed: () {}, icon: const Icon(LineIcons.bars))],
+        actions: [
+          IconButton(
+              onPressed: () {
+                controller.scaffoldKey.currentState!.openEndDrawer();
+              },
+              icon: const Icon(LineIcons.bars))
+        ],
         elevation: 0,
       ),
       body: Column(

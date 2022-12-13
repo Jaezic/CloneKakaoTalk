@@ -1,5 +1,6 @@
 import 'package:KakaoTalk/common/widget/common_button.dart';
-import 'package:KakaoTalk/pages/userLogin/page/userlogin_view_page.dart';
+import 'package:KakaoTalk/pages/friend/controller/friend_view_controller.dart';
+import 'package:KakaoTalk/pages/password_change/view/password_change_view_page.dart';
 import 'package:KakaoTalk/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -34,7 +35,6 @@ class SettingDialog extends StatelessWidget {
         child: SafeArea(
           top: false,
           child: SizedBox(
-            width: GetPlatform.isMobile ? null : 500,
             child: Container(
               padding: const EdgeInsets.symmetric(vertical: 16),
               margin: const EdgeInsets.symmetric(horizontal: 16),
@@ -45,7 +45,18 @@ class SettingDialog extends StatelessWidget {
                     title: '로그아웃',
                     onTap: () {
                       AuthService.instance.logout();
-                      Get.offAllNamed(UserLoginViewPage.url);
+                    },
+                  ),
+                  button(
+                    title: '비밀번호 변경',
+                    onTap: () {
+                      Get.toNamed(PasswordChangeViewPage.url);
+                    },
+                  ),
+                  button(
+                    title: '계정 탈퇴',
+                    onTap: () {
+                      FriendViewController.instance.showUnRegisterDialog(context);
                     },
                   ),
                 ],

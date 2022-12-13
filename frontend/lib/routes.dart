@@ -1,6 +1,7 @@
 import 'package:KakaoTalk/pages/chat/view/chat_view_page.dart';
 import 'package:KakaoTalk/pages/imageview/image_view_page.dart';
 import 'package:KakaoTalk/pages/main/view/main_view_page.dart';
+import 'package:KakaoTalk/pages/password_change/view/password_change_view_page.dart';
 import 'package:KakaoTalk/pages/profile/view/profile_view_page.dart';
 import 'package:KakaoTalk/pages/profile_change/view/profile_change_view_page.dart';
 import 'package:KakaoTalk/pages/route/view/route_view_page.dart';
@@ -51,6 +52,10 @@ class CustomRouter {
     GetPage(
       name: ChatViewPage.url,
       page: () => const ChatViewPage(),
+    ),
+    GetPage(
+      name: PasswordChangeViewPage.url,
+      page: () => const PasswordChangeViewPage(),
     ),
   ];
 }
