@@ -13,21 +13,17 @@ import java.time.format.DateTimeFormatter;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import java.util.Random;
-<<<<<<< HEAD
 import java.util.TimeZone;
 import java.lang.StringBuilder;
-
-=======
 
 import javax.swing.text.DefaultStyledDocument.ElementSpec;
 
 import java.lang.StringBuilder;
 
->>>>>>> 80fb1d6b3c30ad0b9553d769971e13be2db814d7
 public class POST {
     static void register(Network socket, Request request, Connection con, Statement updatestmt) throws Exception {
         AES256 aes256 = new AES256();
-        String cipherText = aes256.encrypt(request.data.getString("pass"));
+        // String cipherText = aes256.encrypt(request.data.getString("pass"));
 
         Statement querystmt;
         String sql = String.format("select * from User where ID = \"%s\"", request.data.get("id"));
@@ -36,7 +32,8 @@ public class POST {
         if (!result.next()) {
             sql = String.format(
                     "insert into User(ID, PassWord, Name, EMail, HomeAddress, Birthday) Values(\"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\");",
-                    request.data.get("id"), cipherText, request.data.get("name"),
+                    request.data.get("id"), request.data.getString("pass"), request.data.get("name"),
+                    // request.data.get("id"), cipherText, request.data.get("name"),
                     request.data.get("email"), request.data.get("homeaddress"),
                     request.data.get("birthday"));
             updatestmt.executeUpdate(sql);
@@ -87,7 +84,8 @@ public class POST {
             socket.response(new Response(2, "Please sign up for membership first", null),
                     request.ip, request.port);
         } else {
-            String password = aes256.decrypt(result.getString("PassWord"));
+            // String password = aes256.decrypt(result.getString("PassWord"));
+            String password = result.getString("PassWord");
 
             // password_sql과 user가 입력한 password가 같다면
             // == 안됨!! 명심..
@@ -250,7 +248,6 @@ public class POST {
         // 둘 중 하나 오류나면 안 올라감.
         con.setAutoCommit(false);
 
-<<<<<<< HEAD
         String create_room = String.format(
                 "insert into Room(id,Title,CreateUserId,Onetoone) values('%s', 'null', '%s', '%s');", roomId,
                 request_json.get("myId"),
@@ -261,14 +258,6 @@ public class POST {
                     request_json.getJSONArray("ids").getString(i));
             updatestmt.executeUpdate(create_room_user);
         }
-=======
-        String create_room = String.format("insert into room values('%s', '%s', '%s', 0);", roomId,
-                request.data.get("title"), request.data.get("myId"), 0);
-        querystmt.executeUpdate(create_room);
-        String create_room_user = String.format("insert into room_user values('%s', '%s');", roomId,
-                request.data.get("myId"));
-        updatestmt.executeUpdate(create_room_user);
->>>>>>> 80fb1d6b3c30ad0b9553d769971e13be2db814d7
 
         con.commit();
         con.setAutoCommit(true);
@@ -326,7 +315,7 @@ public class POST {
                 request_json.get("myId"), request_json.get("message"));
         updatestmt.executeUpdate(send_chat);
 
-        JSONObject response_json = new JSONObject();
+        // JSONObject response_json = new JSONObject();
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         Calendar calendar = Calendar.getInstance();
@@ -335,9 +324,9 @@ public class POST {
 
         String dateResult = sdf.format(date);
 
-        response_json.put("userid", request_json.get("myId"));
-        response_json.put("created_at", dateResult);
-        response_json.put("message", request_json.get("message"));
+        // response_json.put("userid", request_json.get("myId"));
+        // response_json.put("created_at", dateResult);
+        // response_json.put("message", request_json.get("message"));
 
         String find_nickname = String.format("select NickName from UserStatus where id = \"%s\";",
                 request_json.get("myId"));
@@ -346,7 +335,7 @@ public class POST {
         ResultSet result = querystmt.executeQuery(find_nickname);
         result.next();
 
-        response_json.put("nickname", result.getString("NickName"));
+        // response_json.put("nickname", result.getString("NickName"));
 
         String find_chatMember = String.format("select UserId from Room_User where id = \"%s\";",
                 request_json.get("roomId"));
@@ -358,6 +347,8 @@ public class POST {
         }
         CONNECT.broadcastReceivePostChat(request_json.getString("myId"), members);
 
-        socket.response(new Response(200, "OK", response_json), request.ip, request.port);
+        // socket.response(new Response(200, "OK", response_json), request.ip,
+        // request.port);
+        socket.response(new Response(200, "OK", null), request.ip, request.port);
     }
 }
