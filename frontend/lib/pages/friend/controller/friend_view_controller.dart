@@ -23,7 +23,7 @@ class FriendViewController extends GetxController {
   void onInit() async {
     super.onInit();
     friendWidgetList.value = [];
-    AuthService.instance.FriendIdList.value = [];
+    AuthService.instance.FriendList.value = [];
     var weather = Weather(latitude: 37.449768910451795, longitude: 127.1293218455751);
     await weather.weatherInfoGet();
     this.weather.value = weather;
@@ -37,6 +37,7 @@ class FriendViewController extends GetxController {
       return;
     }
     friendWidgetList.clear();
+    AuthService.instance.FriendList.clear();
     AuthService.instance.FriendIdList.clear();
     for (var element in fetchResponse.value!.datas!) {
       friendWidgetList.add(FriendWidgets.FriendTuple(
@@ -44,6 +45,7 @@ class FriendViewController extends GetxController {
           onTap: () {
             Get.toNamed(ProfileViewPage.url, arguments: {"user": User.fromJson(element)});
           }));
+      AuthService.instance.FriendList.add(User.fromJson(element));
       AuthService.instance.FriendIdList.add(element['id']);
     }
     friendCnt.value = friendWidgetList.value.length;

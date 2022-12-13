@@ -316,11 +316,10 @@ class ApiService extends GetxService {
           "roomId": roomId,
         }),
       );
-      GetRoomResponse getFriendListResponse = GetRoomResponse.fromJson(response.data);
-      return ApiResponse<GetRoomResponse>(result: response.isSuccessful, value: getFriendListResponse);
+      GetRoomResponse getRoomResponse = GetRoomResponse.fromJson(response.data);
+      return ApiResponse<GetRoomResponse>(result: response.isSuccessful, value: getRoomResponse);
     } catch (e) {
       e.printError();
-
       return ApiResponse<GetRoomResponse>(result: false, errorMsg: e.toString());
     }
   }
@@ -339,7 +338,6 @@ class ApiService extends GetxService {
       return ApiResponse<GetRoomsResponse>(result: response.isSuccessful, value: GetRoomsResponse.fromJson(response.data));
     } catch (e) {
       e.printError();
-
       return ApiResponse<GetRoomsResponse>(result: false, errorMsg: e.toString());
     }
   }
@@ -423,6 +421,23 @@ class ApiService extends GetxService {
         }),
       );
       //return ApiResponse<String>(result: response.isSuccessful, value: GetChatResponse.fromJson(response.data));
+      return ApiResponse<String>(result: response.isSuccessful, value: response.statusMessage);
+    } catch (e) {
+      e.printError();
+
+      return ApiResponse<String>(result: false, errorMsg: e.toString());
+    }
+  }
+
+  Future<ApiResponse<String>> ExitRoom({required String roomId}) async {
+    try {
+      var response = await Tcp.post(
+        'ExitRoom',
+        data: jsonEncode({
+          "roomId": roomId,
+          "Id": AuthService.instance.user.value!.id,
+        }),
+      );
       return ApiResponse<String>(result: response.isSuccessful, value: response.statusMessage);
     } catch (e) {
       e.printError();

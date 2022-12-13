@@ -7,6 +7,7 @@ class AuthService extends GetxService {
   static AuthService get instance => Get.find<AuthService>();
   String currentChatRoomid = "";
   Rxn<User> user = Rxn();
+  RxList<User> FriendList = RxList();
   RxList<String> FriendIdList = RxList();
   Future<AuthService> init() async {
     Common.logger.d('$runtimeType init!');

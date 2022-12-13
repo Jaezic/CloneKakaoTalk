@@ -1,7 +1,9 @@
+import 'package:KakaoTalk/common/api_service.dart';
 import 'package:KakaoTalk/common/common.dart';
 import 'package:KakaoTalk/common/widget/image_loader.dart';
 import 'package:KakaoTalk/models/Chat.dart';
 import 'package:KakaoTalk/pages/chat/controller/chat_view_controller.dart';
+import 'package:KakaoTalk/pages/profile/view/profile_view_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -120,30 +122,39 @@ class ChatWidgets {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
       child: Row(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.start, children: [
-        chat.profileimagepath != null
-            ? ClipRRect(
-                borderRadius: BorderRadius.circular(15),
-                child: SizedBox(
-                  width: 35,
-                  height: 35,
-                  child: ImageLoader(
-                    url: chat.profileimagepath ?? "",
-                    boxfit: BoxFit.cover,
-                    width: 45,
-                    height: 45,
-                  ),
-                ))
-            : ClipRRect(
-                borderRadius: BorderRadius.circular(15),
-                child: SizedBox(
-                  height: 35,
-                  width: 35,
-                  child: Image.asset(
-                    "./assets/images/profile.jpg",
-                    fit: BoxFit.fill,
+        GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: () async {
+            var response = await ApiService.instance.getUserInfo(userId: chat.userID!);
+            if (response.result) {
+              Get.toNamed(ProfileViewPage.url, arguments: {"user": response.value!.user});
+            }
+          },
+          child: chat.profileimagepath != null
+              ? ClipRRect(
+                  borderRadius: BorderRadius.circular(15),
+                  child: SizedBox(
+                    width: 35,
+                    height: 35,
+                    child: ImageLoader(
+                      url: chat.profileimagepath ?? "",
+                      boxfit: BoxFit.cover,
+                      width: 45,
+                      height: 45,
+                    ),
+                  ))
+              : ClipRRect(
+                  borderRadius: BorderRadius.circular(15),
+                  child: SizedBox(
+                    height: 35,
+                    width: 35,
+                    child: Image.asset(
+                      "./assets/images/profile.jpg",
+                      fit: BoxFit.fill,
+                    ),
                   ),
                 ),
-              ),
+        ),
         const SizedBox(
           width: 6,
         ),

@@ -1,6 +1,7 @@
 import 'package:KakaoTalk/common/common.dart';
 import 'package:KakaoTalk/pages/chat/controller/chat_view_controller.dart';
 import 'package:KakaoTalk/pages/chat/view/chat_widgets.dart';
+import 'package:KakaoTalk/pages/chat/view/user_friend_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -15,6 +16,7 @@ class ChatViewPage extends StatelessWidget {
     var arg = Get.arguments;
     final controller = Get.put(ChatViewController());
     controller.updateRoom(arg['roomid']);
+
     return Scaffold(
       key: controller.scaffoldKey,
       backgroundColor: const Color.fromARGB(255, 175, 193, 207),
@@ -33,7 +35,9 @@ class ChatViewPage extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                controller.room.value!.title ?? '',
+                                controller.room.value!.title!.length > 10
+                                    ? '${controller.room.value!.title!.substring(0, 11)}···'
+                                    : controller.room.value!.title!,
                                 style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
                               ),
                               Text(
@@ -42,9 +46,45 @@ class ChatViewPage extends StatelessWidget {
                               ),
                               Padding(
                                 padding: const EdgeInsets.symmetric(vertical: 15),
-                                child: Common.divider(color: Colors.black, size: 0.08),
+                                child: Common.divider(color: Colors.grey.shade300, size: 1.0),
                               ),
-                              const Text('대화상대', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold))
+                              Row(
+                                children: [
+                                  const Text('대화상대', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+                                  const Spacer(),
+                                  GestureDetector(
+                                    onTap: () => showCupertinoModalPopup(
+                                        barrierColor: Colors.black54,
+                                        context: context,
+                                        builder: (context) {
+                                          return UserFriendDialog(
+                                            onUserAdded: (user) {
+                                              // if (user != null) {
+                                              //   if (controller.usertag.where((p0) => p0.id == user.id).isEmpty) {
+                                              //     controller.usertag.add(user);
+                                              //     Get.back();
+                                              //   } else {
+                                              //     Get.back();
+                                              //     Common.showSnackBar(messageText: "이미 태그되었습니다.");
+                                              //   }
+                                              // }
+                                            },
+                                          );
+                                        }),
+                                    child: const Icon(
+                                      CupertinoIcons.add,
+                                      color: Colors.grey,
+                                      size: 15,
+                                    ),
+                                  )
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Column(
+                                children: controller.userListWidgets.value,
+                              )
                             ],
                           ),
                   ),
@@ -61,11 +101,14 @@ class ChatViewPage extends StatelessWidget {
                 ),
               ),
               child: Row(
-                children: const [
-                  Icon(
-                    LineIcons.arrowLeft,
-                    color: Colors.grey,
-                  )
+                children: [
+                  GestureDetector(
+                    onTap: () => controller.showExitDialog(context),
+                    child: const Icon(
+                      LineIcons.arrowLeft,
+                      color: Colors.grey,
+                    ),
+                  ),
                 ],
               ),
             )

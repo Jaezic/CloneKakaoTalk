@@ -47,8 +47,24 @@ class ChatListWidgets {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  room.title!,
+                Row(
+                  children: [
+                    Text(
+                      room.title!,
+                    ),
+                    if (room.onetoone == 0)
+                      Row(
+                        children: [
+                          const SizedBox(
+                            width: 5,
+                          ),
+                          Text(
+                            '${room.users!.length}',
+                            style: const TextStyle(color: Colors.grey, fontSize: 13),
+                          )
+                        ],
+                      )
+                  ],
                 ),
                 const SizedBox(
                   height: 2,
