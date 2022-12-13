@@ -1,16 +1,20 @@
 package com.example;
 
 import java.sql.*;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
-
+import java.util.List;
+import java.util.Locale;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 import java.util.Random;
+import java.util.TimeZone;
 import java.lang.StringBuilder;
-
 
 public class POST {
     static void register(Network socket, Request request, Connection con, Statement updatestmt) throws Exception {
@@ -202,43 +206,56 @@ public class POST {
     }
 
     static void createRoom(Network socket, Request request, Connection con, Statement updatestmt) throws Exception {
+        JSONObject request_json = new JSONObject();
+        request_json.put("myId", request.data.get("myId"));
+        request_json.put("onetoone", request.data.get("onetoone"));
+        request_json.put("ids", request.data.get("ids"));
+
         // 10자리 랜덤 문자열(영어+숫자) 생성
         char[] tmp = new char[10];
-			for(int i=0; i<tmp.length; i++) {
-				int div = (int) Math.floor( Math.random() * 2 );
-				if(div == 0) { // 0이면 숫자로
-					tmp[i] = (char) (Math.random() * 10 + '0') ;
-				}else { // 1이면 알파벳
-					tmp[i] = (char) (Math.random() * 26 + 'A') ;
-				}
-			}
-		String roomId = new String(tmp);
+        for (int i = 0; i < tmp.length; i++) {
+            int div = (int) Math.floor(Math.random() * 2);
+            if (div == 0) { // 0이면 숫자로
+                tmp[i] = (char) (Math.random() * 10 + '0');
+            } else { // 1이면 알파벳
+                tmp[i] = (char) (Math.random() * 26 + 'A');
+            }
+        }
+        String roomId = new String(tmp);
 
         // 랜덤 문자열이 다른 roomid와 겹치는지 check
-        String same_room_id = "select id from room;";
+        String same_room_id = "select id from Room;";
         Statement querystmt;
         querystmt = con.createStatement();
         ResultSet result = querystmt.executeQuery(same_room_id);
-        while(result.next()){
-            if (result.getString("id") == roomId){
+        while (result.next()) {
+            if (result.getString("id") == roomId) {
                 createRoom(socket, request, con, updatestmt);
-                return ;
+                return;
             }
         }
-        
+
         // 자동 commit false
         // 둘 중 하나 오류나면 안 올라감.
         con.setAutoCommit(false);
-        
-        String create_room = String.format("insert into room values('%s', '%s', '%s', 0);", roomId, request.data.get("title"), request.data.get("myId"), 0);
-        querystmt.executeUpdate(create_room);
-        String create_room_user = String.format("insert into room_user values('%s', '%s');", roomId, request.data.get("myId"));
-        updatestmt.executeUpdate(create_room_user);
+
+        String create_room = String.format(
+                "insert into Room(id,Title,CreateUserId,Onetoone) values('%s', 'null', '%s', '%s');", roomId,
+                request_json.get("myId"),
+                request_json.get("onetoone"));
+        updatestmt.executeUpdate(create_room);
+        for (int i = 0; i < request_json.getJSONArray("ids").length(); i++) {
+            String create_room_user = String.format("insert into Room_User values('%s', '%s');", roomId,
+                    request_json.getJSONArray("ids").getString(i));
+            updatestmt.executeUpdate(create_room_user);
+        }
 
         con.commit();
         con.setAutoCommit(true);
+        JSONObject result_json = new JSONObject();
+        result_json.put("roomId", roomId);
 
-        socket.response(new Response(200, "OK", null), request.ip, request.port);
+        socket.response(new Response(200, "OK", result_json), request.ip, request.port);
     }
 
     // 사람 초대
@@ -269,34 +286,48 @@ public class POST {
         socket.response(new Response(200, "OK", null), request.ip, request.port);
     }
 
-    static void findOneToOne(Network socket, Request request, Connection con, Statement updatestmt) throws Exception {
-        Statement querystmt;
-        // 나와 상대방이 들어있는 방 중에 1 : 1 방 검색
-        String find_one_to_one = String.format(
-                "select id from room where id in (select a.id from room_user as a, room_user as b where a.id = b.id and a.userid = '%s' and b.userid = '%s') and onetoone = true;",
-                request.data.get("myId"), request.data.get("friendId"));
-        querystmt = con.createStatement();
-        ResultSet result = querystmt.executeQuery(find_one_to_one);
-        while (result.next()) {
-            // 1 : 1 채팅방이라면
-            JSONObject reponse_json = new JSONObject();
-            reponse_json.put("roomId", result.getString("id"));
-            socket.response(new Response(200, "OK", reponse_json), request.ip, request.port);
-            return;
-        }
-        // result.next()가 false인 경우도 있기 때문에 따로 빼놓음.
-        socket.response(new Response(5, "There is no 1:1 chat room.", null), request.ip, request.port);
-
-    }
-
     static void sendChat(Network socket, Request request, Connection con, Statement updatestmt) throws Exception {
-        // 현재 날짜, 시간
-        LocalDateTime now = LocalDateTime.now();
-        String formatedNow = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")); // 년, 월, 일, 시, 분, 초로 string
-                                                                                             // formatting
-        String send_chat = String.format("insert into chat values('%s', '%s', '%s', '%s');", request.data.get("roomId"),
-                request.data.get("myId"), request.data.get("message"), formatedNow);
+        JSONObject request_json = new JSONObject();
+        request_json.put("roomId", request.data.get("roomId"));
+        request_json.put("myId", request.data.get("myId"));
+        request_json.put("message", request.data.get("message"));
+        String send_chat = String.format("insert into Chat(Room_id, UserId, message) values('%s', '%s', '%s');",
+                request_json.get("roomId"),
+                request_json.get("myId"), request_json.get("message"));
         updatestmt.executeUpdate(send_chat);
-        socket.response(new Response(200, "OK", null), request.ip, request.port);
+
+        JSONObject response_json = new JSONObject();
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.HOUR_OF_DAY, 9);
+        java.util.Date date = new Date(calendar.getTimeInMillis());
+
+        String dateResult = sdf.format(date);
+
+        response_json.put("userid", request_json.get("myId"));
+        response_json.put("created_at", dateResult);
+        response_json.put("message", request_json.get("message"));
+
+        String find_nickname = String.format("select NickName from UserStatus where id = \"%s\";",
+                request_json.get("myId"));
+        Statement querystmt;
+        querystmt = con.createStatement();
+        ResultSet result = querystmt.executeQuery(find_nickname);
+        result.next();
+
+        response_json.put("nickname", result.getString("NickName"));
+
+        String find_chatMember = String.format("select UserId from Room_User where id = \"%s\";",
+                request_json.get("roomId"));
+        querystmt = con.createStatement();
+        ResultSet member_result = querystmt.executeQuery(find_chatMember);
+        List<String> members = new ArrayList<String>();
+        while (member_result.next()) {
+            members.add(member_result.getString("UserId"));
+        }
+        CONNECT.broadcastReceivePostChat(request_json.getString("myId"), members);
+
+        socket.response(new Response(200, "OK", response_json), request.ip, request.port);
     }
 }

@@ -43,7 +43,7 @@ public class App {
         Socket socket = new Socket(serverip, 9997);
 
         BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-        out.write(msg);
+        out.write(msg); 
         out.flush();
         socket.close();
         // socket.close();
