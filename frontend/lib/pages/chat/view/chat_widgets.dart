@@ -1,4 +1,6 @@
-import 'package:KakaoTalk/pages/chat/controller/Chat.dart';
+import 'package:KakaoTalk/common/common.dart';
+import 'package:KakaoTalk/common/widget/image_loader.dart';
+import 'package:KakaoTalk/models/Chat.dart';
 import 'package:KakaoTalk/pages/chat/controller/chat_view_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -22,6 +24,7 @@ class ChatWidgets {
 
   static Widget textField({required ChatViewController getxcontroller, required String hintText}) {
     return Container(
+      height: 30,
       decoration: BoxDecoration(
         color: const Color.fromARGB(200, 248, 248, 248),
         border: Border.all(width: 1.0, color: Colors.black.withOpacity(0.05)),
@@ -31,9 +34,13 @@ class ChatWidgets {
         children: [
           Expanded(
             child: TextField(
+              focusNode: getxcontroller.textFieldFocusNode,
+              textInputAction: TextInputAction.go,
+              autofocus: true,
               controller: getxcontroller.textEditController,
               maxLines: null,
               keyboardType: TextInputType.multiline,
+              onSubmitted: (value) => getxcontroller.submit(text: value),
               decoration: InputDecoration(
                 isDense: true,
                 hintText: hintText,
@@ -80,20 +87,28 @@ class ChatWidgets {
         mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          const Text(
-            '오후 3:54',
-            style: TextStyle(color: Colors.black54, fontSize: 10),
+          const SizedBox(
+            width: 50,
           ),
-          Container(
-            margin: const EdgeInsets.only(left: 5),
-            padding: const EdgeInsets.symmetric(horizontal: 7.5, vertical: 7.5),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              color: const Color.fromARGB(255, 249, 229, 78),
-            ),
-            child: Text(
-              chat.message!,
-              style: const TextStyle(fontSize: 13),
+          Text(
+            Common.timeDiffFromNow(DateTime.tryParse(chat.createAt ?? '')),
+            style: const TextStyle(color: Colors.black54, fontSize: 10),
+          ),
+          Flexible(
+            child: Container(
+              constraints: const BoxConstraints(
+                maxWidth: 500,
+              ),
+              margin: const EdgeInsets.only(left: 5),
+              padding: const EdgeInsets.symmetric(horizontal: 7.5, vertical: 7.5),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: const Color.fromARGB(255, 249, 229, 78),
+              ),
+              child: Text(
+                chat.message ?? "",
+                style: const TextStyle(fontSize: 13),
+              ),
             ),
           ),
         ],
@@ -105,29 +120,44 @@ class ChatWidgets {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
       child: Row(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.start, children: [
-        ClipRRect(
-          borderRadius: BorderRadius.circular(15),
-          child: SizedBox(
-            height: 35,
-            width: 35,
-            child: Image.asset(
-              "./assets/images/profile.jpg",
-              fit: BoxFit.fill,
-            ),
-          ),
-        ),
+        chat.profileimagepath != null
+            ? ClipRRect(
+                borderRadius: BorderRadius.circular(15),
+                child: SizedBox(
+                  width: 35,
+                  height: 35,
+                  child: ImageLoader(
+                    url: chat.profileimagepath!,
+                    boxfit: BoxFit.cover,
+                    width: 45,
+                    height: 45,
+                  ),
+                ))
+            : ClipRRect(
+                borderRadius: BorderRadius.circular(15),
+                child: SizedBox(
+                  height: 35,
+                  width: 35,
+                  child: Image.asset(
+                    "./assets/images/profile.jpg",
+                    fit: BoxFit.fill,
+                  ),
+                ),
+              ),
         const SizedBox(
           width: 6,
         ),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              chat.username!,
-              style: const TextStyle(color: Colors.black54, fontSize: 10),
-            ),
-            otherChat(chat),
-          ],
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                chat.username ?? "",
+                style: const TextStyle(color: Colors.black54, fontSize: 10),
+              ),
+              otherChat(chat),
+            ],
+          ),
         )
       ]),
     );
@@ -138,21 +168,30 @@ class ChatWidgets {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
-        Container(
-          margin: const EdgeInsets.only(right: 5, top: 3),
-          padding: const EdgeInsets.symmetric(horizontal: 7.5, vertical: 7.5),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            color: Colors.white,
-          ),
-          child: Text(
-            chat.message!,
-            style: const TextStyle(fontSize: 13),
+        Flexible(
+          child: Container(
+            margin: const EdgeInsets.only(right: 5, top: 3),
+            padding: const EdgeInsets.symmetric(horizontal: 7.5, vertical: 7.5),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: Colors.white,
+            ),
+            constraints: const BoxConstraints(
+              maxWidth: 500,
+            ),
+            child: Text(
+              chat.message ?? "",
+              softWrap: true,
+              style: const TextStyle(fontSize: 13),
+            ),
           ),
         ),
-        const Text(
-          '오후 3:54',
-          style: TextStyle(color: Colors.black54, fontSize: 10),
+        Text(
+          Common.timeDiffFromNow(DateTime.tryParse(chat.createAt ?? '')),
+          style: const TextStyle(color: Colors.black54, fontSize: 10),
+        ),
+        const SizedBox(
+          width: 50,
         ),
       ],
     );

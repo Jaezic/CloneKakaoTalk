@@ -115,6 +115,8 @@ public class App {
                         POST.register(socket, request, con, updatestmt);
                     else if (request.route.equalsIgnoreCase("login"))
                         POST.login(socket, request, con, updatestmt);
+                    else if (request.route.equalsIgnoreCase("unregister")) // 탈퇴 api
+                        POST.unregister(socket, request, con, updatestmt);
                     else if (request.route.equalsIgnoreCase("addFriend")) // 친구 추가 api
                         POST.addFriend(socket, request, con, updatestmt);
                     else if (request.route.equalsIgnoreCase("deleteFriend"))

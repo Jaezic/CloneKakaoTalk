@@ -1,3 +1,4 @@
+import 'package:KakaoTalk/pages/chatList/controller/chatlist_view_controller.dart';
 import 'package:KakaoTalk/pages/main/controller/main_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -10,6 +11,7 @@ class MainViewPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(MainController(context));
+    final chatListController = Get.put(ChatListViewController());
     return GetBuilder<MainController>(builder: (controller) {
       return Scaffold(
         appBar: controller.appBarContent[controller.pageIndex.value],

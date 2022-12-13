@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 
 class AuthService extends GetxService {
   static AuthService get instance => Get.find<AuthService>();
+  String currentChatRoomid = "";
   Rxn<User> user = Rxn();
   RxList<String> FriendIdList = RxList();
   Future<AuthService> init() async {

@@ -3,6 +3,7 @@ import 'package:KakaoTalk/common/service_response.dart';
 import 'package:KakaoTalk/models/post_user_login_response.dart';
 import 'package:KakaoTalk/pages/friend/view/friend_widgets.dart';
 import 'package:KakaoTalk/pages/profile/view/profile_view_page.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -34,6 +35,8 @@ class SearchController extends GetxController {
 
   void searchUser(String targetName) async {
     if (targetName.isEmpty) return;
+    searchUserList.clear();
+    searchUserList.add(const Padding(padding: EdgeInsets.symmetric(vertical: 50), child: Center(child: CupertinoActivityIndicator())));
     ApiResponse<PostUserLoginResponse> response = await ApiService.instance.getUserInfo(userId: targetName);
     searchUserList.clear();
     if (response.result) {
@@ -44,11 +47,13 @@ class SearchController extends GetxController {
           }));
     } else {
       searchUserList.add(const Padding(
-        padding: EdgeInsets.only(top: 50),
-        child: Text(
-          '검색 결과가 없습니다.',
-          textAlign: TextAlign.center,
-          style: TextStyle(color: Colors.black54, fontSize: 14),
+        padding: EdgeInsets.symmetric(vertical: 50),
+        child: Center(
+          child: Text(
+            '검색 결과가 없습니다.',
+            textAlign: TextAlign.center,
+            style: TextStyle(color: Colors.black54, fontSize: 14),
+          ),
         ),
       ));
     }

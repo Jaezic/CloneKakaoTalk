@@ -1,4 +1,5 @@
 import 'package:KakaoTalk/common/api_service.dart';
+import 'package:KakaoTalk/common/common.dart';
 import 'package:KakaoTalk/common/service_response.dart';
 import 'package:KakaoTalk/models/get_friend_list_respone.dart';
 import 'package:KakaoTalk/models/post_user_login_response.dart';
@@ -13,7 +14,7 @@ import 'package:get/get.dart';
 
 class FriendViewController extends GetxController {
   RxInt friendCnt = 0.obs;
-  FriendViewController();
+
   static FriendViewController get instance => Get.find<FriendViewController>();
   RxList<Widget> friendWidgetList = RxList();
   Rxn<Weather> weather = Rxn();
@@ -31,20 +32,22 @@ class FriendViewController extends GetxController {
 
   Future<void> fetchFriendList() async {
     ApiResponse<GetFriendListResponse> fetchResponse = await ApiService.instance.fetchFriends();
-    if (fetchResponse.result) {
-      friendWidgetList.clear();
-      AuthService.instance.FriendIdList.clear();
-      for (var element in fetchResponse.value!.datas!) {
-        friendWidgetList.add(FriendWidgets.FriendTuple(
-            user: User.fromJson(element),
-            onTap: () {
-              Get.toNamed(ProfileViewPage.url, arguments: {"user": User.fromJson(element)});
-            }));
-        AuthService.instance.FriendIdList.add(element['id']);
-      }
-      friendCnt.value = friendWidgetList.value.length;
-      update();
+    if (!fetchResponse.result) {
+      Common.showSnackBar(messageText: fetchResponse.errorMsg);
+      return;
     }
+    friendWidgetList.clear();
+    AuthService.instance.FriendIdList.clear();
+    for (var element in fetchResponse.value!.datas!) {
+      friendWidgetList.add(FriendWidgets.FriendTuple(
+          user: User.fromJson(element),
+          onTap: () {
+            Get.toNamed(ProfileViewPage.url, arguments: {"user": User.fromJson(element)});
+          }));
+      AuthService.instance.FriendIdList.add(element['id']);
+    }
+    friendCnt.value = friendWidgetList.value.length;
+    update();
   }
 
   Future<void> showSettingDialog(BuildContext context) {

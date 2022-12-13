@@ -49,68 +49,65 @@ class FriendViewPage extends StatelessWidget {
     final controller = Get.put(FriendViewController());
     return SingleChildScrollView(
       child: Center(
-        child: SizedBox(
-          width: GetPlatform.isMobile ? null : 500,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                FriendWidgets.friendBanner(controller),
-                CommonButton(
-                  padding: EdgeInsets.zero,
-                  onTap: () {
-                    Get.toNamed(ProfileViewPage.url, arguments: {"user": AuthService.instance.user.value});
-                  },
-                  child: Obx(
-                    () => Row(
-                      children: [
-                        ClipRRect(
-                            borderRadius: BorderRadius.circular(23),
-                            child: Obx(() => AuthService.instance.user.value!.profileimagepath == null
-                                ? Container(
-                                    decoration: const BoxDecoration(image: DecorationImage(image: AssetImage("./assets/images/profile.jpg"))),
-                                    height: 55,
-                                    width: 55)
-                                : SizedBox(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              FriendWidgets.friendBanner(controller),
+              CommonButton(
+                padding: EdgeInsets.zero,
+                onTap: () {
+                  Get.toNamed(ProfileViewPage.url, arguments: {"user": AuthService.instance.user.value});
+                },
+                child: Obx(
+                  () => Row(
+                    children: [
+                      ClipRRect(
+                          borderRadius: BorderRadius.circular(23),
+                          child: Obx(() => AuthService.instance.user.value!.profileimagepath == null
+                              ? Container(
+                                  decoration: const BoxDecoration(image: DecorationImage(image: AssetImage("./assets/images/profile.jpg"))),
+                                  height: 55,
+                                  width: 55)
+                              : SizedBox(
+                                  width: 55,
+                                  height: 55,
+                                  child: ImageLoader(
+                                    url: AuthService.instance.user.value!.profileimagepath!,
+                                    boxfit: BoxFit.cover,
                                     width: 55,
                                     height: 55,
-                                    child: ImageLoader(
-                                      url: AuthService.instance.user.value!.profileimagepath!,
-                                      boxfit: BoxFit.cover,
-                                      width: 55,
-                                      height: 55,
-                                    ),
-                                  ))),
-                        const SizedBox(
-                          width: 11,
-                        ),
-                        Text(
-                          AuthService.instance.user.value!.nickname!,
-                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
-                        ),
-                        const Spacer(),
-                        Text(AuthService.instance.user.value!.bio!, style: const TextStyle(fontSize: 12, color: Colors.black54)),
-                        const SizedBox(
-                          width: 10,
-                        )
-                      ],
-                    ),
+                                  ),
+                                ))),
+                      const SizedBox(
+                        width: 11,
+                      ),
+                      Text(
+                        AuthService.instance.user.value!.nickname!,
+                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
+                      ),
+                      const Spacer(),
+                      Text(AuthService.instance.user.value!.bio!, style: const TextStyle(fontSize: 12, color: Colors.black54)),
+                      const SizedBox(
+                        width: 10,
+                      )
+                    ],
                   ),
                 ),
-                Common.divider(margin: const EdgeInsets.symmetric(vertical: 15)),
-                Obx(() => Text(
-                      '친구 ${controller.friendCnt}',
-                      style: const TextStyle(color: Colors.black54, fontSize: 12),
-                    )),
-                Obx(
-                  () => Column(
-                    children: controller.friendWidgetList.value,
-                  ),
-                )
-              ],
-            ),
+              ),
+              Common.divider(margin: const EdgeInsets.symmetric(vertical: 15)),
+              Obx(() => Text(
+                    '친구 ${controller.friendCnt}',
+                    style: const TextStyle(color: Colors.black54, fontSize: 12),
+                  )),
+              Obx(
+                () => Column(
+                  children: controller.friendWidgetList.value,
+                ),
+              )
+            ],
           ),
         ),
       ),

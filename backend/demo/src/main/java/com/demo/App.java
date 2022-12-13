@@ -8,7 +8,10 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.Socket;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
+
+import com.mysql.cj.xdevapi.JsonArray;
 
 public class App {
     static String serverip = "43.200.206.18";
@@ -18,11 +21,10 @@ public class App {
         try {
             JSONObject message = new JSONObject();
             JSONObject data = new JSONObject();
-            data.put("roomId", "test");
-            // data.put("title", "Hello");
+            data.put("myId", "test");
 
             message.put("method", "GET");
-            message.put("route", "fetchRoom");
+            message.put("route", "fetchRooms");
             message.put("data", data);
             udpRequest(message);
             // JSONObject message = new JSONObject();

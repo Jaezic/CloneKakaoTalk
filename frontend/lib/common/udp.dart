@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -58,7 +59,8 @@ class Udp {
     print('data:\n' + message['data']);
     print('-------------------------------------------------');
     Response returnObject = Response();
-    sender.asStream(timeout: const Duration(seconds: 10)).listen((datagram) {
+    //late Timer t;
+    sender.asStream(timeout: const Duration(seconds: 10)).listen((datagram) async {
       var json = jsonDecode(utf8.decode(datagram!.data));
 
       print('-------------------------------------------------');
@@ -68,7 +70,9 @@ class Udp {
       print('data:\n${json['data']}');
       print('-------------------------------------------------');
       returnObject = Response(statusCode: json['statusCode'], statusMessage: json['statusMessage'], data: json['data']);
+      //t.cancel();
     });
+
     await Future.delayed(Duration(milliseconds: timeout));
     sender.close();
     if (returnObject.statusCode == null) {
