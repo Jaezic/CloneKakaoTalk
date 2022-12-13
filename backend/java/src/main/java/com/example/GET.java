@@ -1,6 +1,8 @@
 package com.example;
 
 import java.sql.*;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -8,6 +10,21 @@ import org.json.JSONObject;
 import com.mysql.cj.xdevapi.JsonArray;
 
 public class GET {
+    static void checkServer(Network socket, Request request, Connection con, Statement updatestmt) throws Exception {
+        JSONObject data = new JSONObject();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.HOUR_OF_DAY, 9);
+        java.util.Date date = new Date(calendar.getTimeInMillis());
+
+        String dateResult = sdf.format(date);
+        data.put("ResponseServerTime", dateResult);
+        socket.response(
+                new Response(200, "OK", data),
+                request.ip,
+                request.port);
+    }
+
     static void updateMyData(Network socket, Request request, Connection con, Statement updatestmt) throws Exception {
         Statement querystmt;
         // 갱신 요청시에 userid를 얻어서 User,UserStatus 넣어서 전송.
@@ -93,6 +110,7 @@ public class GET {
             return;
         }
         JSONObject data = new JSONObject();
+        data.put("onetoone", fetch_Room_result.getString("Onetoone"));
         data.put("roomId", fetch_Room_result.getString("id"));
         data.put("createUserId", fetch_Room_result.getString("CreateUserId"));
         JSONArray array = new JSONArray();
@@ -162,7 +180,7 @@ public class GET {
         JSONObject request_json = new JSONObject();
         request_json.put("myId", request.data.get("myId"));
         String find_rooms = String.format(
-                "Select id, update_at from Room where id in (select id from Room_User where UserID = \"%s\");",
+                "Select * from Room where id in (select id from Room_User where UserID = \"%s\");",
                 request_json.get("myId"));
         querystmt = con.createStatement();
         ResultSet rooms_result = querystmt.executeQuery(find_rooms);
@@ -189,6 +207,8 @@ public class GET {
                 room_info.put("latest_message", latestChatResult.getString("message"));
             } else
                 room_info.put("update_at", rooms_result.getTimestamp("update_at"));
+
+            room_info.put("onetoone", rooms_result.getString("Onetoone"));
             sql = String.format(
                     "SELECT User.ID,NickName,UF.path as profile_image_path FROM User LEFT JOIN UserStatus ON User.ID = UserStatus.ID LEFT JOIN User_file UF ON UserStatus.profile_image_id = UF.id WHERE User.ID in (select UserId from Room_User where id = \"%s\");",
                     rooms_result.getString("id"));

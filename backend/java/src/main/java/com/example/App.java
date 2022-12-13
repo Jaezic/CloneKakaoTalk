@@ -159,6 +159,8 @@ public class App {
                         GET.fetchRooms(socket, request, con, updatestmt);
                     else if (request.route.equalsIgnoreCase("receivePostChat")) // 채팅 불러오기
                         GET.receivePostChat(socket, request, con, updatestmt);
+                    else if (request.route.equalsIgnoreCase("checkServer"))
+                        GET.checkServer(socket, request, con, updatestmt);
                     else
                         socket.response(new Response(100, "Invalid Route requested.", null), request.ip,
                                 request.port);

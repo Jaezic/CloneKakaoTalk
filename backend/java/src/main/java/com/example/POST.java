@@ -75,7 +75,7 @@ public class POST {
         // user id가 table에 없다면
         if (!result.next()) {
             // 회원가입 해달라 메세지 출력
-            socket.response(new Response(2, "Please sign up for membership first", null),
+            socket.response(new Response(2, "don't match password in DB", null),
                     request.ip, request.port);
         } else {
             // password_sql과 user가 입력한 password가 같다면
@@ -123,7 +123,8 @@ public class POST {
 
                 // 로그인 시간 now, 횟수 더하기.
                 String statusUpdate = String.format(
-                        "update UserStatus set ResentlyConnectionTime = now(), NumberOfLogins = NumberOfLogins + 1, ConnectionStatus = 'online' where id = '%s';", request.data.get("id"));
+                        "update UserStatus set ResentlyConnectionTime = now(), NumberOfLogins = NumberOfLogins + 1, ConnectionStatus = 'online' where id = '%s';",
+                        request.data.get("id"));
                 int ret = querystmt.executeUpdate(statusUpdate);
             } else {
                 socket.response(new Response(3, "The password is different.", null), request.ip,
@@ -132,30 +133,29 @@ public class POST {
         }
     }
 
-    static void logout(Network socket, Request request, Connection con, Statement updatestmt) throws Exception{
+    static void logout(Network socket, Request request, Connection con, Statement updatestmt) throws Exception {
         Statement querystmt;
-        String logout_sql = String.format("update UserStatus set ResentlyLogOutTime = now(), ConnectionStatus = 'offline' where id = '%s';",request.data.get("id"));
+        String logout_sql = String.format(
+                "update UserStatus set ResentlyLogOutTime = now(), ConnectionStatus = 'offline' where id = '%s';",
+                request.data.get("id"));
         querystmt = con.createStatement();
         querystmt.executeUpdate(logout_sql);
         socket.response(
-            new Response(200, "You have been logged out.", null),
-            request.ip,
-            request.port);
+                new Response(200, "You have been logged out.", null),
+                request.ip,
+                request.port);
         CONNECT.broadcastFetchFriend(request.data.getString("id"));
     }
 
     static void changePassword(Network socket, Request request, Connection con, Statement updatestmt)
             throws Exception {
-        // 로그인 요청시 id,password insert
         Statement querystmt;
-        String change_pass_sql = String.format("update user set password = '%s' where id = '%s';", request.data.get("password"),
+        String change_pass_sql = String.format("update user set password = '%s' where id = '%s';",
+                request.data.get("password"),
                 request.data.get("id"));
         querystmt = con.createStatement();
         querystmt.executeUpdate(change_pass_sql);
-        socket.response(
-                new Response(200, "Password change is complete!", null),
-                request.ip,
-                request.port);
+        socket.response(new Response(200, "Password change is complete!", null), request.ip, request.port);
     }
 
     static void FindPassword(Network socket, Request request, Connection con, Statement updatestmt) throws Exception {
@@ -377,12 +377,13 @@ public class POST {
                 request.data.get("roomId"), // room table ID
                 request.data.get("Id")); // user table ID
         updatestmt.executeUpdate(send_ExitRoom);
-        String count_room_user = String.format("select count(id) from room_user where id = '%s';", request.data.get("roomId"));
+        String count_room_user = String.format("select count(id) from Room_User where id = '%s';",
+                request.data.get("roomId"));
         ResultSet result = querystmt.executeQuery(count_room_user);
         result.next();
 
         // user가 한명밖에 없으면
-        if(result.getInt(1) == 1){
+        if (result.getInt(1) == 1) {
             String delete_room = String.format("delete from Room where id = '%s';", request.data.get("roomId"));
             updatestmt.executeUpdate(delete_room);
         }
