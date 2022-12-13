@@ -13,7 +13,7 @@ import org.json.JSONObject;
 
 public class TCP {
     static Request receive(Socket socket) throws IOException {
-        BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream(), "UTF-8"));
         String inputMessage = in.readLine();
 
         System.out.println("-------------------------------------------------");
@@ -33,7 +33,7 @@ public class TCP {
 
     static void response(Response message, Socket socket, InetAddress ip, int port) throws IOException {
         String msg = message.toJson().toString();
-        BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+        BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), "UTF-8"));
         out.write(msg);
         out.flush();
         System.out.println("-------------------------------------------------");

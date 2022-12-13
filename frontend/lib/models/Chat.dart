@@ -9,7 +9,6 @@ class Chat {
 
   Chat({required this.message, required this.createAt, required this.userID, this.username, this.profileimagepath});
   Chat.fromJson(Map<String, dynamic> json) {
-    print(json);
     message = json["message"];
     createAt = json["created_at"];
     userID = json["userid"];

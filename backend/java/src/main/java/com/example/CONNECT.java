@@ -52,19 +52,6 @@ public class CONNECT {
 
     static void broadcastFetchFriend(String requestUserID) throws IOException, Exception {
         int count = 0;
-        if (!requestUserID.equals("null"))
-            while (true) {
-                Thread.sleep(1000);
-                if (App.connected_sockets.containsKey(requestUserID))
-                    break;
-                else {
-                    count++;
-                }
-                if (count == 10) {
-                    System.out.println("Error : Broadcast Not Found RequestUserID in TCP Sockets");
-                    return;
-                }
-            }
         for (String key : App.connected_sockets.keySet()) {
             Network value = App.connected_sockets.get(key);
             if (!key.equals(requestUserID)) {
@@ -80,6 +67,28 @@ public class CONNECT {
             Network value = App.connected_sockets.get(key);
             if (!key.equals(requestUserID) && targetUserID.contains(key)) {
                 value.response(new Response(200, "receivePostChat", null), value.tcpSocket.getInetAddress(),
+                        value.tcpSocket.getPort());
+            }
+        }
+    }
+
+    static void broadcastfetchRooms(String requestUserID, List<String> targetUserID)
+            throws IOException, Exception {
+        for (String key : App.connected_sockets.keySet()) {
+            Network value = App.connected_sockets.get(key);
+            if (!key.equals(requestUserID) && targetUserID.contains(key)) {
+                value.response(new Response(200, "fetchRooms", null), value.tcpSocket.getInetAddress(),
+                        value.tcpSocket.getPort());
+            }
+        }
+    }
+
+    static void broadcastfetchRoom(String requestUserID, List<String> targetUserID)
+            throws IOException, Exception {
+        for (String key : App.connected_sockets.keySet()) {
+            Network value = App.connected_sockets.get(key);
+            if (!key.equals(requestUserID) && targetUserID.contains(key)) {
+                value.response(new Response(200, "fetchRoom", null), value.tcpSocket.getInetAddress(),
                         value.tcpSocket.getPort());
             }
         }

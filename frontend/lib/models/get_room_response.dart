@@ -24,7 +24,7 @@ class Room {
     title = json['title'];
     roomId = json['roomId'];
     createUserId = json['createUserId'];
-    onetoone = json['onetoone'];
+    onetoone = int.parse(json['onetoone'] ?? '1');
     updateAt = json['update_at'];
     latest_message = json['latest_message'];
 
