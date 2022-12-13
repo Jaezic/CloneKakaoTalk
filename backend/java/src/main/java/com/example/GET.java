@@ -180,7 +180,7 @@ public class GET {
         JSONObject request_json = new JSONObject();
         request_json.put("myId", request.data.get("myId"));
         String find_rooms = String.format(
-                "Select id, update_at from Room where id in (select id from Room_User where UserID = \"%s\");",
+                "Select * from Room where id in (select id from Room_User where UserID = \"%s\");",
                 request_json.get("myId"));
         querystmt = con.createStatement();
         ResultSet rooms_result = querystmt.executeQuery(find_rooms);
@@ -207,6 +207,8 @@ public class GET {
                 room_info.put("latest_message", latestChatResult.getString("message"));
             } else
                 room_info.put("update_at", rooms_result.getTimestamp("update_at"));
+
+            room_info.put("onetoone", rooms_result.getString("Onetoone"));
             sql = String.format(
                     "SELECT User.ID,NickName,UF.path as profile_image_path FROM User LEFT JOIN UserStatus ON User.ID = UserStatus.ID LEFT JOIN User_file UF ON UserStatus.profile_image_id = UF.id WHERE User.ID in (select UserId from Room_User where id = \"%s\");",
                     rooms_result.getString("id"));

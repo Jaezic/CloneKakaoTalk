@@ -1,5 +1,4 @@
 import 'package:KakaoTalk/common/api_service.dart';
-import 'package:KakaoTalk/common/common.dart';
 import 'package:KakaoTalk/common/service_response.dart';
 import 'package:KakaoTalk/models/get_rooms_response.dart';
 import 'package:KakaoTalk/pages/chatList/view/chatlist_widgets.dart';
@@ -12,7 +11,7 @@ class ChatListViewController extends GetxController {
   void updateChatList() async {
     ApiResponse<GetRoomsResponse> response = await ApiService.instance.fetchRooms();
     if (!response.result) {
-      Common.showSnackBar(messageText: response.errorMsg);
+      //Common.showSnackBar(messageText: response.errorMsg);
       return;
     }
     chatWidgetList.clear();

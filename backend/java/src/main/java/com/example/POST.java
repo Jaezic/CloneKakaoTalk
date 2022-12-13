@@ -22,9 +22,6 @@ import java.lang.StringBuilder;
 
 public class POST {
     static void register(Network socket, Request request, Connection con, Statement updatestmt) throws Exception {
-        AES256 aes256 = new AES256();
-        // String cipherText = aes256.encrypt(request.data.getString("pass"));
-
         Statement querystmt;
         String sql = String.format("select * from User where ID = \"%s\"", request.data.get("id"));
         querystmt = con.createStatement();
@@ -32,8 +29,7 @@ public class POST {
         if (!result.next()) {
             sql = String.format(
                     "insert into User(ID, PassWord, Name, EMail, HomeAddress, Birthday) Values(\"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\");",
-                    request.data.get("id"), request.data.getString("pass"), request.data.get("name"),
-                    // request.data.get("id"), cipherText, request.data.get("name"),
+                    request.data.get("id"), request.data.get("pass"), request.data.get("name"),
                     request.data.get("email"), request.data.get("homeaddress"),
                     request.data.get("birthday"));
             updatestmt.executeUpdate(sql);
@@ -68,15 +64,11 @@ public class POST {
     }
 
     static void checkPassword(Network socket, Request request, Connection con, Statement updatestmt) throws Exception {
-        // AES256 aes256 = new AES256();
-
-        // String password = aes256.decrypt(request.data.getString("password"));
-        String password = request.data.getString("password");
         // 로그인 요청시 id,password insert
         Statement querystmt;
         String login_sql = String.format(
-                "SELECT User.ID WHERE User.ID = \"%s\" and User.PassWord = \"%s\"",
-                request.data.get("id"), password);
+                "SELECT User.ID,PassWord,Name,EMail,Birthday,NickName,StatusMessage,UF.path as profile_image_path,UF2.path as profile_background_path FROM User LEFT JOIN UserStatus ON User.ID = UserStatus.ID LEFT JOIN User_file UF ON UserStatus.profile_image_id = UF.id LEFT JOIN User_file UF2 ON UserStatus.profile_background_id = UF2.id WHERE User.ID = \"%s\"",
+                request.data.get("id"));
         querystmt = con.createStatement();
         ResultSet result = querystmt.executeQuery(login_sql);
 
@@ -86,16 +78,24 @@ public class POST {
             socket.response(new Response(2, "don't match password in DB", null),
                     request.ip, request.port);
         } else {
-
-            socket.response(new Response(200, "OK", null), request.ip,
-                    request.port);
+            // password_sql과 user가 입력한 password가 같다면
+            // == 안됨!! 명심..
+            if (request.data.getString("password").equals(result.getString("PassWord"))) {
+                JSONObject request_json = new JSONObject();
+                request_json.put("id", request.data.get("id"));
+                socket.response(
+                        new Response(200, "OK", request_json),
+                        request.ip,
+                        request.port);
+            } else {
+                socket.response(new Response(3, "The password is different.", null), request.ip,
+                        request.port);
+            }
         }
 
     }
 
     static void login(Network socket, Request request, Connection con, Statement updatestmt) throws Exception {
-        AES256 aes256 = new AES256();
-
         // 로그인 요청시 id,password insert
         Statement querystmt;
         String login_sql = String.format(
@@ -110,12 +110,9 @@ public class POST {
             socket.response(new Response(2, "Please sign up for membership first", null),
                     request.ip, request.port);
         } else {
-            // String password = aes256.decrypt(result.getString("PassWord"));
-            String password = result.getString("PassWord");
-
             // password_sql과 user가 입력한 password가 같다면
             // == 안됨!! 명심..
-            if (request.data.get("password").equals(password)) {
+            if (request.data.getString("password").equals(result.getString("PassWord"))) {
                 socket.response(
                         new Response(200, "OK", new User(result, true).getJson()),
                         request.ip,
@@ -126,7 +123,8 @@ public class POST {
 
                 // 로그인 시간 now, 횟수 더하기.
                 String statusUpdate = String.format(
-                        "update UserStatus set ResentlyLogOutTime = now(), ResentlyConnectionTime = now() , NumberOfLogins = NumberOfLogins + 1");
+                        "update UserStatus set ResentlyConnectionTime = now(), NumberOfLogins = NumberOfLogins + 1, ConnectionStatus = 'online' where id = '%s';",
+                        request.data.get("id"));
                 int ret = querystmt.executeUpdate(statusUpdate);
             } else {
                 socket.response(new Response(3, "The password is different.", null), request.ip,
@@ -135,21 +133,55 @@ public class POST {
         }
     }
 
-    static void updatePassword(Network socket, Request request, Connection con, Statement updatestmt) throws Exception {
-        // AES256 aes256 = new AES256();
-        // String new_password = aes256.encrypt(request.data.getString("password"));
-        String new_password = request.data.getString("password");
-
-        // 로그인 요청시 id,password insert
+    static void logout(Network socket, Request request, Connection con, Statement updatestmt) throws Exception {
         Statement querystmt;
-        String change_pass_sql = String.format("update user set password = '%s' where id = '%s';", new_password,
+        String logout_sql = String.format(
+                "update UserStatus set ResentlyLogOutTime = now(), ConnectionStatus = 'offline' where id = '%s';",
+                request.data.get("id"));
+        querystmt = con.createStatement();
+        querystmt.executeUpdate(logout_sql);
+        socket.response(
+                new Response(200, "You have been logged out.", null),
+                request.ip,
+                request.port);
+        CONNECT.broadcastFetchFriend(request.data.getString("id"));
+    }
+
+    static void changePassword(Network socket, Request request, Connection con, Statement updatestmt)
+            throws Exception {
+        Statement querystmt;
+        String change_pass_sql = String.format("update user set password = '%s' where id = '%s';",
+                request.data.get("password"),
                 request.data.get("id"));
         querystmt = con.createStatement();
         querystmt.executeUpdate(change_pass_sql);
-        socket.response(
-                new Response(200, "OK", null),
-                request.ip,
-                request.port);
+        socket.response(new Response(200, "Password change is complete!", null), request.ip, request.port);
+    }
+
+    static void FindPassword(Network socket, Request request, Connection con, Statement updatestmt) throws Exception {
+        Statement querystmt;
+        String FindPassword = String.format(
+                "select PassWord from User where ID = \"%s\" and Birthday = \"%s\" and Name = \"%s\"",
+                request.data.get("id"), request.data.get("birthday"), request.data.get("name"));
+        querystmt = con.createStatement();
+
+        ResultSet FindPassword_result = querystmt.executeQuery(FindPassword);
+
+        if (!FindPassword_result.next()) { // 해당하는 내용과 일치하는 사람이 없다면?
+            socket.response(new Response(4, "No data matching that information exists.", null), request.ip,
+                    request.port);
+        } else {
+            String default_password = "0000";
+            SHA256 sha256 = new SHA256();
+
+            String default_pass_encrypto = sha256.encrypt(default_password);
+            String reset_password = String.format("update user set password = '%s' where id = '%s';",
+                    default_pass_encrypto, request.data.get("id"));
+            updatestmt.executeUpdate(reset_password);
+
+            // 만일 데이터가 존재한다면?
+            socket.response(new Response(200, "OK", null), request.ip, request.port);
+        }
     }
 
     static void addFriend(Network socket, Request request, Connection con, Statement updatestmt) throws Exception {
@@ -326,25 +358,37 @@ public class POST {
             socket.response(new Response(2, "Already invited People", null), request.ip, request.port);
         } else {
 
-            String send_invite = String.format("insert into Room_User valuse('%s', '%s');", request.data.get("roomId"), // room
+            String send_invite = String.format("insert into Room_User values('%s', '%s');", request.data.get("roomId"), // room
                                                                                                                         // table
                                                                                                                         // ID
                     request.data.get("Id")); // user table ID (초대한 친구)
             Statement querystmt;
             querystmt = con.createStatement();
-            querystmt.executeQuery(send_invite);
+            querystmt.executeUpdate(send_invite);
             socket.response(new Response(200, "OK", null), request.ip, request.port);
         }
     }
 
     // room 퇴장
     static void ExitRoom(Network socket, Request request, Connection con, Statement updatestmt) throws Exception {
+        Statement querystmt;
+        querystmt = con.createStatement();
 
         String send_ExitRoom = String.format("delete from Room_User where id = '%s' and UserId = '%s';",
                 request.data.get("roomId"), // room table ID
                 request.data.get("Id")); // user table ID
-
         updatestmt.executeUpdate(send_ExitRoom);
+        String count_room_user = String.format("select count(id) from Room_User where id = '%s';",
+                request.data.get("roomId"));
+        ResultSet result = querystmt.executeQuery(count_room_user);
+        result.next();
+
+        // user가 한명밖에 없으면
+        if (result.getInt(1) == 1) {
+            String delete_room = String.format("delete from Room where id = '%s';", request.data.get("roomId"));
+            updatestmt.executeUpdate(delete_room);
+        }
+
         socket.response(new Response(200, "OK", null), request.ip, request.port);
     }
 

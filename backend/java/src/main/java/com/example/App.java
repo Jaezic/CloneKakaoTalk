@@ -113,14 +113,18 @@ public class App {
                 if (request.method.equalsIgnoreCase("POST")) {
                     if (request.route.equalsIgnoreCase("register"))
                         POST.register(socket, request, con, updatestmt);
-                    else if (request.route.equalsIgnoreCase("login"))
-                        POST.login(socket, request, con, updatestmt);
                     else if (request.route.equalsIgnoreCase("unregister")) // 탈퇴 api
                         POST.unregister(socket, request, con, updatestmt);
-                    else if (request.route.equalsIgnoreCase("checkPassword"))
+                    else if (request.route.equalsIgnoreCase("login"))
+                        POST.login(socket, request, con, updatestmt);
+                    else if (request.route.equalsIgnoreCase("logout")) // 로그아웃 api
+                        POST.logout(socket, request, con, updatestmt);
+                    else if (request.route.equalsIgnoreCase("checkPassword")) // 비밀번호 check api
                         POST.checkPassword(socket, request, con, updatestmt);
-                    else if (request.route.equalsIgnoreCase("change_password")) // 암호 변경
-                        POST.updatePassword(socket, request, con, updatestmt);
+                    else if (request.route.equalsIgnoreCase("changePassword")) // 비밀번호 변경 api
+                        POST.changePassword(socket, request, con, updatestmt);
+                    else if (request.route.equalsIgnoreCase("FindPassword")) // 비밀번호 변경 api
+                        POST.FindPassword(socket, request, con, updatestmt);
                     else if (request.route.equalsIgnoreCase("addFriend")) // 친구 추가 api
                         POST.addFriend(socket, request, con, updatestmt);
                     else if (request.route.equalsIgnoreCase("deleteFriend"))
@@ -133,6 +137,10 @@ public class App {
                         POST.changeProfileBackground(socket, request, con, updatestmt);
                     else if (request.route.equalsIgnoreCase("createRoom")) // 방 만들기
                         POST.createRoom(socket, request, con, updatestmt);
+                    else if (request.route.equalsIgnoreCase("ExitRoom")) // 방 나가기
+                        POST.ExitRoom(socket, request, con, updatestmt);
+                    else if (request.route.equalsIgnoreCase("InvitePeople")) // 친구 초대
+                        POST.InvitePeople(socket, request, con, updatestmt);
                     else if (request.route.equalsIgnoreCase("sendChat")) // 채팅 보내기
                         POST.sendChat(socket, request, con, updatestmt);
                     else
