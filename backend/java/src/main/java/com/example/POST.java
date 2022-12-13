@@ -22,9 +22,9 @@ import java.lang.StringBuilder;
 
 public class POST {
     static void register(Network socket, Request request, Connection con, Statement updatestmt) throws Exception {
-        AES256 aes256 = new AES256();
+        SHA256 sha256 = new SHA256();
         // String cipherText = aes256.encrypt(request.data.getString("pass"));
-
+        String encrypto = sha256.encrypt(request.data.getString("pass"));
         Statement querystmt;
         String sql = String.format("select * from User where ID = \"%s\"", request.data.get("id"));
         querystmt = con.createStatement();
@@ -32,8 +32,7 @@ public class POST {
         if (!result.next()) {
             sql = String.format(
                     "insert into User(ID, PassWord, Name, EMail, HomeAddress, Birthday) Values(\"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\");",
-                    request.data.get("id"), request.data.getString("pass"), request.data.get("name"),
-                    // request.data.get("id"), cipherText, request.data.get("name"),
+                    request.data.get("id"), encrypto, request.data.get("name"),
                     request.data.get("email"), request.data.get("homeaddress"),
                     request.data.get("birthday"));
             updatestmt.executeUpdate(sql);
@@ -84,11 +83,11 @@ public class POST {
             socket.response(new Response(2, "Please sign up for membership first", null),
                     request.ip, request.port);
         } else {
-            String password = aes256.decrypt(result.getString("PassWord"));
-
+            SHA256 sha256 = new SHA256();
+            String crypto = sha256.encrypt(request.data.getString("password"));
             // password_sql과 user가 입력한 password가 같다면
             // == 안됨!! 명심..
-            if (request.data.get("password").equals(password)) {
+            if (crypto.equals(result.getString("PassWord"))) {
                 JSONObject request_json = new JSONObject();
                 request_json.put("id", request.data.get("id"));
                 socket.response(
@@ -121,11 +120,11 @@ public class POST {
                     request.ip, request.port);
         } else {
             // String password = aes256.decrypt(result.getString("PassWord"));
-            String password = result.getString("PassWord");
-
+            SHA256 sha256 = new SHA256();
+            String crypto = sha256.encrypt(request.data.getString("password"));
             // password_sql과 user가 입력한 password가 같다면
             // == 안됨!! 명심..
-            if (request.data.get("password").equals(password)) {
+            if (crypto.equals(result.getString("PassWord"))) {
                 socket.response(
                         new Response(200, "OK", new User(result, true).getJson()),
                         request.ip,
@@ -159,12 +158,11 @@ public class POST {
 
     static void changePassword(Network socket, Request request, Connection con, Statement updatestmt)
             throws Exception {
-        AES256 aes256 = new AES256();
-        String new_password = aes256.encrypt(request.data.getString("password"));
-
+        SHA256 sha256 = new SHA256();
+        String crypto = sha256.encrypt(request.data.getString("password"));
         // 로그인 요청시 id,password insert
         Statement querystmt;
-        String change_pass_sql = String.format("update user set password = '%s' where id = '%s';", new_password,
+        String change_pass_sql = String.format("update user set password = '%s' where id = '%s';", crypto,
                 request.data.get("id"));
         querystmt = con.createStatement();
         querystmt.executeUpdate(change_pass_sql);
