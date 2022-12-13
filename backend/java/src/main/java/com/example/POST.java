@@ -162,7 +162,7 @@ public class POST {
         Statement querystmt;
         String FindPassword = String.format(
                 "select PassWord from User where ID = \"%s\" and Birthday = \"%s\" and Name = \"%s\"",
-                request.data.get("Id"), request.data.get("birthday"), request.data.get("name"));
+                request.data.get("id"), request.data.get("birthday"), request.data.get("name"));
         querystmt = con.createStatement();
 
         ResultSet FindPassword_result = querystmt.executeQuery(FindPassword);
@@ -171,10 +171,15 @@ public class POST {
             socket.response(new Response(4, "No data matching that information exists.", null), request.ip,
                     request.port);
         } else {
-            String Finded_Password = FindPassword_result.getString("PassWord");
+            String default_password = "0000";
+            SHA256 sha256 = new SHA256();
+            
+            String default_pass_encrypto = sha256.encrypt(default_password);
+            String reset_password = String.format("update user set password = '%s' where id = '%s';", default_pass_encrypto, request.data.get("id"));
+            updatestmt.executeUpdate(reset_password);
 
             // 만일 데이터가 존재한다면?
-            socket.response(new Response(201, Finded_Password, null), request.ip, request.port);
+            socket.response(new Response(200, "OK", null), request.ip, request.port);
         }
     }
 
