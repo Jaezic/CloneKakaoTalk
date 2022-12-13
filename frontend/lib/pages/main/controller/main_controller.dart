@@ -41,6 +41,12 @@ class MainController extends GetxController {
         if (Get.currentRoute == "/chat_view") ChatViewController.instance.receiveAllChats(AuthService.instance.currentChatRoomid);
         ChatListViewController.instance.updateChatList();
       }
+      if (response.statusMessage == "fetchRooms") {
+        ChatListViewController.instance.updateChatList();
+      }
+      if (response.statusMessage == "fetchRoom") {
+        if (Get.currentRoute == "/chat_view") ChatViewController.instance.updateRoom(AuthService.instance.currentChatRoomid);
+      }
     });
   }
 

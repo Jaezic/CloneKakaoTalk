@@ -1,3 +1,4 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -8,6 +9,7 @@ class Common extends GetxService {
   static String baseUrl = "http://kakaotalk.mingyu-dev.kro.kr/";
   static const int serverUDPport = 9998;
   static const int serverTCPport = 9997;
+  //static const String serverIP = "123.111.11.25";
   static const String serverIP = "43.200.206.18";
   static const bool isDev = true;
   static Common get instance => Get.find<Common>();
@@ -130,6 +132,47 @@ class Common extends GetxService {
       image = await ImagePicker().pickImage(source: ImageSource.camera);
     } else if (select == 'photo') {
       image = await ImagePicker().pickImage(source: ImageSource.gallery);
+    }
+    return image;
+  }
+
+  static Future<FilePickerResult?> getImageFromUserEx() async {
+    FilePickerResult? image;
+    String? select = await Get.bottomSheet(
+      Container(
+        color: Colors.white,
+        child: SafeArea(
+          child: IntrinsicHeight(
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Expanded(
+                  child: Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      onTap: () {
+                        Get.back(result: 'photo');
+                      },
+                      child: Container(
+                        alignment: Alignment.center,
+                        padding: const EdgeInsets.symmetric(vertical: 24),
+                        child: const Text('갤러리', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                      ),
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+    if (select == 'photo') {
+      image = await FilePicker.platform.pickFiles(
+        withData: true,
+        type: FileType.custom,
+        allowedExtensions: ['jpg', 'png'],
+      );
     }
     return image;
   }

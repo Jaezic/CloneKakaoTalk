@@ -16,7 +16,6 @@ import 'package:dio/dio.dart' hide Response;
 import 'package:get/get_instance/get_instance.dart';
 import 'package:get/state_manager.dart';
 import 'package:get/utils.dart';
-import 'package:image_picker/image_picker.dart';
 
 class ApiService extends GetxService {
   Dio dio = Dio(BaseOptions(baseUrl: Common.apiUrl));
@@ -45,15 +44,15 @@ class ApiService extends GetxService {
     }
   }
 
-  Future<ApiResponse<PostUploadResponse>> upload({required XFile userFile}) async {
+//{required XFile userFile}
+  Future<ApiResponse<PostUploadResponse>> upload({required String path, required name, required bytes}) async {
     try {
       FormData data;
       if (GetPlatform.isWeb) {
-        final bytes = await userFile.readAsBytes();
-        final MultipartFile file = MultipartFile.fromBytes(bytes, filename: userFile.name);
+        final MultipartFile file = MultipartFile.fromBytes(bytes, filename: name);
         data = FormData.fromMap({'userfile': file, 'id': AuthService.instance.user.value!.id});
       } else {
-        data = FormData.fromMap({'userfile': await MultipartFile.fromFile(userFile.path, filename: userFile.name), 'id': AuthService.instance.user.value!.id});
+        data = FormData.fromMap({'userfile': await MultipartFile.fromFile(path, filename: name), 'id': AuthService.instance.user.value!.id});
       }
       var response = await dio.post('/upload', options: dioOptions, data: data);
       PostUploadResponse postUploadResponse = PostUploadResponse.fromJson(response.data);
@@ -436,6 +435,39 @@ class ApiService extends GetxService {
         data: jsonEncode({
           "roomId": roomId,
           "Id": AuthService.instance.user.value!.id,
+        }),
+      );
+      return ApiResponse<String>(result: response.isSuccessful, value: response.statusMessage);
+    } catch (e) {
+      e.printError();
+
+      return ApiResponse<String>(result: false, errorMsg: e.toString());
+    }
+  }
+
+  Future<ApiResponse<String>> invitePeople({required String roomId, required String id}) async {
+    try {
+      var response = await Tcp.post(
+        'InvitePeople',
+        data: jsonEncode({
+          "roomId": roomId,
+          "Id": id,
+        }),
+      );
+      return ApiResponse<String>(result: response.isSuccessful, value: response.statusMessage);
+    } catch (e) {
+      e.printError();
+
+      return ApiResponse<String>(result: false, errorMsg: e.toString());
+    }
+  }
+
+  Future<ApiResponse<String>> logout() async {
+    try {
+      var response = await Tcp.post(
+        'logout',
+        data: jsonEncode({
+          "id": AuthService.instance.user.value!.id!,
         }),
       );
       return ApiResponse<String>(result: response.isSuccessful, value: response.statusMessage);

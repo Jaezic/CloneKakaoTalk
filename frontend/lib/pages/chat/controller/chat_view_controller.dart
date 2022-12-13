@@ -5,9 +5,9 @@ import 'package:KakaoTalk/common/widget/image_loader.dart';
 import 'package:KakaoTalk/models/get_chats_response.dart';
 import 'package:KakaoTalk/models/get_room_response.dart';
 import 'package:KakaoTalk/models/post_user_login_response.dart';
+import 'package:KakaoTalk/pages/chat/view/chat_view_page.dart';
 import 'package:KakaoTalk/pages/chat/view/chat_widgets.dart';
 import 'package:KakaoTalk/pages/chatList/controller/chatlist_view_controller.dart';
-import 'package:KakaoTalk/pages/main/view/main_view_page.dart';
 import 'package:KakaoTalk/pages/profile/view/profile_view_page.dart';
 import 'package:KakaoTalk/services/auth_service.dart';
 import 'package:flutter/material.dart';
@@ -23,8 +23,29 @@ class ChatViewController extends GetxController {
   FocusNode textFieldFocusNode = FocusNode();
   RxList<Widget> userListWidgets = RxList<Widget>();
   RxList<User> userList = RxList<User>();
+  RxList<User> addPossibleList = RxList<User>();
 
   var scaffoldKey = GlobalKey<ScaffoldState>();
+
+  void inviteMember(User newuser) async {
+    ApiResponse<String> response = await ApiService.instance.invitePeople(roomId: room.value!.roomId!, id: newuser.id!);
+    updateRoom(room.value!.roomId!);
+    Get.back();
+  }
+
+  void createMultipleRoom(User newuser) async {
+    List<String> userid = [];
+    for (var user in room.value!.users!) {
+      userid.add(user.id!);
+    }
+    userid.add(newuser.id!);
+    Get.back();
+    Get.back();
+    Get.back();
+    ApiResponse<String> response = await ApiService.instance.createRoom(onetoone: 0, ids: userid);
+    String roomid = response.value!;
+    Get.toNamed(ChatViewPage.url, arguments: {"roomid": roomid});
+  }
 
   void openDrawer() {
     scaffoldKey.currentState!.openDrawer();
@@ -94,7 +115,13 @@ class ChatViewController extends GetxController {
         ),
       ));
     }
-
+    addPossibleList.value = [...AuthService.instance.FriendList.value];
+    addPossibleList.removeWhere((user) {
+      for (var element in ChatViewController.instance.userList.value) {
+        if (element.id == user.id) return true;
+      }
+      return false;
+    });
     AuthService.instance.currentChatRoomid = room.value!.roomId!;
     receiveAllChats(roomid);
   }
@@ -147,6 +174,16 @@ class ChatViewController extends GetxController {
         submitis.value = true;
       }
     });
+    // for (var fuser in AuthService.instance.FriendList.value) {
+    //   bool check = false;
+    //   print(fuser.id);
+    //   for (var user in ChatViewController.instance.userList.value) {
+    //     if (user.id == fuser.id) check = true;
+    //   }
+    //   if (!check) {
+    //     addpossibleList.value.add(fuser);
+    //   }
+    // }
     super.onInit();
   }
 
@@ -196,9 +233,10 @@ class ChatViewController extends GetxController {
               TextButton(
                 onPressed: () async {
                   Navigator.pop(context);
-                  Get.offAllNamed(MainViewPage.url);
+                  Get.back();
+                  Get.back();
                   await ApiService.instance.ExitRoom(roomId: room.value!.roomId!);
-                  await ApiService.instance.fetchRooms();
+                  ChatListViewController.instance.updateChatList();
                 },
                 child: const Text('네', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
               ),

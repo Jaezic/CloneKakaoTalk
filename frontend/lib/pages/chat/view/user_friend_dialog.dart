@@ -1,7 +1,7 @@
 import 'package:KakaoTalk/common/widget/common_button.dart';
 import 'package:KakaoTalk/common/widget/image_loader.dart';
 import 'package:KakaoTalk/models/post_user_login_response.dart';
-import 'package:KakaoTalk/pages/chat/controller/user_friend_dialog_controller.dart';
+import 'package:KakaoTalk/pages/chat/controller/chat_view_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -12,7 +12,6 @@ class UserFriendDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(UserFriendDialogController());
     return ClipRRect(
       borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
       child: Material(
@@ -45,20 +44,20 @@ class UserFriendDialog extends StatelessWidget {
                       const SizedBox(
                         height: 10,
                       ),
-                      for (var index = 0; index < controller.addpossibleList.value.length; index++)
+                      for (var index = 0; index < ChatViewController.instance.addPossibleList.value.length; index++)
                         CommonButton(
                           padding: const EdgeInsets.symmetric(vertical: 8),
-                          onTap: () => onUserAdded(controller.addpossibleList.value[index]),
+                          onTap: () => onUserAdded(ChatViewController.instance.addPossibleList.value[index]),
                           child: Row(
                             children: [
-                              controller.addpossibleList.value[index].profileimagepath != null
+                              ChatViewController.instance.addPossibleList.value[index].profileimagepath != null
                                   ? ClipRRect(
                                       borderRadius: BorderRadius.circular(15),
                                       child: SizedBox(
                                         width: 35,
                                         height: 35,
                                         child: ImageLoader(
-                                          url: controller.addpossibleList.value[index].profileimagepath!,
+                                          url: ChatViewController.instance.addPossibleList.value[index].profileimagepath!,
                                           boxfit: BoxFit.cover,
                                           width: 35,
                                           height: 35,
@@ -79,7 +78,7 @@ class UserFriendDialog extends StatelessWidget {
                                 width: 10,
                               ),
                               Text(
-                                controller.addpossibleList.value[index].nickname ?? "",
+                                ChatViewController.instance.addPossibleList.value[index].nickname ?? "",
                                 style: const TextStyle(color: Colors.black, fontSize: 12),
                               ),
                             ],

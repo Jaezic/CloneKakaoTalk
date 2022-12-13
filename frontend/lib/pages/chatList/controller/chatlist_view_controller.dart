@@ -10,10 +10,6 @@ class ChatListViewController extends GetxController {
   RxList<Widget> chatWidgetList = RxList();
   void updateChatList() async {
     ApiResponse<GetRoomsResponse> response = await ApiService.instance.fetchRooms();
-    if (!response.result) {
-      //Common.showSnackBar(messageText: response.errorMsg);
-      return;
-    }
     chatWidgetList.clear();
     if (response.result) {
       response.value?.datas?.sort(((a, b) {
@@ -24,7 +20,7 @@ class ChatListViewController extends GetxController {
           room: element,
         ));
       }
-      update();
     }
+    update();
   }
 }

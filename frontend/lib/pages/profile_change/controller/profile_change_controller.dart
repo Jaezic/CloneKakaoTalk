@@ -4,6 +4,7 @@ import 'package:KakaoTalk/common/service_response.dart';
 import 'package:KakaoTalk/models/post_upload_response.dart';
 import 'package:KakaoTalk/models/post_user_login_response.dart';
 import 'package:KakaoTalk/services/auth_service.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -39,11 +40,20 @@ class ProfileChangeController extends GetxController {
   }
 
   Future<void> changeProfileImage() async {
-    XFile? userFile = await Common.getImageFromUser();
-    if (userFile == null) {
-      return;
+    ApiResponse<PostUploadResponse> response;
+    if (GetPlatform.isMobile) {
+      XFile? userFile = await Common.getImageFromUser();
+      if (userFile == null) {
+        return;
+      }
+      response = await ApiService.instance.upload(name: userFile.name, path: userFile.path, bytes: userFile.readAsBytes());
+    } else {
+      FilePickerResult? userFile = await Common.getImageFromUserEx();
+      if (userFile == null) {
+        return;
+      }
+      response = await ApiService.instance.upload(name: userFile.names.first, path: userFile.paths.first!, bytes: userFile.files.first.bytes);
     }
-    ApiResponse<PostUploadResponse> response = await ApiService.instance.upload(userFile: userFile);
     if (response.result) {
       if (response.value?.id == null) {
         Common.showSnackBar(messageText: "오류가 발생했습니다");
@@ -52,7 +62,7 @@ class ProfileChangeController extends GetxController {
       ApiResponse<String> uploadResponse = await ApiService.instance.changeProfileImage(imageId: response.value!.id!);
       if (uploadResponse.result) {
         await ApiService.instance.userMe();
-        Common.showSnackBar(messageText: uploadResponse.value ?? "");
+        //Common.showSnackBar(messageText: uploadResponse.value ?? "");
       } else {
         Common.showSnackBar(messageText: response.errorMsg);
       }
@@ -62,20 +72,30 @@ class ProfileChangeController extends GetxController {
   }
 
   Future<void> changeProfileBackground() async {
-    XFile? userFile = await Common.getImageFromUser();
-    if (userFile == null) {
-      return;
+    ApiResponse<PostUploadResponse> response;
+    if (GetPlatform.isMobile) {
+      XFile? userFile = await Common.getImageFromUser();
+      if (userFile == null) {
+        return;
+      }
+      response = await ApiService.instance.upload(name: userFile.name, path: userFile.path, bytes: userFile.readAsBytes());
+    } else {
+      FilePickerResult? userFile = await Common.getImageFromUserEx();
+      if (userFile == null) {
+        return;
+      }
+      response = await ApiService.instance.upload(name: userFile.names.first, path: userFile.paths.first!, bytes: userFile.files.first.bytes);
     }
-    ApiResponse<PostUploadResponse> response = await ApiService.instance.upload(userFile: userFile);
     if (response.result) {
       if (response.value?.id == null) {
         Common.showSnackBar(messageText: "오류가 발생했습니다");
         return;
       }
+
       ApiResponse<String> uploadResponse = await ApiService.instance.changeProfileBackground(imageId: response.value!.id!);
       if (uploadResponse.result) {
         await ApiService.instance.userMe();
-        Common.showSnackBar(messageText: uploadResponse.value ?? "");
+        //Common.showSnackBar(messageText: uploadResponse.value ?? "");
       } else {
         Common.showSnackBar(messageText: response.errorMsg);
       }

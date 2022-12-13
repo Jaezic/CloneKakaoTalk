@@ -35,8 +35,8 @@ class ChatViewPage extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                controller.room.value!.title!.length > 10
-                                    ? '${controller.room.value!.title!.substring(0, 11)}···'
+                                controller.room.value!.title!.length > 15
+                                    ? '${controller.room.value!.title!.substring(0, 16)}···'
                                     : controller.room.value!.title!,
                                 style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
                               ),
@@ -59,6 +59,11 @@ class ChatViewPage extends StatelessWidget {
                                         builder: (context) {
                                           return UserFriendDialog(
                                             onUserAdded: (user) {
+                                              if (controller.room.value!.onetoone == 1) {
+                                                controller.createMultipleRoom(user!);
+                                              } else {
+                                                controller.inviteMember(user!);
+                                              }
                                               // if (user != null) {
                                               //   if (controller.usertag.where((p0) => p0.id == user.id).isEmpty) {
                                               //     controller.usertag.add(user);
@@ -129,9 +134,26 @@ class ChatViewPage extends StatelessWidget {
           child: Obx(
             () => controller.room.value == null
                 ? const CupertinoActivityIndicator()
-                : Text(
-                    controller.room.value!.title!,
-                    style: const TextStyle(fontSize: 17, color: Colors.black, fontWeight: FontWeight.bold),
+                : Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        controller.room.value!.title!.length > 15 ? '${controller.room.value!.title!.substring(0, 16)}···' : controller.room.value!.title!,
+                        style: const TextStyle(fontSize: 17, color: Colors.black, fontWeight: FontWeight.bold),
+                      ),
+                      if (controller.room.value!.onetoone == 0)
+                        Row(
+                          children: [
+                            const SizedBox(
+                              width: 5,
+                            ),
+                            Text(
+                              '${controller.room.value!.users!.length}',
+                              style: const TextStyle(color: Colors.grey, fontSize: 15),
+                            )
+                          ],
+                        )
+                    ],
                   ),
           ),
         ),

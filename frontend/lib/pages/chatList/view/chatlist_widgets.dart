@@ -50,7 +50,7 @@ class ChatListWidgets {
                 Row(
                   children: [
                     Text(
-                      room.title!,
+                      room.title!.length > 15 ? '${room.title!.substring(0, 16)}···' : room.title!,
                     ),
                     if (room.onetoone == 0)
                       Row(
@@ -59,7 +59,7 @@ class ChatListWidgets {
                             width: 5,
                           ),
                           Text(
-                            '${room.users!.length}',
+                            '${room.users!.length + 1}',
                             style: const TextStyle(color: Colors.grey, fontSize: 13),
                           )
                         ],
@@ -70,7 +70,13 @@ class ChatListWidgets {
                   height: 2,
                 ),
                 Text(
-                  room.latest_message ?? "",
+                  (room.latest_message ?? "") == ""
+                      ? "[최근 대화 기록이 없습니다.]"
+                      : (room.latest_message!.length >= 4)
+                          ? (room.latest_message!.substring(0, 4) == "@a(d" && room.latest_message!.split('|').length == 4)
+                              ? "[파일이 전송되었습니다.]"
+                              : room.latest_message!
+                          : room.latest_message!,
                   style: const TextStyle(color: Colors.black54, fontSize: 12),
                 )
               ],

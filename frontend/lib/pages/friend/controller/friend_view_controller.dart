@@ -86,7 +86,11 @@ class FriendViewController extends GetxController {
             ),
             actions: <Widget>[
               TextButton(
-                onPressed: () {},
+                onPressed: () async {
+                  Navigator.pop(context);
+                  await ApiService.instance.unregister();
+                  AuthService.instance.logout();
+                },
                 child: const Text('네', style: TextStyle(color: Colors.black)),
               ),
               TextButton(

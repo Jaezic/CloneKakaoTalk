@@ -59,7 +59,7 @@ public class POST {
             sql = String.format("delete from User where ID = '%s';", request.data.get("myId"));
             updatestmt.executeUpdate(sql);
             socket.response(new Response(200, "OK", null), request.ip, request.port); // 데이터
-            CONNECT.broadcastFetchFriend(result.getString("ID"));
+            CONNECT.broadcastFetchFriend(null);
         }
     }
 
@@ -125,7 +125,7 @@ public class POST {
                 String statusUpdate = String.format(
                         "update UserStatus set ResentlyConnectionTime = now(), NumberOfLogins = NumberOfLogins + 1, ConnectionStatus = 'online' where id = '%s';",
                         request.data.get("id"));
-                int ret = querystmt.executeUpdate(statusUpdate);
+                int ret = updatestmt.executeUpdate(statusUpdate);
             } else {
                 socket.response(new Response(3, "The password is different.", null), request.ip,
                         request.port);
@@ -141,10 +141,10 @@ public class POST {
         querystmt = con.createStatement();
         querystmt.executeUpdate(logout_sql);
         socket.response(
-                new Response(200, "You have been logged out.", null),
+                new Response(200, "OK", null),
                 request.ip,
                 request.port);
-        CONNECT.broadcastFetchFriend(request.data.getString("id"));
+        CONNECT.broadcastFetchFriend(null);
     }
 
     static void changePassword(Network socket, Request request, Connection con, Statement updatestmt)
@@ -173,9 +173,10 @@ public class POST {
         } else {
             String default_password = "0000";
             SHA256 sha256 = new SHA256();
-            
+
             String default_pass_encrypto = sha256.encrypt(default_password);
-            String reset_password = String.format("update user set password = '%s' where id = '%s';", default_pass_encrypto, request.data.get("id"));
+            String reset_password = String.format("update user set password = '%s' where id = '%s';",
+                    default_pass_encrypto, request.data.get("id"));
             updatestmt.executeUpdate(reset_password);
 
             // 만일 데이터가 존재한다면?
@@ -327,10 +328,12 @@ public class POST {
                 request_json.get("myId"),
                 request_json.get("onetoone"));
         updatestmt.executeUpdate(create_room);
+        List<String> members = new ArrayList<String>();
         for (int i = 0; i < request_json.getJSONArray("ids").length(); i++) {
             String create_room_user = String.format("insert into Room_User values('%s', '%s');", roomId,
                     request_json.getJSONArray("ids").getString(i));
             updatestmt.executeUpdate(create_room_user);
+            members.add(request_json.getJSONArray("ids").getString(i));
         }
 
         con.commit();
@@ -338,6 +341,7 @@ public class POST {
         JSONObject result_json = new JSONObject();
         result_json.put("roomId", roomId);
 
+        CONNECT.broadcastfetchRooms(request.data.getString("myId"), members);
         socket.response(new Response(200, "OK", result_json), request.ip, request.port);
     }
 
@@ -364,6 +368,10 @@ public class POST {
             Statement querystmt;
             querystmt = con.createStatement();
             querystmt.executeUpdate(send_invite);
+
+            List<String> members = new ArrayList<String>();
+            members.add(request.data.getString("Id"));
+            CONNECT.broadcastfetchRoom(request.data.getString("Id"), members);
             socket.response(new Response(200, "OK", null), request.ip, request.port);
         }
     }
@@ -372,6 +380,15 @@ public class POST {
     static void ExitRoom(Network socket, Request request, Connection con, Statement updatestmt) throws Exception {
         Statement querystmt;
         querystmt = con.createStatement();
+
+        String find_chatMember = String.format("select UserId from Room_User where id = \"%s\";",
+                request.data.get("roomId"));
+        querystmt = con.createStatement();
+        ResultSet member_result = querystmt.executeQuery(find_chatMember);
+        List<String> members = new ArrayList<String>();
+        while (member_result.next()) {
+            members.add(member_result.getString("UserId"));
+        }
 
         String send_ExitRoom = String.format("delete from Room_User where id = '%s' and UserId = '%s';",
                 request.data.get("roomId"), // room table ID
@@ -387,6 +404,9 @@ public class POST {
             String delete_room = String.format("delete from Room where id = '%s';", request.data.get("roomId"));
             updatestmt.executeUpdate(delete_room);
         }
+
+        CONNECT.broadcastfetchRooms(request.data.getString("Id"), members);
+        CONNECT.broadcastfetchRoom(request.data.getString("Id"), members);
 
         socket.response(new Response(200, "OK", null), request.ip, request.port);
     }

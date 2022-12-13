@@ -21,8 +21,8 @@ public class App {
     static ExecutorService pool;
 
     public static void main(String[] args) throws Exception {
-        // String jdbc_url = "jdbc:mysql://43.200.206.18:3306/networkDB";
-        String jdbc_url = "jdbc:mysql://127.0.0.1:3306/networkDB";
+        String jdbc_url = "jdbc:mysql://43.200.206.18:3306/networkDB";
+        // String jdbc_url = "jdbc:mysql://127.0.0.1:3306/networkDB";
         con = DriverManager.getConnection(jdbc_url, "root", "gachon");
         updatestmt = con.createStatement();
         pool = Executors.newFixedThreadPool(40);

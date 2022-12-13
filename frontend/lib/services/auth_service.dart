@@ -1,3 +1,4 @@
+import 'package:KakaoTalk/common/api_service.dart';
 import 'package:KakaoTalk/common/common.dart';
 import 'package:KakaoTalk/models/post_user_login_response.dart';
 import 'package:KakaoTalk/pages/userLogin/page/userlogin_view_page.dart';
@@ -15,6 +16,7 @@ class AuthService extends GetxService {
   }
 
   Future<void> logout() async {
+    var response = await ApiService.instance.logout();
     user.value!.clear();
     Get.offAllNamed(UserLoginViewPage.url);
   }
