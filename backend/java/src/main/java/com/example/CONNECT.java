@@ -3,7 +3,9 @@ package com.example;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.List;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 
 public class CONNECT {
@@ -67,6 +69,17 @@ public class CONNECT {
             Network value = App.connected_sockets.get(key);
             if (!key.equals(requestUserID)) {
                 value.response(new Response(200, "updateFriend", null), value.tcpSocket.getInetAddress(),
+                        value.tcpSocket.getPort());
+            }
+        }
+    }
+
+    static void broadcastReceivePostChat(String requestUserID, List<String> targetUserID)
+            throws IOException, Exception {
+        for (String key : App.connected_sockets.keySet()) {
+            Network value = App.connected_sockets.get(key);
+            if (!key.equals(requestUserID) && targetUserID.contains(key)) {
+                value.response(new Response(200, "receivePostChat", null), value.tcpSocket.getInetAddress(),
                         value.tcpSocket.getPort());
             }
         }
