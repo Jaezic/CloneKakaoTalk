@@ -145,6 +145,18 @@ public class POST {
         }
     }
 
+    static void logout(Network socket, Request request, Connection con, Statement updatestmt) throws Exception{
+        Statement querystmt;
+        String logout_sql = String.format("update UserStatus set RecentlyLogOutTime = now() where id = '%s';",request.data.get("id"));
+        querystmt = con.createStatement();
+        querystmt.executeUpdate(logout_sql);
+        socket.response(
+            new Response(200, "OK", null),
+            request.ip,
+            request.port);
+        CONNECT.broadcastFetchFriend(request.data.getString("id"));
+    }
+
     static void change_password(Network socket, Request request, Connection con, Statement updatestmt)
             throws Exception {
         AES256 aes256 = new AES256();
