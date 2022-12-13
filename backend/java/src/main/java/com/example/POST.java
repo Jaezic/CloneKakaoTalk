@@ -136,7 +136,7 @@ public class POST {
 
                 // 로그인 시간 now, 횟수 더하기.
                 String statusUpdate = String.format(
-                        "update UserStatus set ResentlyConnectionTime = now() , NumberOfLogins = NumberOfLogins + 1 where id = '%s';", request.data.get("id"));
+                        "update UserStatus set ResentlyConnectionTime = now(), NumberOfLogins = NumberOfLogins + 1, ConnectionStatus = 'online' where id = '%s';", request.data.get("id"));
                 int ret = querystmt.executeUpdate(statusUpdate);
             } else {
                 socket.response(new Response(3, "The password is different.", null), request.ip,
@@ -147,11 +147,11 @@ public class POST {
 
     static void logout(Network socket, Request request, Connection con, Statement updatestmt) throws Exception{
         Statement querystmt;
-        String logout_sql = String.format("update UserStatus set RecentlyLogOutTime = now() where id = '%s';",request.data.get("id"));
+        String logout_sql = String.format("update UserStatus set ResentlyLogOutTime = now(), ConnectionStatus = 'offline' where id = '%s';",request.data.get("id"));
         querystmt = con.createStatement();
         querystmt.executeUpdate(logout_sql);
         socket.response(
-            new Response(200, "OK", null),
+            new Response(200, "You have been logged out.", null),
             request.ip,
             request.port);
         CONNECT.broadcastFetchFriend(request.data.getString("id"));
@@ -169,7 +169,7 @@ public class POST {
         querystmt = con.createStatement();
         querystmt.executeUpdate(change_pass_sql);
         socket.response(
-                new Response(200, "OK", null),
+                new Response(200, "Password change is complete!", null),
                 request.ip,
                 request.port);
     }
