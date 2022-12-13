@@ -136,7 +136,7 @@ public class POST {
 
                 // 로그인 시간 now, 횟수 더하기.
                 String statusUpdate = String.format(
-                        "update UserStatus set ResentlyLogOutTime = now(), ResentlyConnectionTime = now() , NumberOfLogins = NumberOfLogins + 1");
+                        "update UserStatus set ResentlyConnectionTime = now() , NumberOfLogins = NumberOfLogins + 1 where id = '%s';", request.data.get("id"));
                 int ret = querystmt.executeUpdate(statusUpdate);
             } else {
                 socket.response(new Response(3, "The password is different.", null), request.ip,
