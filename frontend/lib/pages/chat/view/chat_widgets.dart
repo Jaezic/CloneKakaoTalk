@@ -127,7 +127,7 @@ class ChatWidgets {
                   width: 35,
                   height: 35,
                   child: ImageLoader(
-                    url: chat.profileimagepath!,
+                    url: chat.profileimagepath ?? "",
                     boxfit: BoxFit.cover,
                     width: 45,
                     height: 45,

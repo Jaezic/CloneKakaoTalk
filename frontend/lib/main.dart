@@ -11,6 +11,7 @@ void main() async {
   await Get.putAsync(() => Common().init());
   await initServices();
   await DesktopWindow.setMinWindowSize(const Size(370, 600));
+  await DesktopWindow.setWindowSize(const Size(500, 800));
   runApp(GetMaterialApp(
     debugShowCheckedModeBanner: false,
     theme: ThemeData(

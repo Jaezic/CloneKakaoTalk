@@ -166,6 +166,7 @@ class ProfileViewPage extends StatelessWidget {
                       if (controller.user.value!.id! != AuthService.instance.user.value!.id &&
                           !AuthService.instance.FriendIdList.contains(controller.user.value!.id!))
                         GestureDetector(
+                          behavior: HitTestBehavior.opaque,
                           onTap: () async {
                             ApiResponse response = await ApiService.instance.addFriend(frinedId: controller.user.value!.id!);
                             if (response.result) {

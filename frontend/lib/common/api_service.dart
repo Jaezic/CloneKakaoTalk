@@ -4,7 +4,6 @@ import 'package:KakaoTalk/common/common.dart';
 import 'package:KakaoTalk/common/dio_extension.dart';
 import 'package:KakaoTalk/common/service_response.dart';
 import 'package:KakaoTalk/common/tcp.dart';
-import 'package:KakaoTalk/models/get_chat_response.dart';
 import 'package:KakaoTalk/models/get_chats_response.dart';
 import 'package:KakaoTalk/models/get_friend_list_respone.dart';
 import 'package:KakaoTalk/models/get_room_response.dart';
@@ -233,7 +232,10 @@ class ApiService extends GetxService {
           "id": AuthService.instance.user.value!.id,
         }),
       );
-      GetFriendListResponse getFriendListResponse = GetFriendListResponse.fromJson(response.data);
+      GetFriendListResponse getFriendListResponse = GetFriendListResponse();
+      if (response.isSuccessful) {
+        getFriendListResponse = GetFriendListResponse.fromJson(response.data);
+      }
       return ApiResponse<GetFriendListResponse>(result: response.isSuccessful, value: getFriendListResponse);
     } catch (e) {
       e.printError();
@@ -318,17 +320,18 @@ class ApiService extends GetxService {
     }
   }
 
-  Future<ApiResponse<GetChatResponse>> sendChat({required String roomId, required String message}) async {
+  Future<ApiResponse<String>> sendChat({required String roomId, required String message}) async {
     try {
       var response = await Tcp.post(
         'sendChat',
         data: jsonEncode({"myId": AuthService.instance.user.value!.id, "roomId": roomId, "message": message}),
       );
-      return ApiResponse<GetChatResponse>(result: response.isSuccessful, value: GetChatResponse.fromJson(response.data));
+      //return ApiResponse<String>(result: response.isSuccessful, value: GetChatResponse.fromJson(response.data));
+      return ApiResponse<String>(result: response.isSuccessful, value: null);
     } catch (e) {
       e.printError();
 
-      return ApiResponse<GetChatResponse>(result: false, errorMsg: e.toString());
+      return ApiResponse<String>(result: false, errorMsg: e.toString());
     }
   }
 

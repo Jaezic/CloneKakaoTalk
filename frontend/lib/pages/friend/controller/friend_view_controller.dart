@@ -1,5 +1,4 @@
 import 'package:KakaoTalk/common/api_service.dart';
-import 'package:KakaoTalk/common/common.dart';
 import 'package:KakaoTalk/common/service_response.dart';
 import 'package:KakaoTalk/models/get_friend_list_respone.dart';
 import 'package:KakaoTalk/models/post_user_login_response.dart';
@@ -33,7 +32,7 @@ class FriendViewController extends GetxController {
   Future<void> fetchFriendList() async {
     ApiResponse<GetFriendListResponse> fetchResponse = await ApiService.instance.fetchFriends();
     if (!fetchResponse.result) {
-      Common.showSnackBar(messageText: fetchResponse.errorMsg);
+      //Common.showSnackBar(messageText: fetchResponse.errorMsg);
       return;
     }
     friendWidgetList.clear();
