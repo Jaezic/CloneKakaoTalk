@@ -173,10 +173,9 @@ public class POST {
         } else {
             String default_password = "0000";
             SHA256 sha256 = new SHA256();
-
+            
             String default_pass_encrypto = sha256.encrypt(default_password);
-            String reset_password = String.format("update user set password = '%s' where id = '%s';",
-                    default_pass_encrypto, request.data.get("id"));
+            String reset_password = String.format("update user set password = '%s' where id = '%s';", default_pass_encrypto, request.data.get("id"));
             updatestmt.executeUpdate(reset_password);
 
             // 만일 데이터가 존재한다면?
