@@ -67,7 +67,7 @@ public class POST {
         }
     }
 
-    static void check_password(Network socket, Request request, Connection con, Statement updatestmt) throws Exception {
+    static void checkPassword(Network socket, Request request, Connection con, Statement updatestmt) throws Exception {
         AES256 aes256 = new AES256();
 
         // 로그인 요청시 id,password insert
@@ -157,7 +157,7 @@ public class POST {
         CONNECT.broadcastFetchFriend(request.data.getString("id"));
     }
 
-    static void change_password(Network socket, Request request, Connection con, Statement updatestmt)
+    static void changePassword(Network socket, Request request, Connection con, Statement updatestmt)
             throws Exception {
         AES256 aes256 = new AES256();
         String new_password = aes256.encrypt(request.data.getString("password"));
