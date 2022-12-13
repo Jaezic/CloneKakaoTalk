@@ -16,7 +16,6 @@ import java.util.Random;
 import java.util.TimeZone;
 import java.lang.StringBuilder;
 
-
 import javax.swing.text.DefaultStyledDocument.ElementSpec;
 
 import java.lang.StringBuilder;
@@ -96,7 +95,7 @@ public class POST {
                         new Response(200, "OK", request_json),
                         request.ip,
                         request.port);
-            }else{
+            } else {
                 socket.response(new Response(3, "The password is different.", null), request.ip,
                         request.port);
             }
@@ -146,22 +145,26 @@ public class POST {
         }
     }
 
-    static void change_password(Network socket, Request request, Connection con, Statement updatestmt) throws Exception {
+    static void change_password(Network socket, Request request, Connection con, Statement updatestmt)
+            throws Exception {
         AES256 aes256 = new AES256();
         String new_password = aes256.encrypt(request.data.getString("password"));
 
         // 로그인 요청시 id,password insert
         Statement querystmt;
-        String change_pass_sql = String.format("update user set password = '%s' where id = '%s';", new_password, request.data.get("id"));
+        String change_pass_sql = String.format("update user set password = '%s' where id = '%s';", new_password,
+                request.data.get("id"));
         querystmt = con.createStatement();
         querystmt.executeUpdate(change_pass_sql);
         socket.response(
-                        new Response(200, "OK", null),
-                        request.ip,
-                        request.port);
+                new Response(200, "OK", null),
+                request.ip,
+                request.port);
     }
 
     static void FindPassword(Network socket, Request request, Connection con, Statement updatestmt) throws Exception {
+        AES256 aes256 = new AES256();
+
         Statement querystmt;
         String FindPassword = String.format(
                 "select PassWord from User where ID = \"%s\" and Birthday = \"%s\" and Name = \"%s\"",
@@ -174,9 +177,10 @@ public class POST {
             socket.response(new Response(4, "No data matching that information exists.", null), request.ip,
                     request.port);
         } else {
+            String Finded_Password = aes256.decrypt(FindPassword_result.getString("PassWord"));
+
             // 만일 데이터가 존재한다면?
-            socket.response(new Response(201, FindPassword_result.getString(1), null), request.ip,
-                    request.port);
+            socket.response(new Response(201, Finded_Password, null), request.ip, request.port);
         }
     }
 
