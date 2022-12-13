@@ -161,6 +161,25 @@ public class POST {
                         request.port);
     }
 
+    static void FindPassword(Network socket, Request request, Connection con, Statement updatestmt) throws Exception {
+        Statement querystmt;
+        String FindPassword = String.format(
+                "select PassWord from User where ID = \"%s\" and Birthday = \"%s\" and Name = \"%s\"",
+                request.data.get("Id"), request.data.get("birthday"), request.data.get("name"));
+        querystmt = con.createStatement();
+
+        ResultSet FindPassword_result = querystmt.executeQuery(FindPassword);
+
+        if (!FindPassword_result.next()) { // 해당하는 내용과 일치하는 사람이 없다면?
+            socket.response(new Response(4, "No data matching that information exists.", null), request.ip,
+                    request.port);
+        } else {
+            // 만일 데이터가 존재한다면?
+            socket.response(new Response(201, FindPassword_result.getString(1), null), request.ip,
+                    request.port);
+        }
+    }
+
     static void addFriend(Network socket, Request request, Connection con, Statement updatestmt) throws Exception {
         Statement querystmt;
         // 친구 id가 이 메신저에 등록되어있는지 우선 확인.
