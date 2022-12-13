@@ -16,7 +16,6 @@ import java.util.Random;
 import java.util.TimeZone;
 import java.lang.StringBuilder;
 
-
 import javax.swing.text.DefaultStyledDocument.ElementSpec;
 
 import java.lang.StringBuilder;
@@ -68,38 +67,28 @@ public class POST {
         }
     }
 
-    static void check_password(Network socket, Request request, Connection con, Statement updatestmt) throws Exception {
-        AES256 aes256 = new AES256();
+    static void checkPassword(Network socket, Request request, Connection con, Statement updatestmt) throws Exception {
+        // AES256 aes256 = new AES256();
 
+        // String password = aes256.decrypt(request.data.getString("password"));
+        String password = request.data.getString("password");
         // 로그인 요청시 id,password insert
         Statement querystmt;
         String login_sql = String.format(
-                "SELECT User.ID,PassWord,Name,EMail,Birthday,NickName,StatusMessage,UF.path as profile_image_path,UF2.path as profile_background_path FROM User LEFT JOIN UserStatus ON User.ID = UserStatus.ID LEFT JOIN User_file UF ON UserStatus.profile_image_id = UF.id LEFT JOIN User_file UF2 ON UserStatus.profile_background_id = UF2.id WHERE User.ID = \"%s\"",
-                request.data.get("id"));
+                "SELECT User.ID WHERE User.ID = \"%s\" and User.PassWord = \"%s\"",
+                request.data.get("id"), password);
         querystmt = con.createStatement();
         ResultSet result = querystmt.executeQuery(login_sql);
 
         // user id가 table에 없다면
         if (!result.next()) {
             // 회원가입 해달라 메세지 출력
-            socket.response(new Response(2, "Please sign up for membership first", null),
+            socket.response(new Response(2, "don't match password in DB", null),
                     request.ip, request.port);
         } else {
-            String password = aes256.decrypt(result.getString("PassWord"));
 
-            // password_sql과 user가 입력한 password가 같다면
-            // == 안됨!! 명심..
-            if (request.data.get("password").equals(password)) {
-                JSONObject request_json = new JSONObject();
-                request_json.put("id", request.data.get("id"));
-                socket.response(
-                        new Response(200, "OK", request_json),
-                        request.ip,
-                        request.port);
-            }else{
-                socket.response(new Response(3, "The password is different.", null), request.ip,
-                        request.port);
-            }
+            socket.response(new Response(200, "OK", null), request.ip,
+                    request.port);
         }
 
     }
@@ -146,19 +135,21 @@ public class POST {
         }
     }
 
-    static void change_password(Network socket, Request request, Connection con, Statement updatestmt) throws Exception {
-        AES256 aes256 = new AES256();
-        String new_password = aes256.encrypt(request.data.getString("password"));
+    static void updatePassword(Network socket, Request request, Connection con, Statement updatestmt) throws Exception {
+        // AES256 aes256 = new AES256();
+        // String new_password = aes256.encrypt(request.data.getString("password"));
+        String new_password = request.data.getString("password");
 
         // 로그인 요청시 id,password insert
         Statement querystmt;
-        String change_pass_sql = String.format("update user set password = '%s' where id = '%s';", new_password, request.data.get("id"));
+        String change_pass_sql = String.format("update user set password = '%s' where id = '%s';", new_password,
+                request.data.get("id"));
         querystmt = con.createStatement();
         querystmt.executeUpdate(change_pass_sql);
         socket.response(
-                        new Response(200, "OK", null),
-                        request.ip,
-                        request.port);
+                new Response(200, "OK", null),
+                request.ip,
+                request.port);
     }
 
     static void addFriend(Network socket, Request request, Connection con, Statement updatestmt) throws Exception {
