@@ -396,7 +396,7 @@ class ApiService extends GetxService {
       var passbyte = utf8.encode(newpassword);
       newpassword = sha256.convert(passbyte).toString();
       var response = await Tcp.post(
-        'updatePassword',
+        'changePassword',
         data: jsonEncode({
           "id": AuthService.instance.user.value!.id,
           "password": newpassword,
