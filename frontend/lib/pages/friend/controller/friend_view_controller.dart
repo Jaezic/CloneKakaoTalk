@@ -32,13 +32,15 @@ class FriendViewController extends GetxController {
 
   Future<void> fetchFriendList() async {
     ApiResponse<GetFriendListResponse> fetchResponse = await ApiService.instance.fetchFriends();
-    if (!fetchResponse.result) {
-      //Common.showSnackBar(messageText: fetchResponse.errorMsg);
-      return;
-    }
     friendWidgetList.clear();
     AuthService.instance.FriendList.clear();
     AuthService.instance.FriendIdList.clear();
+    if (!fetchResponse.result) {
+      //Common.showSnackBar(messageText: fetchResponse.errorMsg);
+      friendCnt.value = friendWidgetList.value.length;
+      update();
+      return;
+    }
     for (var element in fetchResponse.value!.datas!) {
       friendWidgetList.add(FriendWidgets.FriendTuple(
           user: User.fromJson(element),

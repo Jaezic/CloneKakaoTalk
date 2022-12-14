@@ -496,4 +496,21 @@ class ApiService extends GetxService {
       return ApiResponse<String>(result: false, errorMsg: e.toString());
     }
   }
+
+  Future<ApiResponse<String>> deleteFriend({required String id}) async {
+    try {
+      var response = await Tcp.post(
+        'deleteFriend',
+        data: jsonEncode({
+          "myId": AuthService.instance.user.value!.id!,
+          "friendId": id,
+        }),
+      );
+      return ApiResponse<String>(result: response.isSuccessful, value: response.statusMessage);
+    } catch (e) {
+      e.printError();
+
+      return ApiResponse<String>(result: false, errorMsg: e.toString());
+    }
+  }
 }
