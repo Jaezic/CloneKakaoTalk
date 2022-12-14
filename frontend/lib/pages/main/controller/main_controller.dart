@@ -40,7 +40,7 @@ class MainController extends GetxController {
       if (response.statusMessage == "receivePostChat") {
         if (Get.currentRoute == "/chat_view") {
           final controller = Get.find<ChatViewController>(tag: response.data['tag']);
-          controller.receiveAllChats(AuthService.instance.currentChatRoomid);
+          controller.receiveAllChats(response.data['tag']);
         }
         ChatListViewController.instance.updateChatList();
       }
@@ -50,7 +50,7 @@ class MainController extends GetxController {
       if (response.statusMessage == "fetchRoom") {
         if (Get.currentRoute == "/chat_view") {
           final controller = Get.find<ChatViewController>(tag: response.data['tag']);
-          controller.updateRoom(AuthService.instance.currentChatRoomid);
+          controller.updateRoom(response.data['tag']);
         }
       }
     });

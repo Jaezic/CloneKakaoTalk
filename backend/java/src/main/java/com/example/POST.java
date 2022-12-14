@@ -117,7 +117,6 @@ public class POST {
                         new Response(200, "OK", new User(result, true).getJson()),
                         request.ip,
                         request.port);
-                CONNECT.broadcastFetchFriend(result.getString("ID"));
                 // 로그인 성공시 해당 유저 아이디 UserStatus 갱신
                 // querystmt
 

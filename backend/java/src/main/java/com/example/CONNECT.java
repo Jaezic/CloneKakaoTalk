@@ -16,6 +16,7 @@ public class CONNECT {
         }
         App.connected_sockets.put(request.data.get("userID").toString(), socket);
         System.out.println(App.connected_sockets);
+        CONNECT.broadcastFetchFriend(request.data.getString("userID"));
         App.pool.execute(new ManagementTCPSocket(request.data.get("userID").toString()));
         socket.response(new Response(200, "OK", null), request.ip,
                 request.port);
