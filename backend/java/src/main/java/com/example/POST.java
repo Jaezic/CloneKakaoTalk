@@ -369,7 +369,7 @@ public class POST {
 
             List<String> members = new ArrayList<String>();
             members.add(request.data.getString("Id"));
-            CONNECT.broadcastfetchRoom(request.data.getString("Id"), members);
+            CONNECT.broadcastfetchRoom(request.data.getString("Id"), members, request.data.getString("roomId"));
             socket.response(new Response(200, "OK", null), request.ip, request.port);
         }
     }
@@ -404,7 +404,7 @@ public class POST {
         }
 
         CONNECT.broadcastfetchRooms(request.data.getString("Id"), members);
-        CONNECT.broadcastfetchRoom(request.data.getString("Id"), members);
+        CONNECT.broadcastfetchRoom(request.data.getString("Id"), members, request.data.getString("roomId"));
 
         socket.response(new Response(200, "OK", null), request.ip, request.port);
     }
@@ -449,7 +449,7 @@ public class POST {
         while (member_result.next()) {
             members.add(member_result.getString("UserId"));
         }
-        CONNECT.broadcastReceivePostChat(request_json.getString("myId"), members);
+        CONNECT.broadcastReceivePostChat(request_json.getString("myId"), members, request.data.getString("roomId"));
 
         // socket.response(new Response(200, "OK", response_json), request.ip,
         // request.port);

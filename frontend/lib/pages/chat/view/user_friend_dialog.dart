@@ -8,7 +8,8 @@ import 'package:get/get.dart';
 
 class UserFriendDialog extends StatelessWidget {
   final void Function(User? user) onUserAdded;
-  const UserFriendDialog({super.key, required this.onUserAdded});
+  final ChatViewController controller;
+  const UserFriendDialog({super.key, required this.onUserAdded, required this.controller});
 
   @override
   Widget build(BuildContext context) {
@@ -44,20 +45,20 @@ class UserFriendDialog extends StatelessWidget {
                       const SizedBox(
                         height: 10,
                       ),
-                      for (var index = 0; index < ChatViewController.instance.addPossibleList.value.length; index++)
+                      for (var index = 0; index < controller.addPossibleList.value.length; index++)
                         CommonButton(
                           padding: const EdgeInsets.symmetric(vertical: 8),
-                          onTap: () => onUserAdded(ChatViewController.instance.addPossibleList.value[index]),
+                          onTap: () => onUserAdded(controller.addPossibleList.value[index]),
                           child: Row(
                             children: [
-                              ChatViewController.instance.addPossibleList.value[index].profileimagepath != null
+                              controller.addPossibleList.value[index].profileimagepath != null
                                   ? ClipRRect(
                                       borderRadius: BorderRadius.circular(15),
                                       child: SizedBox(
                                         width: 35,
                                         height: 35,
                                         child: ImageLoader(
-                                          url: ChatViewController.instance.addPossibleList.value[index].profileimagepath!,
+                                          url: controller.addPossibleList.value[index].profileimagepath!,
                                           boxfit: BoxFit.cover,
                                           width: 35,
                                           height: 35,
@@ -78,7 +79,7 @@ class UserFriendDialog extends StatelessWidget {
                                 width: 10,
                               ),
                               Text(
-                                ChatViewController.instance.addPossibleList.value[index].nickname ?? "",
+                                controller.addPossibleList.value[index].nickname ?? "",
                                 style: const TextStyle(color: Colors.black, fontSize: 12),
                               ),
                             ],

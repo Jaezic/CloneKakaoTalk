@@ -15,7 +15,7 @@ import 'package:get/get.dart';
 
 class ChatViewController extends GetxController {
   TextEditingController textEditController = TextEditingController();
-  static ChatViewController get instance => Get.find<ChatViewController>();
+  // static ChatViewController get instance => Get.find<ChatViewController>();
   ScrollController scrollController = ScrollController();
   RxBool submitis = false.obs;
   Rxn<Room> room = Rxn();
@@ -39,11 +39,11 @@ class ChatViewController extends GetxController {
       userid.add(user.id!);
     }
     userid.add(newuser.id!);
-    Get.back();
-    Get.back();
-    Get.back();
     ApiResponse<String> response = await ApiService.instance.createRoom(onetoone: 0, ids: userid);
     String roomid = response.value!;
+    Get.back();
+    Get.back();
+    Get.back();
     Get.toNamed(ChatViewPage.url, arguments: {"roomid": roomid});
   }
 
@@ -117,7 +117,7 @@ class ChatViewController extends GetxController {
     }
     addPossibleList.value = [...AuthService.instance.FriendList.value];
     addPossibleList.removeWhere((user) {
-      for (var element in ChatViewController.instance.userList.value) {
+      for (var element in userList.value) {
         if (element.id == user.id) return true;
       }
       return false;

@@ -14,7 +14,7 @@ class ChatViewPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var arg = Get.arguments;
-    final controller = Get.put(ChatViewController());
+    final controller = Get.put(ChatViewController(), tag: arg['roomid']);
     controller.updateRoom(arg['roomid']);
 
     return Scaffold(
@@ -58,6 +58,7 @@ class ChatViewPage extends StatelessWidget {
                                         context: context,
                                         builder: (context) {
                                           return UserFriendDialog(
+                                            controller: controller,
                                             onUserAdded: (user) {
                                               if (controller.room.value!.onetoone == 1) {
                                                 controller.createMultipleRoom(user!);

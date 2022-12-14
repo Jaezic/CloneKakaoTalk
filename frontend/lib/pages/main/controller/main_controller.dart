@@ -38,14 +38,20 @@ class MainController extends GetxController {
         await FriendViewController.instance.fetchFriendList();
       }
       if (response.statusMessage == "receivePostChat") {
-        if (Get.currentRoute == "/chat_view") ChatViewController.instance.receiveAllChats(AuthService.instance.currentChatRoomid);
+        if (Get.currentRoute == "/chat_view") {
+          final controller = Get.find<ChatViewController>(tag: response.data['tag']);
+          controller.receiveAllChats(AuthService.instance.currentChatRoomid);
+        }
         ChatListViewController.instance.updateChatList();
       }
       if (response.statusMessage == "fetchRooms") {
         ChatListViewController.instance.updateChatList();
       }
       if (response.statusMessage == "fetchRoom") {
-        if (Get.currentRoute == "/chat_view") ChatViewController.instance.updateRoom(AuthService.instance.currentChatRoomid);
+        if (Get.currentRoute == "/chat_view") {
+          final controller = Get.find<ChatViewController>(tag: response.data['tag']);
+          controller.updateRoom(AuthService.instance.currentChatRoomid);
+        }
       }
     });
   }

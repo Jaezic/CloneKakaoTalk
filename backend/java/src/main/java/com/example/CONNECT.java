@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 public class CONNECT {
     static void userConnect(Network socket, Request request) throws JSONException, Exception {
@@ -61,12 +62,14 @@ public class CONNECT {
         }
     }
 
-    static void broadcastReceivePostChat(String requestUserID, List<String> targetUserID)
+    static void broadcastReceivePostChat(String requestUserID, List<String> targetUserID, String room_id)
             throws IOException, Exception {
         for (String key : App.connected_sockets.keySet()) {
             Network value = App.connected_sockets.get(key);
             if (!key.equals(requestUserID) && targetUserID.contains(key)) {
-                value.response(new Response(200, "receivePostChat", null), value.tcpSocket.getInetAddress(),
+                JSONObject data = new JSONObject();
+                data.put("tag", room_id);
+                value.response(new Response(200, "receivePostChat", data), value.tcpSocket.getInetAddress(),
                         value.tcpSocket.getPort());
             }
         }
@@ -83,12 +86,14 @@ public class CONNECT {
         }
     }
 
-    static void broadcastfetchRoom(String requestUserID, List<String> targetUserID)
+    static void broadcastfetchRoom(String requestUserID, List<String> targetUserID, String room_id)
             throws IOException, Exception {
         for (String key : App.connected_sockets.keySet()) {
             Network value = App.connected_sockets.get(key);
             if (!key.equals(requestUserID) && targetUserID.contains(key)) {
-                value.response(new Response(200, "fetchRoom", null), value.tcpSocket.getInetAddress(),
+                JSONObject data = new JSONObject();
+                data.put("tag", room_id);
+                value.response(new Response(200, "fetchRoom", data), value.tcpSocket.getInetAddress(),
                         value.tcpSocket.getPort());
             }
         }
