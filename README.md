@@ -7,12 +7,13 @@ UDP/TCP Network를 이용한 카카오톡 서버, 클라이언트 만들기
 ### **MultiThread**
 ExecutorService MultiThread를 이용해서 TCP/UDP 통신을 여러 Client와 진행할 수 있음.
 
-
-
-
 ### BroadCast 
 Client와 Server가 연결이 되면 Server는 Client와 연결된 TCP Socket을 User ID로 관리한다.
 한 Client가 특정 API를 요청하고, 해당 API가 다른 Client에게 API를 요청하도록 유도하기 위해 연결된 TCP Socket에 API BroadCast를 이용한다.
+
+### Verify server connectivity
+서버와의 연결이 괜찮은지 확인을 한다. 만약, 서버와 연결이 되지 않는다면 무한정 Splash Page를 벗어날 수 없다.
+![ezgif com-gif-maker](https://user-images.githubusercontent.com/55248746/207530665-cd9c284f-38a9-4980-b507-b2adfc27dfb9.gif)
 
 
 ### Multiple Users in a Room
