@@ -477,4 +477,23 @@ class ApiService extends GetxService {
       return ApiResponse<String>(result: false, errorMsg: e.toString());
     }
   }
+
+  Future<ApiResponse<String>> findPassword({required String id, required DateTime birthday, required String name}) async {
+    try {
+      String birthdayString = "${birthday.year}-${birthday.month}-${birthday.day}";
+      var response = await Tcp.post(
+        'FindPassword',
+        data: jsonEncode({
+          "id": id,
+          "birthday": birthdayString,
+          "name": name,
+        }),
+      );
+      return ApiResponse<String>(result: response.isSuccessful, value: response.statusMessage);
+    } catch (e) {
+      e.printError();
+
+      return ApiResponse<String>(result: false, errorMsg: e.toString());
+    }
+  }
 }

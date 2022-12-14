@@ -1,15 +1,16 @@
 import 'package:KakaoTalk/common/widget/common_button.dart';
+import 'package:KakaoTalk/pages/resetPassword/controller/resetPassword_view_controller.dart';
 import 'package:KakaoTalk/pages/userRegister/controller/userRegister_view_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class UserRegisterViewPage extends StatelessWidget {
-  const UserRegisterViewPage({super.key});
+class ResetPasswordViewPage extends StatelessWidget {
+  const ResetPasswordViewPage({super.key});
 
-  static const url = '/user_register';
+  static const url = '/reset_password';
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(UserRegisterViewController());
+    final controller = Get.put(ResetPasswordViewController());
     const namefieldstyle = TextStyle(fontWeight: FontWeight.bold, fontSize: 14);
     return Scaffold(
       body: SingleChildScrollView(
@@ -23,7 +24,7 @@ class UserRegisterViewPage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
-                      '카카오계정 정보를 입력해주세요',
+                      '찾고자 하는 계정의 정보를 입력해주세요',
                       style: TextStyle(fontSize: 20),
                     ),
                     const SizedBox(
@@ -38,46 +39,10 @@ class UserRegisterViewPage extends StatelessWidget {
                       height: 40,
                     ),
                     const Text(
-                      '비밀번호',
-                      style: namefieldstyle,
-                    ),
-                    UserRegisterViewController.textField(textEditController: controller.passFieldController, hintText: '비밀번호', pass: true),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    UserRegisterViewController.textField(textEditController: controller.passVerifyFieldController, hintText: '비밀번호 확인', pass: true),
-                    const SizedBox(
-                      height: 40,
-                    ),
-                    const Text(
                       '이름',
                       style: namefieldstyle,
                     ),
                     UserRegisterViewController.textField(textEditController: controller.nameFieldController, hintText: '이름'),
-                    const SizedBox(
-                      height: 40,
-                    ),
-                    const Text(
-                      '닉네임',
-                      style: namefieldstyle,
-                    ),
-                    UserRegisterViewController.textField(textEditController: controller.nicknameFieldController, hintText: '닉네임'),
-                    const SizedBox(
-                      height: 40,
-                    ),
-                    const Text(
-                      '이메일',
-                      style: namefieldstyle,
-                    ),
-                    UserRegisterViewController.textField(textEditController: controller.emailFieldController, hintText: 'ooo@ooo.ooo'),
-                    const SizedBox(
-                      height: 40,
-                    ),
-                    const Text(
-                      '집주소',
-                      style: namefieldstyle,
-                    ),
-                    UserRegisterViewController.textField(textEditController: controller.homeaddressFieldController, hintText: '경기도 성남시'),
                     const SizedBox(
                       height: 40,
                     ),
@@ -117,7 +82,7 @@ class UserRegisterViewPage extends StatelessWidget {
                     CommonButton(
                         padding: EdgeInsets.zero,
                         onTap: () {
-                          controller.userRegister();
+                          controller.findPassword();
                         },
                         child: Container(
                             width: GetPlatform.isMobile ? null : 460,
@@ -125,7 +90,7 @@ class UserRegisterViewPage extends StatelessWidget {
                             decoration: BoxDecoration(borderRadius: BorderRadius.circular(2.5), color: const Color.fromARGB(255, 254, 229, 0)),
                             child: const Center(
                                 child: Text(
-                              '회원가입',
+                              '확인',
                               style: TextStyle(fontWeight: FontWeight.bold),
                             )))),
                     const SizedBox(

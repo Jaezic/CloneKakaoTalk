@@ -1,4 +1,5 @@
 import 'package:KakaoTalk/common/widget/common_button.dart';
+import 'package:KakaoTalk/pages/resetPassword/page/resetPassword_view_page.dart';
 import 'package:KakaoTalk/pages/userLogin/controller/userlogin_view_controller.dart';
 import 'package:KakaoTalk/pages/userRegister/page/userRegister_view_page.dart';
 import 'package:flutter/material.dart';
@@ -65,6 +66,14 @@ class UserLoginViewPage extends StatelessWidget {
                         onTap: () => Get.toNamed(UserRegisterViewPage.url),
                         child: const Text(
                           '회원가입',
+                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12, color: Colors.black54),
+                        ),
+                      ),
+                      const Spacer(),
+                      GestureDetector(
+                        onTap: () => Get.toNamed(ResetPasswordViewPage.url),
+                        child: const Text(
+                          '비밀번호 찾기',
                           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12, color: Colors.black54),
                         ),
                       )
