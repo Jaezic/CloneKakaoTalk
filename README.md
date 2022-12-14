@@ -15,6 +15,8 @@ Client와 Server가 연결이 되면 Server는 Client와 연결된 TCP Socket을
 한 Client가 특정 API를 요청하고, 해당 API가 다른 Client에게 API를 요청하도록 유도하기 위해 연결된 TCP Socket에 API BroadCast를 이용한다.
 
 
+### Multiple Users in a Room
+BroadCast와 MultiThread를 이용해서 한 방에서 여러 명이 동시에 빠른 속도로 대화를 이어갈 수 있다.
 
 
 ### File Transfer
