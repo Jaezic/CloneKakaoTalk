@@ -17,6 +17,7 @@ Client와 Server가 연결이 되면 Server는 Client와 연결된 TCP Socket을
 
 ### Multiple Users in a Room
 BroadCast와 MultiThread를 이용해서 한 방에서 여러 명이 동시에 빠른 속도로 대화를 이어갈 수 있다.
+![ezgif com-gif-maker (1)](https://user-images.githubusercontent.com/55248746/207524543-e512ad67-3668-48e7-9f22-4f269d150c30.gif)
 
 
 ### File Transfer
