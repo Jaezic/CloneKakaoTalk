@@ -18,7 +18,7 @@ Client와 Server가 연결이 되면 Server는 Client와 연결된 TCP Socket을
 
 
 ### File Transfer
-node.js Upload Server를 이용해서 파일을 올리고, 업로드된 파일의 URL을 이용해 파일을 브라우저로 받을 수 있따.
+node.js Upload Server를 이용해서 파일을 올리고, 업로드된 파일의 URL을 이용해 파일을 브라우저로 받을 수 있다.
 ![ezgif com-gif-maker](https://user-images.githubusercontent.com/55248746/207513068-f1e9d48a-d97f-4233-b824-605e38878f18.gif)
 
 
