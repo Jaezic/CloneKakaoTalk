@@ -149,12 +149,10 @@ public class POST {
 
     static void changePassword(Network socket, Request request, Connection con, Statement updatestmt)
             throws Exception {
-        Statement querystmt;
-        String change_pass_sql = String.format("update user set password = '%s' where id = '%s';",
+        String change_pass_sql = String.format("update User set PassWord = '%s' where ID = '%s';",
                 request.data.get("password"),
                 request.data.get("id"));
-        querystmt = con.createStatement();
-        querystmt.executeUpdate(change_pass_sql);
+        updatestmt.executeUpdate(change_pass_sql);
         socket.response(new Response(200, "Password change is complete!", null), request.ip, request.port);
     }
 
@@ -175,7 +173,7 @@ public class POST {
             SHA256 sha256 = new SHA256();
 
             String default_pass_encrypto = sha256.encrypt(default_password);
-            String reset_password = String.format("update user set password = '%s' where id = '%s';",
+            String reset_password = String.format("update User set PassWord = '%s' where ID = '%s';",
                     default_pass_encrypto, request.data.get("id"));
             updatestmt.executeUpdate(reset_password);
 
