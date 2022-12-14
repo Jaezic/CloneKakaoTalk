@@ -27,20 +27,20 @@ class ProfileViewPage extends StatelessWidget {
           controller.user.value!.profilebackgroundpath == null,
           controller.user.value!.profilebackgroundpath ?? "./assets/images/background.jpg"
         ]),
-        child: Container(
-          decoration: controller.user.value!.profilebackgroundpath == null
-              ? const BoxDecoration(
-                  color: Color.fromARGB(255, 135, 145, 152),
-                )
-              : BoxDecoration(
-                  image: DecorationImage(
-                    fit: BoxFit.cover,
-                    image: CachedNetworkImageProvider(controller.user.value!.profilebackgroundpath!), // 배경 이미지
+        child: Obx(
+          () => Container(
+            decoration: controller.user.value!.profilebackgroundpath == null
+                ? const BoxDecoration(
+                    color: Color.fromARGB(255, 135, 145, 152),
+                  )
+                : BoxDecoration(
+                    image: DecorationImage(
+                      fit: BoxFit.cover,
+                      image: CachedNetworkImageProvider(controller.user.value!.profilebackgroundpath!), // 배경 이미지
+                    ),
                   ),
-                ),
-          child: SafeArea(
-            child: Obx(
-              () => Column(
+            child: SafeArea(
+              child: Column(
                 children: [
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
