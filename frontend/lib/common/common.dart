@@ -9,8 +9,8 @@ class Common extends GetxService {
   static String baseUrl = "http://kakaotalk.mingyu-dev.kro.kr/";
   static const int serverUDPport = 9998;
   static const int serverTCPport = 9997;
-  //static const String serverIP = "123.111.11.25";
-  static const String serverIP = "43.200.206.18";
+  static const String serverIP = "123.111.11.25";
+  //static const String serverIP = "43.200.206.18";
   static const bool isDev = true;
   static Common get instance => Get.find<Common>();
 
